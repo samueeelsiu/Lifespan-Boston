@@ -1,0 +1,146 @@
+[
+  {
+    "range": "0-10",
+    "EXTDEM": 17,
+    "INTDEM": 79,
+    "RAZE": 10
+  },
+  {
+    "range": "10-20",
+    "EXTDEM": 64,
+    "INTDEM": 304,
+    "RAZE": 9
+  },
+  {
+    "range": "20-30",
+    "EXTDEM": 32,
+    "INTDEM": 199,
+    "RAZE": 6
+  },
+  {
+    "range": "30-40",
+    "EXTDEM": 14,
+    "INTDEM": 78,
+    "RAZE": 4
+  },
+  {
+    "range": "40-50",
+    "EXTDEM": 26,
+    "INTDEM": 87,
+    "RAZE": 13
+  },
+  {
+    "range": "50-60",
+    "EXTDEM": 25,
+    "INTDEM": 112,
+    "RAZE": 9
+  },
+  {
+    "range": "60-70",
+    "EXTDEM": 34,
+    "INTDEM": 98,
+    "RAZE": 16
+  },
+  {
+    "range": "70-80",
+    "EXTDEM": 31,
+    "INTDEM": 116,
+    "RAZE": 25
+  },
+  {
+    "range": "80-90",
+    "EXTDEM": 63,
+    "INTDEM": 216,
+    "RAZE": 28
+  },
+  {
+    "range": "90-100",
+    "EXTDEM": 132,
+    "INTDEM": 491,
+    "RAZE": 30
+  },
+  {
+    "range": "100-110",
+    "EXTDEM": 132,
+    "INTDEM": 556,
+    "RAZE": 62
+  },
+  {
+    "range": "110-120",
+    "EXTDEM": 245,
+    "INTDEM": 1172,
+    "RAZE": 58
+  },
+  {
+    "range": "120-130",
+    "EXTDEM": 105,
+    "INTDEM": 783,
+    "RAZE": 59
+  },
+  {
+    "range": "130-140",
+    "EXTDEM": 41,
+    "INTDEM": 202,
+    "RAZE": 14
+  },
+  {
+    "range": "140-150",
+    "EXTDEM": 19,
+    "INTDEM": 112,
+    "RAZE": 10
+  },
+  {
+    "range": "150-160",
+    "EXTDEM": 5,
+    "INTDEM": 94,
+    "RAZE": 1
+  },
+  {
+    "range": "160-170",
+    "EXTDEM": 11,
+    "INTDEM": 48,
+    "RAZE": 1
+  },
+  {
+    "range": "170-180",
+    "EXTDEM": 0,
+    "INTDEM": 21,
+    "RAZE": 1
+  },
+  {
+    "range": "180-190",
+    "EXTDEM": 1,
+    "INTDEM": 12,
+    "RAZE": 1
+  },
+  {
+    "range": "190-200",
+    "EXTDEM": 1,
+    "INTDEM": 10,
+    "RAZE": 0
+  },
+  {
+    "range": "200-210",
+    "EXTDEM": 0,
+    "INTDEM": 2,
+    "RAZE": 0
+  },
+  {
+    "range": "210-220",
+    "EXTDEM": 1,
+    "INTDEM": 2,
+    "RAZE": 0
+  },
+  {
+    "range": "220-230",
+    "EXTDEM": 0,
+    "INTDEM": 1,
+    "RAZE": 1
+  },
+  {
+    "range": "280-290",
+    "EXTDEM": 0,
+    "INTDEM": 1,
+    "RAZE": 0
+  }
+]

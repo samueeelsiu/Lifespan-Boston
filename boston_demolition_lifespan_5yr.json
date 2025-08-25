@@ -1,0 +1,278 @@
+[
+  {
+    "range": "0-5",
+    "EXTDEM": 11,
+    "INTDEM": 27,
+    "RAZE": 8
+  },
+  {
+    "range": "5-10",
+    "EXTDEM": 6,
+    "INTDEM": 52,
+    "RAZE": 2
+  },
+  {
+    "range": "10-15",
+    "EXTDEM": 27,
+    "INTDEM": 114,
+    "RAZE": 5
+  },
+  {
+    "range": "15-20",
+    "EXTDEM": 37,
+    "INTDEM": 190,
+    "RAZE": 4
+  },
+  {
+    "range": "20-25",
+    "EXTDEM": 23,
+    "INTDEM": 136,
+    "RAZE": 2
+  },
+  {
+    "range": "25-30",
+    "EXTDEM": 9,
+    "INTDEM": 63,
+    "RAZE": 4
+  },
+  {
+    "range": "30-35",
+    "EXTDEM": 7,
+    "INTDEM": 45,
+    "RAZE": 3
+  },
+  {
+    "range": "35-40",
+    "EXTDEM": 7,
+    "INTDEM": 33,
+    "RAZE": 1
+  },
+  {
+    "range": "40-45",
+    "EXTDEM": 12,
+    "INTDEM": 41,
+    "RAZE": 7
+  },
+  {
+    "range": "45-50",
+    "EXTDEM": 14,
+    "INTDEM": 46,
+    "RAZE": 6
+  },
+  {
+    "range": "50-55",
+    "EXTDEM": 15,
+    "INTDEM": 54,
+    "RAZE": 3
+  },
+  {
+    "range": "55-60",
+    "EXTDEM": 10,
+    "INTDEM": 58,
+    "RAZE": 6
+  },
+  {
+    "range": "60-65",
+    "EXTDEM": 16,
+    "INTDEM": 54,
+    "RAZE": 9
+  },
+  {
+    "range": "65-70",
+    "EXTDEM": 18,
+    "INTDEM": 44,
+    "RAZE": 7
+  },
+  {
+    "range": "70-75",
+    "EXTDEM": 19,
+    "INTDEM": 54,
+    "RAZE": 12
+  },
+  {
+    "range": "75-80",
+    "EXTDEM": 12,
+    "INTDEM": 62,
+    "RAZE": 13
+  },
+  {
+    "range": "80-85",
+    "EXTDEM": 19,
+    "INTDEM": 92,
+    "RAZE": 14
+  },
+  {
+    "range": "85-90",
+    "EXTDEM": 44,
+    "INTDEM": 124,
+    "RAZE": 14
+  },
+  {
+    "range": "90-95",
+    "EXTDEM": 79,
+    "INTDEM": 256,
+    "RAZE": 14
+  },
+  {
+    "range": "95-100",
+    "EXTDEM": 53,
+    "INTDEM": 235,
+    "RAZE": 16
+  },
+  {
+    "range": "100-105",
+    "EXTDEM": 59,
+    "INTDEM": 247,
+    "RAZE": 38
+  },
+  {
+    "range": "105-110",
+    "EXTDEM": 73,
+    "INTDEM": 309,
+    "RAZE": 24
+  },
+  {
+    "range": "110-115",
+    "EXTDEM": 159,
+    "INTDEM": 575,
+    "RAZE": 28
+  },
+  {
+    "range": "115-120",
+    "EXTDEM": 86,
+    "INTDEM": 597,
+    "RAZE": 30
+  },
+  {
+    "range": "120-125",
+    "EXTDEM": 78,
+    "INTDEM": 528,
+    "RAZE": 35
+  },
+  {
+    "range": "125-130",
+    "EXTDEM": 27,
+    "INTDEM": 255,
+    "RAZE": 24
+  },
+  {
+    "range": "130-135",
+    "EXTDEM": 22,
+    "INTDEM": 124,
+    "RAZE": 8
+  },
+  {
+    "range": "135-140",
+    "EXTDEM": 19,
+    "INTDEM": 78,
+    "RAZE": 6
+  },
+  {
+    "range": "140-145",
+    "EXTDEM": 13,
+    "INTDEM": 65,
+    "RAZE": 8
+  },
+  {
+    "range": "145-150",
+    "EXTDEM": 6,
+    "INTDEM": 47,
+    "RAZE": 2
+  },
+  {
+    "range": "150-155",
+    "EXTDEM": 3,
+    "INTDEM": 47,
+    "RAZE": 0
+  },
+  {
+    "range": "155-160",
+    "EXTDEM": 2,
+    "INTDEM": 47,
+    "RAZE": 1
+  },
+  {
+    "range": "160-165",
+    "EXTDEM": 7,
+    "INTDEM": 32,
+    "RAZE": 0
+  },
+  {
+    "range": "165-170",
+    "EXTDEM": 4,
+    "INTDEM": 16,
+    "RAZE": 1
+  },
+  {
+    "range": "170-175",
+    "EXTDEM": 0,
+    "INTDEM": 9,
+    "RAZE": 0
+  },
+  {
+    "range": "175-180",
+    "EXTDEM": 0,
+    "INTDEM": 12,
+    "RAZE": 1
+  },
+  {
+    "range": "180-185",
+    "EXTDEM": 1,
+    "INTDEM": 6,
+    "RAZE": 1
+  },
+  {
+    "range": "185-190",
+    "EXTDEM": 0,
+    "INTDEM": 6,
+    "RAZE": 0
+  },
+  {
+    "range": "190-195",
+    "EXTDEM": 0,
+    "INTDEM": 7,
+    "RAZE": 0
+  },
+  {
+    "range": "195-200",
+    "EXTDEM": 1,
+    "INTDEM": 3,
+    "RAZE": 0
+  },
+  {
+    "range": "200-205",
+    "EXTDEM": 0,
+    "INTDEM": 1,
+    "RAZE": 0
+  },
+  {
+    "range": "205-210",
+    "EXTDEM": 0,
+    "INTDEM": 1,
+    "RAZE": 0
+  },
+  {
+    "range": "210-215",
+    "EXTDEM": 1,
+    "INTDEM": 1,
+    "RAZE": 0
+  },
+  {
+    "range": "215-220",
+    "EXTDEM": 0,
+    "INTDEM": 1,
+    "RAZE": 0
+  },
+  {
+    "range": "220-225",
+    "EXTDEM": 0,
+    "INTDEM": 1,
+    "RAZE": 1
+  },
+  {
+    "range": "285-290",
+    "EXTDEM": 0,
+    "INTDEM": 1,
+    "RAZE": 0
+  }
+]

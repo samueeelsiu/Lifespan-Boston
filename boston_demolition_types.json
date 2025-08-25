@@ -1,0 +1,14 @@
+[
+  {
+    "type": "EXTDEM",
+    "count": 999
+  },
+  {
+    "type": "INTDEM",
+    "count": 4796
+  },
+  {
+    "type": "RAZE",
+    "count": 358
+  }
+]
