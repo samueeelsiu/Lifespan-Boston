@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Boston Building Demolition Analysis</title>
-    <meta name="description" content="Interactive dashboard analyzing Boston building demolitions with colorblind-friendly visualizations">
+    <meta name="description" content="Interactive dashboard analyzing Boston building demolitions with plasma color scheme">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.js"></script>
     <style>
         * {
@@ -224,7 +224,8 @@
                     Building lifespan is calculated by subtracting the construction year from the demolition year. 
                     After cleaning (removing records with lifespan less than 1 year), the final dataset contains 
                     <span class="stats">6,153 valid building records</span>.      
-                    ** Note: While buildings date back to the 1900s, the demolition permit records primarily cover recent years (2009-2025)
+                    <br><br>
+                    <strong>Note:</strong> While buildings date back to the 1900s, the demolition permit records primarily cover recent years (2009-2025)
                 </p>
             </div>
         </div>
@@ -267,7 +268,7 @@
             </div>
             
             <div class="control-group">
-                <button onclick="window.location.reload()">🔄 Reload Page</button>
+                <button onclick="window.location.reload()">Reload Page</button>
             </div>
         </div>
 
@@ -307,32 +308,28 @@
     </div>
 
     <div class="footer">
-        Data Source: City of Boston Open Data | Analysis Date: 2024
+        Data Source: City of Boston Open Data | Analysis Date: 2025
     </div>
 
     <script>
         let currentData = null;
         let charts = {};
 
-        // Color scheme - colorblind-friendly palette (using ColorBrewer)
-        // This palette is accessible for deuteranopia, protanopia, and tritanopia
+        // Color scheme - Plasma palette (dark to light representing intensity)
+        // RAZE (most intensive) -> EXTDEM (middle) -> INTDEM (least intensive)
         const colors = {
-            EXTDEM: 'rgba(44, 123, 182, 0.8)',    // Blue (safe for all types)
-            INTDEM: 'rgba(253, 174, 97, 0.8)',    // Orange (distinguishable from blue)
-            RAZE: 'rgba(171, 217, 233, 0.8)',     // Light Blue (provides contrast)
-            single: 'rgba(44, 123, 182, 0.8)'     // Default blue for single type
+            RAZE: 'rgba(13, 8, 135, 0.8)',        // Dark purple (most intensive)
+            EXTDEM: 'rgba(204, 71, 120, 0.8)',    // Medium magenta/pink (middle)
+            INTDEM: 'rgba(254, 206, 50, 0.8)',   // Bright yellow (least intensive)
+            single: 'rgba(126, 3, 168, 0.8)'      // Default purple for single type
         };
 
         const borderColors = {
-            EXTDEM: 'rgba(44, 123, 182, 1)',
-            INTDEM: 'rgba(253, 174, 97, 1)',
-            RAZE: 'rgba(171, 217, 233, 1)',
-            single: 'rgba(44, 123, 182, 1)'
+            RAZE: 'rgba(13, 8, 135, 1)',
+            EXTDEM: 'rgba(204, 71, 120, 1)',
+            INTDEM: 'rgba(254, 206, 50, 0.8)',
+            single: 'rgba(126, 3, 168, 1)'
         };
-        
-        // Alternative colorblind-safe palettes:
-        // Viridis-inspired: ['rgba(68, 1, 84, 0.8)', 'rgba(59, 82, 139, 0.8)', 'rgba(33, 145, 140, 0.8)']
-        // Cividis-inspired: ['rgba(0, 34, 77, 0.8)', 'rgba(92, 107, 116, 0.8)', 'rgba(255, 233, 69, 0.8)']
 
         // Load data from JSON
         async function loadDataFromJSON() {
@@ -518,8 +515,8 @@
             let datasets = [];
 
             if (filter === 'all') {
-                // Stacked view
-                ['EXTDEM', 'INTDEM', 'RAZE'].forEach(type => {
+                // Stacked view - Order from bottom to top: RAZE (most intensive), EXTDEM, INTDEM (least intensive)
+                ['RAZE', 'EXTDEM', 'INTDEM'].forEach(type => {
                     let data = yearlyData.map(d => d[type] || 0);
                     
                     if (viewMode === 'percentage') {
@@ -672,7 +669,8 @@
             let datasets = [];
 
             if (filter === 'all') {
-                ['EXTDEM', 'INTDEM', 'RAZE'].forEach(type => {
+                // Order from bottom to top: RAZE (most intensive), EXTDEM, INTDEM (least intensive)
+                ['RAZE', 'EXTDEM', 'INTDEM'].forEach(type => {
                     let data = dataToUse.map(d => d[type] || 0);
                     
                     if (viewMode === 'percentage') {
