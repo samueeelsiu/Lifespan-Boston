@@ -1,14 +1,14 @@
 [
   {
     "type": "EXTDEM",
-    "count": 999
+    "count": 864
   },
   {
     "type": "INTDEM",
-    "count": 4796
+    "count": 4686
   },
   {
     "type": "RAZE",
-    "count": 358
+    "count": 328
   }
 ]

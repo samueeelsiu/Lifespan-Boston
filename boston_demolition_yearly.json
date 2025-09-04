@@ -7,98 +7,98 @@
   },
   {
     "year": 2010,
-    "EXTDEM": 87,
-    "INTDEM": 271,
-    "RAZE": 14
+    "EXTDEM": 72,
+    "INTDEM": 257,
+    "RAZE": 13
   },
   {
     "year": 2011,
-    "EXTDEM": 71,
-    "INTDEM": 277,
-    "RAZE": 22
+    "EXTDEM": 61,
+    "INTDEM": 264,
+    "RAZE": 18
   },
   {
     "year": 2012,
-    "EXTDEM": 60,
-    "INTDEM": 271,
-    "RAZE": 8
+    "EXTDEM": 50,
+    "INTDEM": 264,
+    "RAZE": 6
   },
   {
     "year": 2013,
-    "EXTDEM": 78,
-    "INTDEM": 279,
-    "RAZE": 11
+    "EXTDEM": 66,
+    "INTDEM": 269,
+    "RAZE": 10
   },
   {
     "year": 2014,
-    "EXTDEM": 100,
-    "INTDEM": 334,
-    "RAZE": 11
+    "EXTDEM": 78,
+    "INTDEM": 326,
+    "RAZE": 8
   },
   {
     "year": 2015,
-    "EXTDEM": 88,
-    "INTDEM": 384,
-    "RAZE": 20
-  },
-  {
-    "year": 2016,
-    "EXTDEM": 78,
-    "INTDEM": 370,
-    "RAZE": 21
-  },
-  {
-    "year": 2017,
-    "EXTDEM": 76,
-    "INTDEM": 363,
-    "RAZE": 12
-  },
-  {
-    "year": 2018,
-    "EXTDEM": 57,
-    "INTDEM": 344,
+    "EXTDEM": 75,
+    "INTDEM": 376,
     "RAZE": 19
   },
   {
+    "year": 2016,
+    "EXTDEM": 68,
+    "INTDEM": 362,
+    "RAZE": 19
+  },
+  {
+    "year": 2017,
+    "EXTDEM": 60,
+    "INTDEM": 358,
+    "RAZE": 8
+  },
+  {
+    "year": 2018,
+    "EXTDEM": 49,
+    "INTDEM": 338,
+    "RAZE": 15
+  },
+  {
     "year": 2019,
-    "EXTDEM": 43,
-    "INTDEM": 394,
-    "RAZE": 17
+    "EXTDEM": 39,
+    "INTDEM": 388,
+    "RAZE": 15
   },
   {
     "year": 2020,
-    "EXTDEM": 37,
-    "INTDEM": 229,
-    "RAZE": 14
+    "EXTDEM": 33,
+    "INTDEM": 223,
+    "RAZE": 13
   },
   {
     "year": 2021,
-    "EXTDEM": 42,
-    "INTDEM": 287,
+    "EXTDEM": 39,
+    "INTDEM": 279,
     "RAZE": 15
   },
   {
     "year": 2022,
-    "EXTDEM": 69,
-    "INTDEM": 292,
+    "EXTDEM": 64,
+    "INTDEM": 286,
     "RAZE": 21
   },
   {
     "year": 2023,
     "EXTDEM": 47,
-    "INTDEM": 244,
-    "RAZE": 32
+    "INTDEM": 240,
+    "RAZE": 31
   },
   {
     "year": 2024,
-    "EXTDEM": 41,
-    "INTDEM": 275,
-    "RAZE": 69
+    "EXTDEM": 38,
+    "INTDEM": 274,
+    "RAZE": 66
   },
   {
     "year": 2025,
     "EXTDEM": 23,
     "INTDEM": 173,
-    "RAZE": 52
+    "RAZE": 51
   }
 ]

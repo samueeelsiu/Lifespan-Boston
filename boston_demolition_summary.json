@@ -1,10 +1,10 @@
 {
-  "total_demolitions": 6153,
-  "average_lifespan": 96.38274012676743,
+  "total_demolitions": 5878,
+  "average_lifespan": 96.83055461041171,
   "median_lifespan": 109.0,
   "min_lifespan": 1,
   "max_lifespan": 285,
-  "extdem_count": 999,
-  "intdem_count": 4796,
-  "raze_count": 358
+  "extdem_count": 864,
+  "intdem_count": 4686,
+  "raze_count": 328
 }
