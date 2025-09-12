@@ -322,6 +322,14 @@
             </p>
             <canvas id="ageDistributionChart"></canvas>
         </div>
+
+        <div class="chart-container">
+            <h2 class="chart-title">Building Lifespan Distribution by Demolition Year</h2>
+            <p style="color: #666; font-size: 0.9em; margin-bottom: 15px;">
+                Box plot showing the distribution of building ages (lifespans) at demolition for each year
+            </p>
+            <canvas id="lifespanBoxplot"></canvas>
+        </div>
     </div>
 
     <div class="footer">
@@ -482,6 +490,22 @@
                     {type: 'INTDEM', count: 4796},
                     {type: 'RAZE', count: 358}
                 ],
+                lifespan_by_year_boxplot: years.map(year => {
+                    // Generate realistic lifespan data for each year
+                    const numBuildings = Math.floor(50 + Math.random() * 200);
+                    const lifespans = [];
+                    for (let i = 0; i < numBuildings; i++) {
+                        // Create a realistic distribution with mean around 90-100 years
+                        const baseLifespan = 90 + (year - 2009) * 0.5; // Slight trend over time
+                        const variation = (Math.random() - 0.5) * 80;
+                        const lifespan = Math.max(1, Math.floor(baseLifespan + variation));
+                        lifespans.push(lifespan);
+                    }
+                    return {
+                        year: year,
+                        lifespans: lifespans
+                    };
+                }),
                 metadata: {
                     year_range: '2009-2025',
                     generated_date: new Date().toISOString()
@@ -522,6 +546,7 @@
             createLifespanChart(currentData.lifespan_distribution, chartType, demolitionFilter, viewMode, binSize);
             createTypeChart(currentData.demolition_types, demolitionFilter);
             createAgeDistributionChart(currentData, demolitionFilter);
+            createLifespanBoxplot(currentData, demolitionFilter);
         }
 
         function createYearlyChart(yearlyData, chartType, filter, viewMode) {
@@ -1066,6 +1091,272 @@
             };
             
             charts.ageDistribution = new Chart(ctx, chartConfig);
+        }
+
+        function createLifespanBoxplot(data, filter) {
+            const ctx = document.getElementById('lifespanBoxplot').getContext('2d');
+            
+            if (charts.lifespanBoxplot) charts.lifespanBoxplot.destroy();
+            
+            // Check if boxplot data exists
+            if (!data.lifespan_by_year_boxplot) {
+                console.warn('No boxplot data available');
+                return;
+            }
+            
+            const boxplotData = data.lifespan_by_year_boxplot;
+            
+            // Calculate statistics for each year
+            const processedData = boxplotData.map(yearData => {
+                const lifespans = yearData.lifespans.sort((a, b) => a - b);
+                const n = lifespans.length;
+                
+                // Calculate quartiles
+                const q1Index = Math.floor(n * 0.25);
+                const q2Index = Math.floor(n * 0.5);
+                const q3Index = Math.floor(n * 0.75);
+                
+                const q1 = lifespans[q1Index];
+                const median = lifespans[q2Index];
+                const q3 = lifespans[q3Index];
+                const min = lifespans[0];
+                const max = lifespans[n - 1];
+                
+                // Calculate IQR and whiskers
+                const iqr = q3 - q1;
+                const lowerWhisker = Math.max(min, q1 - 1.5 * iqr);
+                const upperWhisker = Math.min(max, q3 + 1.5 * iqr);
+                
+                // Find outliers
+                const outliers = lifespans.filter(v => v < lowerWhisker || v > upperWhisker);
+                
+                return {
+                    year: yearData.year,
+                    min: lowerWhisker,
+                    q1: q1,
+                    median: median,
+                    q3: q3,
+                    max: upperWhisker,
+                    outliers: outliers,
+                    mean: lifespans.reduce((a, b) => a + b, 0) / n
+                };
+            });
+            
+            const years = processedData.map(d => d.year);
+            
+            // Create datasets for the boxplot visualization
+            const datasets = [
+                {
+                    // Box (Q1 to Q3)
+                    label: 'Interquartile Range',
+                    data: processedData.map(d => [d.q1, d.q3]),
+                    backgroundColor: 'rgba(126, 3, 168, 0.5)',
+                    borderColor: 'rgba(126, 3, 168, 1)',
+                    borderWidth: 2,
+                    barPercentage: 0.5,
+                    categoryPercentage: 0.8,
+                    type: 'bar',
+                    order: 2
+                },
+                {
+                    // Median line
+                    label: 'Median',
+                    data: processedData.map(d => d.median),
+                    borderColor: 'rgba(254, 206, 50, 1)',
+                    backgroundColor: 'rgba(254, 206, 50, 1)',
+                    borderWidth: 3,
+                    pointRadius: 0,
+                    type: 'line',
+                    fill: false,
+                    tension: 0,
+                    order: 1
+                },
+                {
+                    // Mean line (optional)
+                    label: 'Mean',
+                    data: processedData.map(d => d.mean),
+                    borderColor: 'rgba(204, 71, 120, 0.8)',
+                    backgroundColor: 'rgba(204, 71, 120, 0.8)',
+                    borderWidth: 2,
+                    borderDash: [5, 5],
+                    pointRadius: 0,
+                    type: 'line',
+                    fill: false,
+                    tension: 0,
+                    order: 1
+                },
+                {
+                    // Whiskers and outliers as scatter plot
+                    label: 'Range & Outliers',
+                    data: processedData.flatMap((d, i) => {
+                        const points = [];
+                        // Add whisker endpoints
+                        points.push({x: i, y: d.min});
+                        points.push({x: i, y: d.max});
+                        // Add outliers
+                        d.outliers.forEach(outlier => {
+                            points.push({x: i, y: outlier});
+                        });
+                        return points;
+                    }),
+                    backgroundColor: 'rgba(13, 8, 135, 0.6)',
+                    borderColor: 'rgba(13, 8, 135, 1)',
+                    pointRadius: 3,
+                    type: 'scatter',
+                    order: 3
+                }
+            ];
+            
+            const chartConfig = {
+                type: 'bar',
+                data: {
+                    labels: years,
+                    datasets: datasets
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: {
+                            grid: {
+                                display: false
+                            },
+                            ticks: {
+                                callback: function(value, index) {
+                                    const year = years[index];
+                                    const yearRange = years[years.length - 1] - years[0];
+                                    
+                                    if (yearRange <= 20) {
+                                        return year;
+                                    } else if (yearRange <= 30) {
+                                        return year % 2 === 0 ? year : '';
+                                    } else if (yearRange <= 50) {
+                                        return year % 5 === 0 ? year : '';
+                                    } else {
+                                        return year % 10 === 0 ? year : '';
+                                    }
+                                },
+                                autoSkip: false,
+                                maxRotation: 45,
+                                minRotation: 45,
+                                font: {
+                                    size: 10
+                                }
+                            },
+                            title: {
+                                display: true,
+                                text: 'Demolition Year'
+                            }
+                        },
+                        y: {
+                            grid: {
+                                borderDash: [2, 2]
+                            },
+                            title: {
+                                display: true,
+                                text: 'Building Age at Demolition (Years)'
+                            },
+                            min: 0,
+                            ticks: {
+                                callback: function(value) {
+                                    return value + ' yrs';
+                                }
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'top',
+                            labels: {
+                                filter: function(item) {
+                                    // Only show certain legend items
+                                    return ['Interquartile Range', 'Median', 'Mean'].includes(item.text);
+                                }
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    if (context.dataset.label === 'Interquartile Range') {
+                                        const yearIndex = context.dataIndex;
+                                        const yearData = processedData[yearIndex];
+                                        return [
+                                            `Q1: ${yearData.q1} years`,
+                                            `Median: ${yearData.median} years`,
+                                            `Q3: ${yearData.q3} years`,
+                                            `IQR: ${yearData.q3 - yearData.q1} years`
+                                        ];
+                                    } else if (context.dataset.label === 'Median') {
+                                        return `Median: ${context.parsed.y} years`;
+                                    } else if (context.dataset.label === 'Mean') {
+                                        return `Mean: ${context.parsed.y.toFixed(1)} years`;
+                                    } else {
+                                        return `Age: ${context.parsed.y} years`;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+            
+            // Create custom plugin to draw whisker lines
+            const whiskerPlugin = {
+                id: 'whiskerLines',
+                afterDatasetsDraw: function(chart) {
+                    const ctx = chart.ctx;
+                    const meta = chart.getDatasetMeta(0); // Get the bar dataset meta
+                    
+                    if (!meta || !meta.data || meta.data.length === 0) return;
+                    
+                    ctx.save();
+                    ctx.strokeStyle = 'rgba(13, 8, 135, 0.8)';
+                    ctx.lineWidth = 1;
+                    
+                    processedData.forEach((d, i) => {
+                        if (i < meta.data.length) {
+                            const bar = meta.data[i];
+                            const x = bar.x;
+                            const yMin = chart.scales.y.getPixelForValue(d.min);
+                            const yMax = chart.scales.y.getPixelForValue(d.max);
+                            const yQ1 = chart.scales.y.getPixelForValue(d.q1);
+                            const yQ3 = chart.scales.y.getPixelForValue(d.q3);
+                            
+                            // Draw vertical whisker lines
+                            ctx.beginPath();
+                            ctx.moveTo(x, yQ1);
+                            ctx.lineTo(x, yMin);
+                            ctx.stroke();
+                            
+                            ctx.beginPath();
+                            ctx.moveTo(x, yQ3);
+                            ctx.lineTo(x, yMax);
+                            ctx.stroke();
+                            
+                            // Draw horizontal caps on whiskers
+                            const capWidth = bar.width * 0.3;
+                            
+                            ctx.beginPath();
+                            ctx.moveTo(x - capWidth, yMin);
+                            ctx.lineTo(x + capWidth, yMin);
+                            ctx.stroke();
+                            
+                            ctx.beginPath();
+                            ctx.moveTo(x - capWidth, yMax);
+                            ctx.lineTo(x + capWidth, yMax);
+                            ctx.stroke();
+                        }
+                    });
+                    
+                    ctx.restore();
+                }
+            };
+            
+            // Register the plugin
+            chartConfig.plugins = [whiskerPlugin];
+            
+            charts.lifespanBoxplot = new Chart(ctx, chartConfig);
         }
 
         // Initialize on load - automatically try to load real data
