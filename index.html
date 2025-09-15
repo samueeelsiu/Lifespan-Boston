@@ -6,6 +6,12 @@
     <title>Boston Building Demolition Analysis</title>
     <meta name="description" content="Interactive dashboard analyzing Boston building demolitions with plasma color scheme">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+     integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+     crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+     crossorigin=""></script>
     <style>
         * {
             margin: 0;
@@ -176,6 +182,13 @@
         canvas {
             max-height: 400px;
         }
+        
+        /* NEW: Map container style */
+        #map {
+            height: 500px;
+            width: 100%;
+            border-radius: 4px;
+        }
 
         .footer {
             text-align: center;
@@ -189,6 +202,18 @@
             text-align: center;
             padding: 40px;
             color: #666;
+        }
+
+        .error-message {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+            padding: 15px 20px;
+            margin: 20px 0;
+            border-radius: 4px;
+            text-align: center;
+            font-weight: 500;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
         @media (max-width: 768px) {
@@ -219,11 +244,10 @@
                 <p>
                     This analysis combines data from the <strong>Boston Property Assessment Dataset</strong> 
                     and <strong>Boston Approved Building Permits</strong>. The methodology involves matching 
-                    <span class="stats">6,492 demolition records</span> from the permit dataset with 
-                    <span class="stats">160,778 buildings</span> from the property assessment data using building IDs. 
+                    demolition records from the permit dataset with buildings from the property assessment data using building IDs. 
                     Building lifespan is calculated by subtracting the construction year from the demolition year. 
-                    After cleaning (removing records with lifespan less than 1 year and remove all the repeated record, only count the most recent demolition record), the final dataset contains 
-                    <span class="stats"> 5,878 valid building records</span>.      
+                    After cleaning (removing records with lifespan less than 1 year and removing all repeated records, only counting the most recent demolition record), 
+                    the final dataset contains valid building records.      
                     <br><br>
                     <strong>Note:</strong> While buildings date back to the 1900s, the demolition permit records primarily cover recent years (2009-2025)
                     <br><br>
@@ -301,6 +325,14 @@
         </div>
 
         <div class="chart-container">
+            <h2 class="chart-title">Demolition Locations Map</h2>
+            <p style="color: #666; font-size: 0.9em; margin-bottom: 15px;">
+                Each point represents a demolished building. Color indicates demolition type. Hover over a point to see its lifespan.
+            </p>
+            <div id="map"></div>
+        </div>
+
+        <div class="chart-container">
             <h2 class="chart-title">Demolitions by Year</h2>
             <canvas id="yearlyChart"></canvas>
         </div>
@@ -339,9 +371,9 @@
     <script>
         let currentData = null;
         let charts = {};
+        let map = null; // Variable to hold the map instance
+        let pointLayer = null; // Variable to hold the layer of points on the map
 
-        // Color scheme - Plasma palette (dark to light representing intensity)
-        // RAZE (most intensive) -> EXTDEM (middle) -> INTDEM (least intensive)
         const colors = {
             RAZE: 'rgba(13, 8, 135, 0.8)',        // Dark purple (most intensive)
             EXTDEM: 'rgba(204, 71, 120, 0.8)',    // Medium magenta/pink (middle)
@@ -361,178 +393,97 @@
             try {
                 const response = await fetch('boston_demolition_data.json');
                 if (!response.ok) {
-                    showWarningAndLoadDemo();
+                    showError();
                     return;
                 }
                 const data = await response.json();
                 currentData = data;
                 
-                // Ensure we have 5yr data if not present
                 if (!data.lifespan_distribution_5yr && data.lifespan_distribution) {
-                    // Generate 5yr bins from 10yr data if needed
                     data.lifespan_distribution_5yr = data.lifespan_distribution;
                 }
                 
                 updateDashboard(data);
                 console.log('Successfully loaded Boston demolition data from JSON');
                 
-                // Show success indicator (optional - subtle feedback)
-                const successDiv = document.createElement('div');
-                successDiv.style.cssText = `
-                    position: fixed;
-                    top: 20px;
-                    right: 20px;
-                    background: #d4edda;
-                    border: 1px solid #c3e6cb;
-                    color: #155724;
-                    padding: 10px 15px;
-                    border-radius: 4px;
-                    font-size: 14px;
-                    z-index: 1000;
-                    opacity: 0.9;
-                `;
-                successDiv.textContent = '✓ Data loaded successfully';
-                document.body.appendChild(successDiv);
-                setTimeout(() => successDiv.remove(), 2000);
             } catch (error) {
                 console.error('Error loading JSON:', error);
-                showWarningAndLoadDemo();
+                showError();
             }
         }
         
-        function showWarningAndLoadDemo() {
-            // Show warning message at the top of the page
-            const warningDiv = document.createElement('div');
-            warningDiv.style.cssText = `
-                background: #fff3cd;
-                border: 1px solid #ffc107;
-                color: #856404;
-                padding: 15px 20px;
-                margin: 20px 0;
-                border-radius: 4px;
-                text-align: center;
-                font-weight: 500;
-                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            `;
-            warningDiv.innerHTML = `
-                ⚠ ️ <strong>Warning:</strong> Unable to load boston_demolition_data.json. 
-                Displaying demo data for demonstration purposes. 
+        
+        function showError() {
+            // Show error message
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'error-message';
+            errorDiv.innerHTML = `
+                <strong>Error:</strong> Unable to load boston_demolition_data.json. 
                 <br>Please ensure the JSON file is in the same directory as this HTML file.
             `;
             
-            // Insert warning after header
+            // Insert error after header
             const header = document.querySelector('.header');
             if (header && header.parentNode) {
-                header.parentNode.insertBefore(warningDiv, header.nextSibling);
+                header.parentNode.insertBefore(errorDiv, header.nextSibling);
             }
             
-            // Load demo data
-            console.warn('Loading demo data as JSON file was not found');
-            generateDemoData();
-        }
-
-        function generateDemoData() {
-            // Generate demo data for testing
-            // Using 2009-2025 to match typical demolition permit data range
-            const startYear = 2009;
-            const endYear = 2025;
-            const years = Array.from({length: endYear - startYear + 1}, (_, i) => startYear + i);
-            
-            const yearlyData = years.map(year => {
-                // Create realistic demolition patterns for recent years
-                const baseRate = 30 + Math.random() * 20;
-                return {
-                    year: year,
-                    EXTDEM: Math.floor(baseRate + Math.random() * 30),
-                    INTDEM: Math.floor(baseRate * 4 + Math.random() * 50),  // INTDEM is typically higher
-                    RAZE: Math.floor(baseRate * 0.3 + Math.random() * 10)   // RAZE is typically lower
-                };
-            });
-
-            // Generate demo data with support for different bin sizes
-            const lifespanData = [];
-            for (let i = 0; i <= 200; i += 10) {
-                const range = `${i}-${i+10}`;
-                lifespanData.push({
-                    range: range,
-                    EXTDEM: Math.floor(150 * Math.exp(-i/60) + Math.random() * 20),
-                    INTDEM: Math.floor(120 * Math.exp(-i/70) + Math.random() * 15),
-                    RAZE: Math.floor(80 * Math.exp(-i/80) + Math.random() * 10)
-                });
-            }
-            
-            // Also generate 5-year bin data
-            const lifespanData5yr = [];
-            for (let i = 0; i <= 200; i += 5) {
-                const range = `${i}-${i+5}`;
-                lifespanData5yr.push({
-                    range: range,
-                    EXTDEM: Math.floor(75 * Math.exp(-i/60) + Math.random() * 10),
-                    INTDEM: Math.floor(60 * Math.exp(-i/70) + Math.random() * 8),
-                    RAZE: Math.floor(40 * Math.exp(-i/80) + Math.random() * 5)
-                });
-            }
-
-            const demoData = {
-                summary_stats: {
-                    total_demolitions: 6153,
-                    average_lifespan: 96.4,
-                    median_lifespan: 95,
-                    extdem_count: 999,
-                    intdem_count: 4796,
-                    raze_count: 358
-                },
-                yearly_stacked: yearlyData,
-                lifespan_distribution: lifespanData.filter(d => (d.EXTDEM + d.INTDEM + d.RAZE) > 0),
-                lifespan_distribution_5yr: lifespanData5yr.filter(d => (d.EXTDEM + d.INTDEM + d.RAZE) > 0),
-                demolition_types: [
-                    {type: 'EXTDEM', count: 999},
-                    {type: 'INTDEM', count: 4796},
-                    {type: 'RAZE', count: 358}
-                ],
-                lifespan_by_year_boxplot: years.map(year => {
-                    // Generate realistic lifespan data for each year
-                    const numBuildings = Math.floor(50 + Math.random() * 200);
-                    const lifespans = [];
-                    for (let i = 0; i < numBuildings; i++) {
-                        // Create a realistic distribution with mean around 90-100 years
-                        const baseLifespan = 90 + (year - 2009) * 0.5; // Slight trend over time
-                        const variation = (Math.random() - 0.5) * 80;
-                        const lifespan = Math.max(1, Math.floor(baseLifespan + variation));
-                        lifespans.push(lifespan);
-                    }
-                    return {
-                        year: year,
-                        lifespans: lifespans
-                    };
-                }),
-                metadata: {
-                    year_range: '2009-2025',
-                    generated_date: new Date().toISOString()
-                }
-            };
-
-            currentData = demoData;
-            updateDashboard(demoData);
+            // Update stats to show error state
+            document.getElementById('totalDemo').textContent = 'N/A';
+            document.getElementById('avgLifespan').innerHTML = 'N/A';
+            document.getElementById('extdemCount').textContent = 'N/A';
+            document.getElementById('intdemCount').textContent = 'N/A';
         }
 
         function updateDashboard(data) {
-            // Update statistics
             const stats = data.summary_stats;
             document.getElementById('totalDemo').textContent = stats.total_demolitions.toLocaleString();
-            document.getElementById('avgLifespan').innerHTML = stats.average_lifespan.toFixed(1) + ' <span class="stat-unit">years</span>';
             document.getElementById('extdemCount').textContent = stats.extdem_count.toLocaleString();
             document.getElementById('intdemCount').textContent = stats.intdem_count.toLocaleString();
             
-            // Update subtitle with actual year range if available
             if (data.metadata && data.metadata.year_range) {
                 document.getElementById('subtitle').textContent = 
                     `Building Lifecycle and Demolition Patterns (${data.metadata.year_range})`;
             }
 
+            // Initialize map on first load
+            initMap();
             // Create/update charts
             updateCharts();
         }
+
+        /**
+         * ✨ NEW FUNCTION ✨
+         * Updates the "Average Lifespan" card based on the selected demolition type.
+         * @param {string} filter - The selected demolition type ('all', 'RAZE', 'EXTDEM', 'INTDEM').
+         * @param {object} data - The full dataset from the JSON file.
+         */
+        function updateAverageLifespan(filter, data) {
+            let lifespan = 0;
+            const lifespanElement = document.getElementById('avgLifespan');
+
+            if (filter === 'all') {
+                // Use the overall average from summary_stats
+                lifespan = data.summary_stats.average_lifespan;
+            } else {
+                // Find the specific type in the lifespan_by_type array
+                const typeData = data.lifespan_by_type.find(d => d.type === filter);
+                if (typeData && typeData.average) {
+                    lifespan = typeData.average;
+                } else {
+                    // Fallback to 0 if the type isn't found for some reason
+                    lifespan = 0; 
+                }
+            }
+
+            if (lifespan > 0) {
+                 lifespanElement.innerHTML = lifespan.toFixed(1) + ' <span class="stat-unit">years</span>';
+            } else {
+                 lifespanElement.innerHTML = 'N/A';
+            }
+        }
+
+
 
         function updateCharts() {
             if (!currentData) return;
@@ -542,11 +493,76 @@
             const viewMode = document.getElementById('viewMode').value;
             const binSize = parseInt(document.getElementById('binSize').value);
 
+            updateAverageLifespan(demolitionFilter, currentData);
+
+            // Update all visualizations
+            createMapPlot(currentData, demolitionFilter);
             createYearlyChart(currentData.yearly_stacked, chartType, demolitionFilter, viewMode);
             createLifespanChart(currentData.lifespan_distribution, chartType, demolitionFilter, viewMode, binSize);
             createTypeChart(currentData.demolition_types, demolitionFilter);
             createAgeDistributionChart(currentData, demolitionFilter);
             createLifespanBoxplot(currentData, demolitionFilter);
+        }
+        
+        // NEW: Function to initialize the map just once
+        function initMap() {
+            if (!map) { // Only create the map instance if it doesn't exist
+                map = L.map('map').setView([42.3601, -71.0589], 12);
+
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                }).addTo(map);
+            }
+        }
+
+        // MODIFIED: This function now only adds/updates points, not the map itself
+        function createMapPlot(data, filter) {
+            if (!map) return; // Don't do anything if map isn't initialized
+
+            // If a layer of points already exists, remove it first
+            if (pointLayer) {
+                map.removeLayer(pointLayer);
+            }
+
+            if (!data.map_points) {
+                console.error("Map data ('map_points') is missing from the JSON file.");
+                return;
+            }
+            
+            let points_to_plot = data.map_points;
+
+            // Filter points if a specific demolition type is selected
+            if (filter !== 'all') {
+                points_to_plot = data.map_points.filter(p => p.type === filter);
+            }
+            
+            const markers = [];
+            // Loop through the data and create circle markers
+            points_to_plot.forEach(point => {
+                if (point.lat && point.lng) {
+                    const markerColor = colors[point.type] || colors.single;
+                    
+                    const circleMarker = L.circleMarker([point.lat, point.lng], {
+                        radius: 4,      
+                        fillColor: markerColor, 
+                        color: borderColors[point.type] || borderColors.single,
+                        weight: 1,       
+                        opacity: 0.6,   
+                        fillOpacity: 1 
+                    });
+
+                    // Add a tooltip that shows on hover
+                    circleMarker.bindTooltip(`
+                        <strong>Type:</strong> ${point.type}<br>
+                        <strong>Lifespan:</strong> ${point.lifespan} years
+                    `);
+                    markers.push(circleMarker);
+                }
+            });
+
+            // Add all markers to a single layer group for easy removal later
+            pointLayer = L.layerGroup(markers);
+            pointLayer.addTo(map);
         }
 
         function createYearlyChart(yearlyData, chartType, filter, viewMode) {
@@ -708,16 +724,44 @@
                 }
             }
             
-            const labels = dataToUse.map(d => d.range);
+            // ================== MODIFIED LOGIC START ==================
+            // Find the last bin that has data for the current filter to trim trailing empty bins
+            // without creating gaps in the middle of the axis.
+            let finalData;
+            if (filter === 'all') {
+                // For 'all', the data is already pre-filtered by the python script to not have trailing zeros.
+                finalData = dataToUse;
+            } else {
+                // Find the index of the last bin that contains data for the selected filter.
+                let lastIndexWithData = -1;
+                for (let i = dataToUse.length - 1; i >= 0; i--) {
+                    if ((dataToUse[i][filter] || 0) > 0) {
+                        lastIndexWithData = i;
+                        break; // Exit loop once the last data point is found
+                    }
+                }
+
+                if (lastIndexWithData > -1) {
+                    // Slice the array from the beginning up to the last data point (inclusive).
+                    // This preserves intermediate empty bins but removes trailing ones.
+                    finalData = dataToUse.slice(0, lastIndexWithData + 1);
+                } else {
+                    // If no data exists for this filter, use an empty array.
+                    finalData = [];
+                }
+            }
+            // =================== MODIFIED LOGIC END ===================
+
+            const labels = finalData.map(d => d.range);
             let datasets = [];
 
             if (filter === 'all') {
                 // Order from bottom to top: RAZE (most intensive), EXTDEM, INTDEM (least intensive)
                 ['RAZE', 'EXTDEM', 'INTDEM'].forEach(type => {
-                    let data = dataToUse.map(d => d[type] || 0);
+                    let data = finalData.map(d => d[type] || 0);
                     
                     if (viewMode === 'percentage') {
-                        data = dataToUse.map(d => {
+                        data = finalData.map(d => {
                             const total = (d.EXTDEM || 0) + (d.INTDEM || 0) + (d.RAZE || 0);
                             return total > 0 ? ((d[type] || 0) / total) * 100 : 0;
                         });
@@ -734,7 +778,7 @@
                     });
                 });
             } else {
-                let data = dataToUse.map(d => d[filter] || 0);
+                let data = finalData.map(d => d[filter] || 0);
                 
                 datasets.push({
                     label: filter,
@@ -1051,6 +1095,7 @@
                     plugins: {
                         legend: {
                             position: 'right',
+                            reverse: true,
                             labels: {
                                 boxWidth: 15,
                                 padding: 10,
@@ -1098,7 +1143,6 @@
             
             if (charts.lifespanBoxplot) charts.lifespanBoxplot.destroy();
             
-            // Check if boxplot data exists
             if (!data.lifespan_by_year_boxplot) {
                 console.warn('No boxplot data available');
                 return;
@@ -1106,48 +1150,50 @@
             
             const boxplotData = data.lifespan_by_year_boxplot;
             
-            // Calculate statistics for each year
             const processedData = boxplotData.map(yearData => {
-                const lifespans = yearData.lifespans.sort((a, b) => a - b);
+                const lifespans = [...yearData.lifespans].sort((a, b) => a - b);
                 const n = lifespans.length;
                 
-                // Calculate quartiles
                 const q1Index = Math.floor(n * 0.25);
                 const q2Index = Math.floor(n * 0.5);
                 const q3Index = Math.floor(n * 0.75);
                 
-                const q1 = lifespans[q1Index];
-                const median = lifespans[q2Index];
-                const q3 = lifespans[q3Index];
-                const min = lifespans[0];
-                const max = lifespans[n - 1];
+                const q1 = n > 0 ? lifespans[q1Index] : 0;
+                const median = n > 0 ? lifespans[q2Index] : 0;
+                const q3 = n > 0 ? lifespans[q3Index] : 0;
+                const min = n > 0 ? lifespans[0] : 0;
+                const max = n > 0 ? lifespans[n - 1] : 0;
                 
-                // Calculate IQR and whiskers
                 const iqr = q3 - q1;
-                const lowerWhisker = Math.max(min, q1 - 1.5 * iqr);
-                const upperWhisker = Math.min(max, q3 + 1.5 * iqr);
+                const lowerBound = q1 - 1.5 * iqr;
+                const upperBound = q3 + 1.5 * iqr;
                 
-                // Find outliers
-                const outliers = lifespans.filter(v => v < lowerWhisker || v > upperWhisker);
+                const outliers = lifespans.filter(v => v < lowerBound || v > upperBound);
+                
+                const nonOutlierValues = lifespans.filter(v => v >= lowerBound && v <= upperBound);
+                const whiskerMin = nonOutlierValues.length > 0 ? Math.min(...nonOutlierValues) : q1;
+                const whiskerMax = nonOutlierValues.length > 0 ? Math.max(...nonOutlierValues) : q3;
                 
                 return {
                     year: yearData.year,
-                    min: lowerWhisker,
+                    min: min,
+                    max: max,
+                    whiskerMin: whiskerMin,
+                    whiskerMax: whiskerMax,
                     q1: q1,
                     median: median,
                     q3: q3,
-                    max: upperWhisker,
                     outliers: outliers,
-                    mean: lifespans.reduce((a, b) => a + b, 0) / n
+                    mean: n > 0 ? lifespans.reduce((a, b) => a + b, 0) / n : 0,
+                    iqr: iqr,
+                    count: n
                 };
             });
             
             const years = processedData.map(d => d.year);
             
-            // Create datasets for the boxplot visualization
             const datasets = [
                 {
-                    // Box (Q1 to Q3)
                     label: 'Interquartile Range',
                     data: processedData.map(d => [d.q1, d.q3]),
                     backgroundColor: 'rgba(126, 3, 168, 0.5)',
@@ -1155,55 +1201,19 @@
                     borderWidth: 2,
                     barPercentage: 0.5,
                     categoryPercentage: 0.8,
-                    type: 'bar',
-                    order: 2
-                },
-                {
-                    // Median line
-                    label: 'Median',
-                    data: processedData.map(d => d.median),
-                    borderColor: 'rgba(254, 206, 50, 1)',
-                    backgroundColor: 'rgba(254, 206, 50, 1)',
-                    borderWidth: 3,
-                    pointRadius: 0,
-                    type: 'line',
-                    fill: false,
-                    tension: 0,
                     order: 1
                 },
                 {
-                    // Mean line (optional)
-                    label: 'Mean',
-                    data: processedData.map(d => d.mean),
-                    borderColor: 'rgba(204, 71, 120, 0.8)',
-                    backgroundColor: 'rgba(204, 71, 120, 0.8)',
-                    borderWidth: 2,
-                    borderDash: [5, 5],
-                    pointRadius: 0,
-                    type: 'line',
-                    fill: false,
-                    tension: 0,
-                    order: 1
-                },
-                {
-                    // Whiskers and outliers as scatter plot
-                    label: 'Range & Outliers',
+                    label: 'Outliers',
                     data: processedData.flatMap((d, i) => {
-                        const points = [];
-                        // Add whisker endpoints
-                        points.push({x: i, y: d.min});
-                        points.push({x: i, y: d.max});
-                        // Add outliers
-                        d.outliers.forEach(outlier => {
-                            points.push({x: i, y: outlier});
-                        });
-                        return points;
+                        return d.outliers.map(outlier => ({x: i, y: outlier}));
                     }),
-                    backgroundColor: 'rgba(13, 8, 135, 0.6)',
-                    borderColor: 'rgba(13, 8, 135, 1)',
-                    pointRadius: 3,
+                    backgroundColor: 'rgba(255, 0, 0, 0.6)',
+                    borderColor: 'rgba(255, 0, 0, 1)',
+                    pointRadius: 4,
+                    pointHoverRadius: 6,
                     type: 'scatter',
-                    order: 3
+                    order: 2
                 }
             ];
             
@@ -1218,49 +1228,29 @@
                     maintainAspectRatio: false,
                     scales: {
                         x: {
-                            grid: {
-                                display: false
-                            },
+                            grid: { display: false },
                             ticks: {
                                 callback: function(value, index) {
                                     const year = years[index];
                                     const yearRange = years[years.length - 1] - years[0];
-                                    
-                                    if (yearRange <= 20) {
-                                        return year;
-                                    } else if (yearRange <= 30) {
-                                        return year % 2 === 0 ? year : '';
-                                    } else if (yearRange <= 50) {
-                                        return year % 5 === 0 ? year : '';
-                                    } else {
-                                        return year % 10 === 0 ? year : '';
-                                    }
+                                    if (yearRange <= 20) { return year; }
+                                    else if (yearRange <= 30) { return year % 2 === 0 ? year : ''; }
+                                    else if (yearRange <= 50) { return year % 5 === 0 ? year : ''; }
+                                    else { return year % 10 === 0 ? year : ''; }
                                 },
                                 autoSkip: false,
                                 maxRotation: 45,
                                 minRotation: 45,
-                                font: {
-                                    size: 10
-                                }
+                                font: { size: 10 }
                             },
-                            title: {
-                                display: true,
-                                text: 'Demolition Year'
-                            }
+                            title: { display: true, text: 'Demolition Year' }
                         },
                         y: {
-                            grid: {
-                                borderDash: [2, 2]
-                            },
-                            title: {
-                                display: true,
-                                text: 'Building Age at Demolition (Years)'
-                            },
+                            grid: { borderDash: [2, 2] },
+                            title: { display: true, text: 'Building Age at Demolition (Years)' },
                             min: 0,
                             ticks: {
-                                callback: function(value) {
-                                    return value + ' yrs';
-                                }
+                                callback: function(value) { return value + ' yrs'; }
                             }
                         }
                     },
@@ -1270,8 +1260,17 @@
                             position: 'top',
                             labels: {
                                 filter: function(item) {
-                                    // Only show certain legend items
-                                    return ['Interquartile Range', 'Median', 'Mean'].includes(item.text);
+                                    return ['Interquartile Range', 'Outliers'].includes(item.text);
+                                },
+                                generateLabels: function(chart) {
+                                    const items = Chart.defaults.plugins.legend.labels.generateLabels(chart);
+                                    items.forEach(item => {
+                                        if (item.text === 'Outliers') {
+                                            const totalOutliers = processedData.reduce((sum, d) => sum + d.outliers.length, 0);
+                                            item.text = `Outliers (${totalOutliers} total)`;
+                                        }
+                                    });
+                                    return items;
                                 }
                             }
                         },
@@ -1282,18 +1281,28 @@
                                         const yearIndex = context.dataIndex;
                                         const yearData = processedData[yearIndex];
                                         return [
-                                            `Q1: ${yearData.q1} years`,
-                                            `Median: ${yearData.median} years`,
-                                            `Q3: ${yearData.q3} years`,
-                                            `IQR: ${yearData.q3 - yearData.q1} years`
+                                            `Data points: ${yearData.count}`,
+                                            `Minimum: ${yearData.min} years`,
+                                            `Q1 (25th percentile): ${yearData.q1} years`,
+                                            `Median (50th percentile): ${yearData.median} years`,
+                                            `Q3 (75th percentile): ${yearData.q3} years`,
+                                            `Maximum: ${yearData.max} years`,
+                                            `IQR (Q3-Q1): ${yearData.iqr} years`,
+                                            `Mean: ${yearData.mean.toFixed(1)} years`,
+                                            `Outliers: ${yearData.outliers.length}`,
+                                            `Lower whisker: ${yearData.whiskerMin} years`,
+                                            `Upper whisker: ${yearData.whiskerMax} years`
                                         ];
-                                    } else if (context.dataset.label === 'Median') {
-                                        return `Median: ${context.parsed.y} years`;
-                                    } else if (context.dataset.label === 'Mean') {
-                                        return `Mean: ${context.parsed.y.toFixed(1)} years`;
-                                    } else {
-                                        return `Age: ${context.parsed.y} years`;
+                                    } else if (context.dataset.label === 'Outliers') {
+                                        const yearIndex = context.parsed.x;
+                                        const year = years[yearIndex];
+                                        return [
+                                            `Year: ${year}`,
+                                            `Outlier value: ${context.parsed.y} years`,
+                                            `(Beyond 1.5×IQR range)`
+                                        ];
                                     }
+                                     return '';
                                 }
                             }
                         }
@@ -1301,50 +1310,63 @@
                 }
             };
             
-            // Create custom plugin to draw whisker lines
-            const whiskerPlugin = {
-                id: 'whiskerLines',
+            const boxplotDrawingPlugin = {
+                id: 'boxplotDrawing',
                 afterDatasetsDraw: function(chart) {
                     const ctx = chart.ctx;
-                    const meta = chart.getDatasetMeta(0); // Get the bar dataset meta
+                    const meta = chart.getDatasetMeta(0);
                     
                     if (!meta || !meta.data || meta.data.length === 0) return;
                     
                     ctx.save();
-                    ctx.strokeStyle = 'rgba(13, 8, 135, 0.8)';
-                    ctx.lineWidth = 1;
                     
                     processedData.forEach((d, i) => {
                         if (i < meta.data.length) {
                             const bar = meta.data[i];
                             const x = bar.x;
-                            const yMin = chart.scales.y.getPixelForValue(d.min);
-                            const yMax = chart.scales.y.getPixelForValue(d.max);
+                            const yMin = chart.scales.y.getPixelForValue(d.whiskerMin);
+                            const yMax = chart.scales.y.getPixelForValue(d.whiskerMax);
                             const yQ1 = chart.scales.y.getPixelForValue(d.q1);
                             const yQ3 = chart.scales.y.getPixelForValue(d.q3);
+                            const yMedian = chart.scales.y.getPixelForValue(d.median);
                             
-                            // Draw vertical whisker lines
-                            ctx.beginPath();
-                            ctx.moveTo(x, yQ1);
-                            ctx.lineTo(x, yMin);
-                            ctx.stroke();
+                            // Whiskers Style
+                            ctx.strokeStyle = 'rgba(13, 8, 135, 1)'; // Darker for whiskers
+                            ctx.lineWidth = 2;
                             
+                            // Top whisker line
                             ctx.beginPath();
                             ctx.moveTo(x, yQ3);
                             ctx.lineTo(x, yMax);
                             ctx.stroke();
                             
-                            // Draw horizontal caps on whiskers
-                            const capWidth = bar.width * 0.3;
-                            
+                            // Top whisker cap
+                            const capWidth = bar.width * 0.5;
                             ctx.beginPath();
-                            ctx.moveTo(x - capWidth, yMin);
-                            ctx.lineTo(x + capWidth, yMin);
+                            ctx.moveTo(x - capWidth / 2, yMax);
+                            ctx.lineTo(x + capWidth / 2, yMax);
+                            ctx.stroke();
+
+                            // Bottom whisker line
+                            ctx.beginPath();
+                            ctx.moveTo(x, yQ1);
+                            ctx.lineTo(x, yMin);
                             ctx.stroke();
                             
+                             // Bottom whisker cap
                             ctx.beginPath();
-                            ctx.moveTo(x - capWidth, yMax);
-                            ctx.lineTo(x + capWidth, yMax);
+                            ctx.moveTo(x - capWidth / 2, yMin);
+                            ctx.lineTo(x + capWidth / 2, yMin);
+                            ctx.stroke();
+                            
+                            // Median Line Style
+                            ctx.strokeStyle = 'rgba(254, 206, 50, 1)'; // Bright yellow
+                            ctx.lineWidth = 3;
+                            
+                            // Draw Median Line inside the bar
+                            ctx.beginPath();
+                            ctx.moveTo(bar.x - bar.width / 2, yMedian);
+                            ctx.lineTo(bar.x + bar.width / 2, yMedian);
                             ctx.stroke();
                         }
                     });
@@ -1353,24 +1375,19 @@
                 }
             };
             
-            // Register the plugin
-            chartConfig.plugins = [whiskerPlugin];
+            chartConfig.plugins = [boxplotDrawingPlugin];
             
             charts.lifespanBoxplot = new Chart(ctx, chartConfig);
         }
 
-        // Initialize on load - automatically try to load real data
         window.addEventListener('DOMContentLoaded', () => {
-            // Set default dropdown value
             document.getElementById('demolitionFilter').value = 'RAZE';
             
-            // Show loading state
             document.getElementById('totalDemo').textContent = 'Loading...';
             document.getElementById('avgLifespan').innerHTML = 'Loading...';
             document.getElementById('extdemCount').textContent = 'Loading...';
             document.getElementById('intdemCount').textContent = 'Loading...';
             
-            // Automatically attempt to load real data
             loadDataFromJSON();
         });
     </script>

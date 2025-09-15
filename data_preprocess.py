@@ -34,8 +34,16 @@ def process_demolition_data(assessment_file, permit_file):
     print("Processing demolition permits with de-duplication...")
     demolition_types = ['EXTDEM', 'INTDEM', 'RAZE']
 
-    # Filter for all relevant demolition types at once
-    demolition_permits = bldg_permit_df[bldg_permit_df['worktype'].isin(demolition_types)].copy()
+    # **MODIFICATION**: Use correct column names 'y_latitude' and 'x_longitude'
+    permit_cols = ['worktype', 'issued_date', 'parcel_id', 'y_latitude', 'x_longitude']
+    if not all(col in bldg_permit_df.columns for col in permit_cols):
+        print(
+            "Error: Permit file is missing required columns (worktype, issued_date, parcel_id, y_latitude, x_longitude).")
+        # Fallback to not include geo data if columns are missing
+        permit_cols = ['worktype', 'issued_date', 'parcel_id']
+        print("Warning: Proceeding without generating map data.")
+
+    demolition_permits = bldg_permit_df[bldg_permit_df['worktype'].isin(demolition_types)][permit_cols].copy()
 
     if demolition_permits.empty:
         print("No demolition permits found of types EXTDEM, INTDEM, or RAZE.")
@@ -73,6 +81,15 @@ def process_demolition_data(assessment_file, permit_file):
     print(f"\nTotal matched records before cleaning: {initial_record_count}")
     print(f"Records with lifespan < 1 year removed: {records_removed}")
     print(f"Final valid records: {final_record_count}")
+
+    # **NEW**: Clean up coordinate data only if columns exist
+    has_geo_data = 'y_latitude' in lifespan_df.columns and 'x_longitude' in lifespan_df.columns
+    if has_geo_data:
+        lifespan_df.dropna(subset=['y_latitude', 'x_longitude'], inplace=True)
+        # Ensure coordinates are valid for Boston area
+        lifespan_df = lifespan_df[lifespan_df['y_latitude'].between(42, 43)]
+        lifespan_df = lifespan_df[lifespan_df['x_longitude'].between(-72, -70)]
+        print(f"Final valid records with coordinates: {len(lifespan_df)}")
 
     if lifespan_df.empty:
         print("No valid records after merging and cleaning.")
@@ -115,7 +132,7 @@ def process_demolition_data(assessment_file, permit_file):
     all_data['yearly_stacked'] = yearly_data
 
     # Create lifespan distribution (10-year bins)
-    bins = list(range(0, int(lifespan_df['lifespan'].max()) + 20, 10))
+    bins = list(range(0, int(lifespan_df['lifespan'].max()) + 11, 10))
     lifespan_bins = []
     for i in range(len(bins) - 1):
         bin_label = f"{bins[i]}-{bins[i + 1]}"
@@ -132,7 +149,7 @@ def process_demolition_data(assessment_file, permit_file):
     all_data['lifespan_distribution'] = lifespan_bins
 
     # Create lifespan distribution (5-year bins)
-    bins_5 = list(range(0, int(lifespan_df['lifespan'].max()) + 10, 5))
+    bins_5 = list(range(0, int(lifespan_df['lifespan'].max()) + 6, 5))
     lifespan_bins_5 = []
     for i in range(len(bins_5) - 1):
         bin_label = f"{bins_5[i]}-{bins_5[i + 1]}"
@@ -180,6 +197,19 @@ def process_demolition_data(assessment_file, permit_file):
             })
     all_data['lifespan_by_year_boxplot'] = lifespan_by_year_boxplot
 
+    # --- 7. **NEW**: Generate data for the map plot ---
+    if has_geo_data:
+        print("Generating data for map plot...")
+        map_df = lifespan_df[['y_latitude', 'x_longitude', 'worktype', 'lifespan']].copy()
+        map_df.rename(columns={
+            'y_latitude': 'lat',
+            'x_longitude': 'lng',
+            'worktype': 'type'
+        }, inplace=True)
+        all_data['map_points'] = map_df.to_dict(orient='records')
+    else:
+        all_data['map_points'] = []  # Add empty list if no geo data
+
     # Metadata
     all_data['metadata'] = {
         'generated_date': datetime.now().isoformat(),
@@ -207,23 +237,7 @@ def save_json_files(data, output_prefix='boston_demolition'):
     main_file = f"{output_prefix}_data.json"
     with open(main_file, 'w') as f:
         json.dump(data, f, indent=2)
-    print(f"Saved main data to {main_file}")
-
-    # Save individual components for smaller file sizes if needed
-    components = [
-        ('summary', data.get('summary_stats', {})),
-        ('yearly', data.get('yearly_stacked', [])),
-        ('lifespan', data.get('lifespan_distribution', [])),
-        ('lifespan_5yr', data.get('lifespan_distribution_5yr', [])),
-        ('types', data.get('demolition_types', [])),
-        ('boxplot', data.get('lifespan_by_year_boxplot', []))
-    ]
-
-    for component_name, component_data in components:
-        filename = f"{output_prefix}_{component_name}.json"
-        with open(filename, 'w') as f:
-            json.dump(component_data, f, indent=2)
-        print(f"Saved {component_name} data to {filename}")
+    print(f"\nSaved main data to {main_file}")
 
 
 def main():
@@ -243,36 +257,11 @@ def main():
     if processed_data:
         # Save to JSON files
         save_json_files(processed_data)
-
-        # Print summary
         print("\n" + "=" * 50)
         print("PROCESSING COMPLETE!")
-        print("=" * 50)
-        print("\nData Processing Summary:")
-        print(f"  Total buildings in assessment data: {processed_data['metadata']['total_buildings_in_assessment']}")
-        print(f"  Demolition permits processed: {processed_data['metadata']['total_demolition_permits']}")
-        print(f"  Successfully matched records: {processed_data['metadata']['matched_records']}")
-        print(f"  Final valid records (after cleaning): {processed_data['metadata']['final_valid_records']}")
-        print("\nSummary Statistics:")
-        for key, value in processed_data['summary_stats'].items():
-            if isinstance(value, float):
-                print(f"  {key}: {value:.2f}")
-            else:
-                print(f"  {key}: {value}")
-
-        print(f"\nYear range analyzed: {processed_data['metadata']['year_range']}")
-        print(f"Total yearly records: {len(processed_data['yearly_stacked'])}")
-        print(f"Total lifespan bins: {len(processed_data['lifespan_distribution'])}")
-
-        print("\nFiles created:")
-        print("  - boston_demolition_data.json (main file)")
-        print("  - boston_demolition_summary.json")
-        print("  - boston_demolition_yearly.json")
-        print("  - boston_demolition_lifespan.json (10-year bins)")
-        print("  - boston_demolition_lifespan_5yr.json (5-year bins)")
-        print("  - boston_demolition_types.json")
-        print("  - boston_demolition_boxplot.json")
-        print("\nYou can now upload these JSON files to GitHub and use them with the HTML dashboard!")
+        print(f"  Final valid records for charting: {processed_data['metadata']['final_valid_records']}")
+        print(f"  Points for map plot: {len(processed_data['map_points'])}")
+        print("\n" + "=" * 50)
     else:
         print("Failed to process data. Please check your CSV files and their contents.")
 
