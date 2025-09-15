@@ -1,4 +1,788 @@
 {
+  "yearly_age_distribution": {
+    "2009": {
+      "All": {
+        "0-5 years": 0,
+        "5-10 years": 0,
+        "10-20 years": 0,
+        "20-30 years": 1,
+        "30-50 years": 0,
+        "50-75 years": 0,
+        "75-100 years": 1,
+        "100-150 years": 9,
+        "150+ years": 0
+      },
+      "EXTDEM": {
+        "0-5 years": 0,
+        "5-10 years": 0,
+        "10-20 years": 0,
+        "20-30 years": 1,
+        "30-50 years": 0,
+        "50-75 years": 0,
+        "75-100 years": 0,
+        "100-150 years": 1,
+        "150+ years": 0
+      },
+      "INTDEM": {
+        "0-5 years": 0,
+        "5-10 years": 0,
+        "10-20 years": 0,
+        "20-30 years": 0,
+        "30-50 years": 0,
+        "50-75 years": 0,
+        "75-100 years": 1,
+        "100-150 years": 8,
+        "150+ years": 0
+      },
+      "RAZE": {
+        "0-5 years": 0,
+        "5-10 years": 0,
+        "10-20 years": 0,
+        "20-30 years": 0,
+        "30-50 years": 0,
+        "50-75 years": 0,
+        "75-100 years": 0,
+        "100-150 years": 0,
+        "150+ years": 0
+      }
+    },
+    "2010": {
+      "All": {
+        "0-5 years": 2,
+        "5-10 years": 3,
+        "10-20 years": 26,
+        "20-30 years": 10,
+        "30-50 years": 8,
+        "50-75 years": 20,
+        "75-100 years": 83,
+        "100-150 years": 176,
+        "150+ years": 14
+      },
+      "EXTDEM": {
+        "0-5 years": 0,
+        "5-10 years": 0,
+        "10-20 years": 9,
+        "20-30 years": 1,
+        "30-50 years": 1,
+        "50-75 years": 3,
+        "75-100 years": 13,
+        "100-150 years": 43,
+        "150+ years": 2
+      },
+      "INTDEM": {
+        "0-5 years": 2,
+        "5-10 years": 3,
+        "10-20 years": 15,
+        "20-30 years": 9,
+        "30-50 years": 7,
+        "50-75 years": 14,
+        "75-100 years": 67,
+        "100-150 years": 128,
+        "150+ years": 12
+      },
+      "RAZE": {
+        "0-5 years": 0,
+        "5-10 years": 0,
+        "10-20 years": 2,
+        "20-30 years": 0,
+        "30-50 years": 0,
+        "50-75 years": 3,
+        "75-100 years": 3,
+        "100-150 years": 5,
+        "150+ years": 0
+      }
+    },
+    "2011": {
+      "All": {
+        "0-5 years": 0,
+        "5-10 years": 9,
+        "10-20 years": 21,
+        "20-30 years": 7,
+        "30-50 years": 11,
+        "50-75 years": 23,
+        "75-100 years": 66,
+        "100-150 years": 195,
+        "150+ years": 9
+      },
+      "EXTDEM": {
+        "0-5 years": 0,
+        "5-10 years": 0,
+        "10-20 years": 6,
+        "20-30 years": 0,
+        "30-50 years": 1,
+        "50-75 years": 6,
+        "75-100 years": 12,
+        "100-150 years": 36,
+        "150+ years": 0
+      },
+      "INTDEM": {
+        "0-5 years": 0,
+        "5-10 years": 9,
+        "10-20 years": 15,
+        "20-30 years": 7,
+        "30-50 years": 9,
+        "50-75 years": 17,
+        "75-100 years": 50,
+        "100-150 years": 147,
+        "150+ years": 9
+      },
+      "RAZE": {
+        "0-5 years": 0,
+        "5-10 years": 0,
+        "10-20 years": 0,
+        "20-30 years": 0,
+        "30-50 years": 1,
+        "50-75 years": 0,
+        "75-100 years": 4,
+        "100-150 years": 12,
+        "150+ years": 0
+      }
+    },
+    "2012": {
+      "All": {
+        "0-5 years": 1,
+        "5-10 years": 4,
+        "10-20 years": 27,
+        "20-30 years": 6,
+        "30-50 years": 5,
+        "50-75 years": 16,
+        "75-100 years": 67,
+        "100-150 years": 184,
+        "150+ years": 10
+      },
+      "EXTDEM": {
+        "0-5 years": 0,
+        "5-10 years": 0,
+        "10-20 years": 3,
+        "20-30 years": 1,
+        "30-50 years": 1,
+        "50-75 years": 7,
+        "75-100 years": 16,
+        "100-150 years": 21,
+        "150+ years": 1
+      },
+      "INTDEM": {
+        "0-5 years": 1,
+        "5-10 years": 4,
+        "10-20 years": 24,
+        "20-30 years": 5,
+        "30-50 years": 4,
+        "50-75 years": 9,
+        "75-100 years": 48,
+        "100-150 years": 160,
+        "150+ years": 9
+      },
+      "RAZE": {
+        "0-5 years": 0,
+        "5-10 years": 0,
+        "10-20 years": 0,
+        "20-30 years": 0,
+        "30-50 years": 0,
+        "50-75 years": 0,
+        "75-100 years": 3,
+        "100-150 years": 3,
+        "150+ years": 0
+      }
+    },
+    "2013": {
+      "All": {
+        "0-5 years": 2,
+        "5-10 years": 2,
+        "10-20 years": 27,
+        "20-30 years": 3,
+        "30-50 years": 16,
+        "50-75 years": 13,
+        "75-100 years": 85,
+        "100-150 years": 183,
+        "150+ years": 13
+      },
+      "EXTDEM": {
+        "0-5 years": 2,
+        "5-10 years": 1,
+        "10-20 years": 3,
+        "20-30 years": 0,
+        "30-50 years": 3,
+        "50-75 years": 4,
+        "75-100 years": 19,
+        "100-150 years": 31,
+        "150+ years": 3
+      },
+      "INTDEM": {
+        "0-5 years": 0,
+        "5-10 years": 1,
+        "10-20 years": 23,
+        "20-30 years": 3,
+        "30-50 years": 13,
+        "50-75 years": 9,
+        "75-100 years": 63,
+        "100-150 years": 147,
+        "150+ years": 10
+      },
+      "RAZE": {
+        "0-5 years": 0,
+        "5-10 years": 0,
+        "10-20 years": 1,
+        "20-30 years": 0,
+        "30-50 years": 0,
+        "50-75 years": 0,
+        "75-100 years": 3,
+        "100-150 years": 5,
+        "150+ years": 0
+      }
+    },
+    "2014": {
+      "All": {
+        "0-5 years": 2,
+        "5-10 years": 0,
+        "10-20 years": 32,
+        "20-30 years": 5,
+        "30-50 years": 12,
+        "50-75 years": 24,
+        "75-100 years": 75,
+        "100-150 years": 251,
+        "150+ years": 10
+      },
+      "EXTDEM": {
+        "0-5 years": 2,
+        "5-10 years": 0,
+        "10-20 years": 4,
+        "20-30 years": 0,
+        "30-50 years": 2,
+        "50-75 years": 5,
+        "75-100 years": 18,
+        "100-150 years": 45,
+        "150+ years": 2
+      },
+      "INTDEM": {
+        "0-5 years": 0,
+        "5-10 years": 0,
+        "10-20 years": 28,
+        "20-30 years": 5,
+        "30-50 years": 9,
+        "50-75 years": 18,
+        "75-100 years": 56,
+        "100-150 years": 201,
+        "150+ years": 8
+      },
+      "RAZE": {
+        "0-5 years": 0,
+        "5-10 years": 0,
+        "10-20 years": 0,
+        "20-30 years": 0,
+        "30-50 years": 1,
+        "50-75 years": 1,
+        "75-100 years": 1,
+        "100-150 years": 5,
+        "150+ years": 0
+      }
+    },
+    "2015": {
+      "All": {
+        "0-5 years": 2,
+        "5-10 years": 4,
+        "10-20 years": 30,
+        "20-30 years": 5,
+        "30-50 years": 13,
+        "50-75 years": 30,
+        "75-100 years": 87,
+        "100-150 years": 279,
+        "150+ years": 17
+      },
+      "EXTDEM": {
+        "0-5 years": 0,
+        "5-10 years": 0,
+        "10-20 years": 8,
+        "20-30 years": 2,
+        "30-50 years": 4,
+        "50-75 years": 5,
+        "75-100 years": 20,
+        "100-150 years": 36,
+        "150+ years": 0
+      },
+      "INTDEM": {
+        "0-5 years": 2,
+        "5-10 years": 4,
+        "10-20 years": 22,
+        "20-30 years": 3,
+        "30-50 years": 9,
+        "50-75 years": 23,
+        "75-100 years": 60,
+        "100-150 years": 233,
+        "150+ years": 17
+      },
+      "RAZE": {
+        "0-5 years": 0,
+        "5-10 years": 0,
+        "10-20 years": 0,
+        "20-30 years": 0,
+        "30-50 years": 0,
+        "50-75 years": 2,
+        "75-100 years": 7,
+        "100-150 years": 10,
+        "150+ years": 0
+      }
+    },
+    "2016": {
+      "All": {
+        "0-5 years": 2,
+        "5-10 years": 2,
+        "10-20 years": 46,
+        "20-30 years": 4,
+        "30-50 years": 13,
+        "50-75 years": 27,
+        "75-100 years": 75,
+        "100-150 years": 264,
+        "150+ years": 15
+      },
+      "EXTDEM": {
+        "0-5 years": 1,
+        "5-10 years": 0,
+        "10-20 years": 4,
+        "20-30 years": 2,
+        "30-50 years": 3,
+        "50-75 years": 5,
+        "75-100 years": 14,
+        "100-150 years": 37,
+        "150+ years": 2
+      },
+      "INTDEM": {
+        "0-5 years": 0,
+        "5-10 years": 2,
+        "10-20 years": 41,
+        "20-30 years": 2,
+        "30-50 years": 9,
+        "50-75 years": 18,
+        "75-100 years": 59,
+        "100-150 years": 217,
+        "150+ years": 13
+      },
+      "RAZE": {
+        "0-5 years": 1,
+        "5-10 years": 0,
+        "10-20 years": 1,
+        "20-30 years": 0,
+        "30-50 years": 1,
+        "50-75 years": 4,
+        "75-100 years": 2,
+        "100-150 years": 10,
+        "150+ years": 0
+      }
+    },
+    "2017": {
+      "All": {
+        "0-5 years": 6,
+        "5-10 years": 3,
+        "10-20 years": 39,
+        "20-30 years": 8,
+        "30-50 years": 13,
+        "50-75 years": 21,
+        "75-100 years": 85,
+        "100-150 years": 239,
+        "150+ years": 12
+      },
+      "EXTDEM": {
+        "0-5 years": 1,
+        "5-10 years": 0,
+        "10-20 years": 7,
+        "20-30 years": 0,
+        "30-50 years": 2,
+        "50-75 years": 7,
+        "75-100 years": 10,
+        "100-150 years": 32,
+        "150+ years": 1
+      },
+      "INTDEM": {
+        "0-5 years": 3,
+        "5-10 years": 3,
+        "10-20 years": 31,
+        "20-30 years": 8,
+        "30-50 years": 10,
+        "50-75 years": 14,
+        "75-100 years": 73,
+        "100-150 years": 205,
+        "150+ years": 11
+      },
+      "RAZE": {
+        "0-5 years": 2,
+        "5-10 years": 0,
+        "10-20 years": 1,
+        "20-30 years": 0,
+        "30-50 years": 1,
+        "50-75 years": 0,
+        "75-100 years": 2,
+        "100-150 years": 2,
+        "150+ years": 0
+      }
+    },
+    "2018": {
+      "All": {
+        "0-5 years": 1,
+        "5-10 years": 1,
+        "10-20 years": 50,
+        "20-30 years": 3,
+        "30-50 years": 8,
+        "50-75 years": 20,
+        "75-100 years": 83,
+        "100-150 years": 218,
+        "150+ years": 18
+      },
+      "EXTDEM": {
+        "0-5 years": 1,
+        "5-10 years": 0,
+        "10-20 years": 4,
+        "20-30 years": 1,
+        "30-50 years": 2,
+        "50-75 years": 3,
+        "75-100 years": 12,
+        "100-150 years": 24,
+        "150+ years": 2
+      },
+      "INTDEM": {
+        "0-5 years": 0,
+        "5-10 years": 1,
+        "10-20 years": 45,
+        "20-30 years": 2,
+        "30-50 years": 6,
+        "50-75 years": 16,
+        "75-100 years": 65,
+        "100-150 years": 187,
+        "150+ years": 16
+      },
+      "RAZE": {
+        "0-5 years": 0,
+        "5-10 years": 0,
+        "10-20 years": 1,
+        "20-30 years": 0,
+        "30-50 years": 0,
+        "50-75 years": 1,
+        "75-100 years": 6,
+        "100-150 years": 7,
+        "150+ years": 0
+      }
+    },
+    "2019": {
+      "All": {
+        "0-5 years": 5,
+        "5-10 years": 2,
+        "10-20 years": 10,
+        "20-30 years": 28,
+        "30-50 years": 10,
+        "50-75 years": 23,
+        "75-100 years": 72,
+        "100-150 years": 275,
+        "150+ years": 15
+      },
+      "EXTDEM": {
+        "0-5 years": 0,
+        "5-10 years": 0,
+        "10-20 years": 0,
+        "20-30 years": 2,
+        "30-50 years": 0,
+        "50-75 years": 2,
+        "75-100 years": 5,
+        "100-150 years": 29,
+        "150+ years": 1
+      },
+      "INTDEM": {
+        "0-5 years": 3,
+        "5-10 years": 2,
+        "10-20 years": 10,
+        "20-30 years": 26,
+        "30-50 years": 9,
+        "50-75 years": 19,
+        "75-100 years": 64,
+        "100-150 years": 239,
+        "150+ years": 14
+      },
+      "RAZE": {
+        "0-5 years": 2,
+        "5-10 years": 0,
+        "10-20 years": 0,
+        "20-30 years": 0,
+        "30-50 years": 1,
+        "50-75 years": 2,
+        "75-100 years": 3,
+        "100-150 years": 7,
+        "150+ years": 0
+      }
+    },
+    "2020": {
+      "All": {
+        "0-5 years": 4,
+        "5-10 years": 1,
+        "10-20 years": 3,
+        "20-30 years": 19,
+        "30-50 years": 11,
+        "50-75 years": 14,
+        "75-100 years": 27,
+        "100-150 years": 176,
+        "150+ years": 14
+      },
+      "EXTDEM": {
+        "0-5 years": 1,
+        "5-10 years": 0,
+        "10-20 years": 0,
+        "20-30 years": 4,
+        "30-50 years": 1,
+        "50-75 years": 2,
+        "75-100 years": 4,
+        "100-150 years": 21,
+        "150+ years": 0
+      },
+      "INTDEM": {
+        "0-5 years": 3,
+        "5-10 years": 1,
+        "10-20 years": 3,
+        "20-30 years": 14,
+        "30-50 years": 9,
+        "50-75 years": 11,
+        "75-100 years": 22,
+        "100-150 years": 147,
+        "150+ years": 13
+      },
+      "RAZE": {
+        "0-5 years": 0,
+        "5-10 years": 0,
+        "10-20 years": 0,
+        "20-30 years": 1,
+        "30-50 years": 1,
+        "50-75 years": 1,
+        "75-100 years": 1,
+        "100-150 years": 8,
+        "150+ years": 1
+      }
+    },
+    "2021": {
+      "All": {
+        "0-5 years": 4,
+        "5-10 years": 3,
+        "10-20 years": 5,
+        "20-30 years": 21,
+        "30-50 years": 7,
+        "50-75 years": 32,
+        "75-100 years": 36,
+        "100-150 years": 209,
+        "150+ years": 16
+      },
+      "EXTDEM": {
+        "0-5 years": 2,
+        "5-10 years": 0,
+        "10-20 years": 1,
+        "20-30 years": 2,
+        "30-50 years": 0,
+        "50-75 years": 6,
+        "75-100 years": 4,
+        "100-150 years": 22,
+        "150+ years": 2
+      },
+      "INTDEM": {
+        "0-5 years": 2,
+        "5-10 years": 3,
+        "10-20 years": 4,
+        "20-30 years": 19,
+        "30-50 years": 6,
+        "50-75 years": 24,
+        "75-100 years": 28,
+        "100-150 years": 180,
+        "150+ years": 13
+      },
+      "RAZE": {
+        "0-5 years": 0,
+        "5-10 years": 0,
+        "10-20 years": 0,
+        "20-30 years": 0,
+        "30-50 years": 1,
+        "50-75 years": 2,
+        "75-100 years": 4,
+        "100-150 years": 7,
+        "150+ years": 1
+      }
+    },
+    "2022": {
+      "All": {
+        "0-5 years": 4,
+        "5-10 years": 8,
+        "10-20 years": 10,
+        "20-30 years": 33,
+        "30-50 years": 12,
+        "50-75 years": 26,
+        "75-100 years": 37,
+        "100-150 years": 225,
+        "150+ years": 12
+      },
+      "EXTDEM": {
+        "0-5 years": 0,
+        "5-10 years": 2,
+        "10-20 years": 1,
+        "20-30 years": 9,
+        "30-50 years": 2,
+        "50-75 years": 7,
+        "75-100 years": 4,
+        "100-150 years": 35,
+        "150+ years": 1
+      },
+      "INTDEM": {
+        "0-5 years": 2,
+        "5-10 years": 6,
+        "10-20 years": 8,
+        "20-30 years": 24,
+        "30-50 years": 10,
+        "50-75 years": 16,
+        "75-100 years": 28,
+        "100-150 years": 180,
+        "150+ years": 11
+      },
+      "RAZE": {
+        "0-5 years": 2,
+        "5-10 years": 0,
+        "10-20 years": 1,
+        "20-30 years": 0,
+        "30-50 years": 0,
+        "50-75 years": 3,
+        "75-100 years": 5,
+        "100-150 years": 10,
+        "150+ years": 0
+      }
+    },
+    "2023": {
+      "All": {
+        "0-5 years": 1,
+        "5-10 years": 2,
+        "10-20 years": 10,
+        "20-30 years": 26,
+        "30-50 years": 18,
+        "50-75 years": 25,
+        "75-100 years": 36,
+        "100-150 years": 192,
+        "150+ years": 8
+      },
+      "EXTDEM": {
+        "0-5 years": 0,
+        "5-10 years": 0,
+        "10-20 years": 0,
+        "20-30 years": 0,
+        "30-50 years": 1,
+        "50-75 years": 4,
+        "75-100 years": 11,
+        "100-150 years": 31,
+        "150+ years": 0
+      },
+      "INTDEM": {
+        "0-5 years": 0,
+        "5-10 years": 1,
+        "10-20 years": 10,
+        "20-30 years": 26,
+        "30-50 years": 16,
+        "50-75 years": 19,
+        "75-100 years": 22,
+        "100-150 years": 139,
+        "150+ years": 7
+      },
+      "RAZE": {
+        "0-5 years": 1,
+        "5-10 years": 1,
+        "10-20 years": 0,
+        "20-30 years": 0,
+        "30-50 years": 1,
+        "50-75 years": 2,
+        "75-100 years": 3,
+        "100-150 years": 22,
+        "150+ years": 1
+      }
+    },
+    "2024": {
+      "All": {
+        "0-5 years": 5,
+        "5-10 years": 4,
+        "10-20 years": 12,
+        "20-30 years": 27,
+        "30-50 years": 25,
+        "50-75 years": 27,
+        "75-100 years": 34,
+        "100-150 years": 225,
+        "150+ years": 17
+      },
+      "EXTDEM": {
+        "0-5 years": 0,
+        "5-10 years": 0,
+        "10-20 years": 1,
+        "20-30 years": 2,
+        "30-50 years": 0,
+        "50-75 years": 1,
+        "75-100 years": 7,
+        "100-150 years": 27,
+        "150+ years": 0
+      },
+      "INTDEM": {
+        "0-5 years": 5,
+        "5-10 years": 4,
+        "10-20 years": 11,
+        "20-30 years": 24,
+        "30-50 years": 22,
+        "50-75 years": 16,
+        "75-100 years": 20,
+        "100-150 years": 154,
+        "150+ years": 16
+      },
+      "RAZE": {
+        "0-5 years": 0,
+        "5-10 years": 0,
+        "10-20 years": 0,
+        "20-30 years": 1,
+        "30-50 years": 3,
+        "50-75 years": 10,
+        "75-100 years": 7,
+        "100-150 years": 44,
+        "150+ years": 1
+      }
+    },
+    "2025": {
+      "All": {
+        "0-5 years": 3,
+        "5-10 years": 8,
+        "10-20 years": 6,
+        "20-30 years": 20,
+        "30-50 years": 10,
+        "50-75 years": 15,
+        "75-100 years": 35,
+        "100-150 years": 137,
+        "150+ years": 11
+      },
+      "EXTDEM": {
+        "0-5 years": 0,
+        "5-10 years": 1,
+        "10-20 years": 2,
+        "20-30 years": 1,
+        "30-50 years": 1,
+        "50-75 years": 1,
+        "75-100 years": 4,
+        "100-150 years": 12,
+        "150+ years": 0
+      },
+      "INTDEM": {
+        "0-5 years": 3,
+        "5-10 years": 7,
+        "10-20 years": 4,
+        "20-30 years": 17,
+        "30-50 years": 7,
+        "50-75 years": 12,
+        "75-100 years": 21,
+        "100-150 years": 91,
+        "150+ years": 10
+      },
+      "RAZE": {
+        "0-5 years": 0,
+        "5-10 years": 0,
+        "10-20 years": 0,
+        "20-30 years": 2,
+        "30-50 years": 2,
+        "50-75 years": 2,
+        "75-100 years": 10,
+        "100-150 years": 34,
+        "150+ years": 1
+      }
+    }
+  },
   "summary_stats": {
     "total_demolitions": 5878,
     "average_lifespan": 96.92798634812287,
@@ -41681,7 +42465,7 @@
     }
   ],
   "metadata": {
-    "generated_date": "2025-09-15T03:16:16.083603",
+    "generated_date": "2025-09-15T03:31:40.375910",
     "total_parcels_analyzed": 5878,
     "year_range": "2009-2025",
     "data_source": "Boston Property Assessment & Building Permits",
