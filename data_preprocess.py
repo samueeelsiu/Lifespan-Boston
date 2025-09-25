@@ -7,12 +7,7 @@ from datetime import datetime
 def process_demolition_data(assessment_file, permit_file):
     """
     Process Boston demolition data and generate JSON files for web dashboard.
-
-    Note: While buildings in the assessment data may date back to the 1900s,
-    the demolition permit records typically cover recent years (2009-2025),
-    reflecting modern record-keeping practices and recent urban development.
     """
-
     # --- 1. Load the datasets ---
     print("Loading datasets...")
     try:
@@ -30,18 +25,32 @@ def process_demolition_data(assessment_file, permit_file):
     build_years = assessment_data.groupby('PID')['YR_BUILT'].min().reset_index()
     build_years.rename(columns={'YR_BUILT': 'build_year'}, inplace=True)
 
-    # --- 3. Process all demolition permits together (MODIFIED LOGIC) ---
+    # --- NEW: Calculate current building age distribution ---
+    print("Calculating current building age distribution...")
+    current_year = 2025  # Using 2025 as current year
+    all_buildings = prop_ass_df[['YR_BUILT']].copy()
+    all_buildings = all_buildings[all_buildings['YR_BUILT'] > 0]
+    all_buildings['age'] = current_year - all_buildings['YR_BUILT']
+
+    # Create age distribution for current buildings
+    age_bins = list(range(0, int(all_buildings['age'].max()) + 11, 10))
+    current_age_distribution = []
+    for i in range(len(age_bins) - 1):
+        bin_count = len(all_buildings[(all_buildings['age'] >= age_bins[i]) &
+                                      (all_buildings['age'] < age_bins[i + 1])])
+        if bin_count > 0:
+            current_age_distribution.append({
+                'range': f"{age_bins[i]}-{age_bins[i + 1]}",
+                'count': bin_count
+            })
+
+    # --- 3. Process all demolition permits together ---
     print("Processing demolition permits with de-duplication...")
     demolition_types = ['EXTDEM', 'INTDEM', 'RAZE']
-
-    # **MODIFICATION**: Use correct column names 'y_latitude' and 'x_longitude'
     permit_cols = ['worktype', 'issued_date', 'parcel_id', 'y_latitude', 'x_longitude']
     if not all(col in bldg_permit_df.columns for col in permit_cols):
-        print(
-            "Error: Permit file is missing required columns (worktype, issued_date, parcel_id, y_latitude, x_longitude).")
-        # Fallback to not include geo data if columns are missing
+        print("Error: Permit file is missing required columns. Proceeding without map data.")
         permit_cols = ['worktype', 'issued_date', 'parcel_id']
-        print("Warning: Proceeding without generating map data.")
 
     demolition_permits = bldg_permit_df[bldg_permit_df['worktype'].isin(demolition_types)][permit_cols].copy()
 
@@ -49,44 +58,28 @@ def process_demolition_data(assessment_file, permit_file):
         print("No demolition permits found of types EXTDEM, INTDEM, or RAZE.")
         return None
 
-    # Convert dates and extract demolition year
     demolition_permits['issued_date'] = pd.to_datetime(demolition_permits['issued_date'], errors='coerce')
     demolition_permits.dropna(subset=['issued_date'], inplace=True)
     demolition_permits['demolition_year'] = demolition_permits['issued_date'].dt.year
 
-    # Get the single, most recent demolition permit for each parcel to avoid double counting
     final_demolitions = demolition_permits.loc[
         demolition_permits.groupby('parcel_id')['demolition_year'].idxmax()
     ]
 
     # --- 4. Merge with build years and calculate lifespan ---
     print("Merging data and calculating lifespan...")
-    lifespan_df = pd.merge(
-        final_demolitions,
-        build_years,
-        left_on='parcel_id',
-        right_on='PID',
-        how='inner'
-    )
-
-    # Calculate lifespan and clean data (lifespan > 0)
+    lifespan_df = pd.merge(final_demolitions, build_years, left_on='parcel_id', right_on='PID', how='inner')
     lifespan_df['lifespan'] = lifespan_df['demolition_year'] - lifespan_df['build_year']
 
-    # Report records removed during cleaning
     initial_record_count = len(lifespan_df)
     lifespan_df = lifespan_df[lifespan_df['lifespan'] > 0]
     final_record_count = len(lifespan_df)
-    records_removed = initial_record_count - final_record_count
 
-    print(f"\nTotal matched records before cleaning: {initial_record_count}")
-    print(f"Records with lifespan < 1 year removed: {records_removed}")
-    print(f"Final valid records: {final_record_count}")
+    print(f"\nFinal valid records: {final_record_count}")
 
-    # **NEW**: Clean up coordinate data only if columns exist
     has_geo_data = 'y_latitude' in lifespan_df.columns and 'x_longitude' in lifespan_df.columns
     if has_geo_data:
         lifespan_df.dropna(subset=['y_latitude', 'x_longitude'], inplace=True)
-        # Ensure coordinates are valid for Boston area
         lifespan_df = lifespan_df[lifespan_df['y_latitude'].between(42, 43)]
         lifespan_df = lifespan_df[lifespan_df['x_longitude'].between(-72, -70)]
         print(f"Final valid records with coordinates: {len(lifespan_df)}")
@@ -95,13 +88,13 @@ def process_demolition_data(assessment_file, permit_file):
         print("No valid records after merging and cleaning.")
         return None
 
-    # --- 5. Generate all data structures for JSON output ---
     all_data = {}
-
-    # Calculate demolition type counts from the final, cleaned data
     type_counts = lifespan_df['worktype'].value_counts().to_dict()
+    min_year = int(lifespan_df['demolition_year'].min())
+    max_year = int(lifespan_df['demolition_year'].max())
+    years = list(range(min_year, max_year + 1))
 
-    # Calculate summary statistics
+    # Summary Stats
     all_data['summary_stats'] = {
         'total_demolitions': final_record_count,
         'average_lifespan': float(lifespan_df['lifespan'].mean()),
@@ -113,102 +106,179 @@ def process_demolition_data(assessment_file, permit_file):
         'raze_count': type_counts.get('RAZE', 0)
     }
 
-    # Create yearly demolitions data (for stacked bar chart)
-    min_year = int(lifespan_df['demolition_year'].min())
-    max_year = int(lifespan_df['demolition_year'].max())
-    years = list(range(min_year, max_year + 1))
-
+    # Yearly stacked data
     yearly_data = []
     for year in years:
         year_data = {'year': year}
         for demo_type in demolition_types:
-            count = len(lifespan_df[
-                            (lifespan_df['demolition_year'] == year) &
-                            (lifespan_df['worktype'] == demo_type)
-                            ])
+            count = len(lifespan_df[(lifespan_df['demolition_year'] == year) & (lifespan_df['worktype'] == demo_type)])
             year_data[demo_type] = count
         yearly_data.append(year_data)
-
     all_data['yearly_stacked'] = yearly_data
 
-    # Create lifespan distribution (10-year bins)
+    # Lifespan distribution (10-year bins)
     bins = list(range(0, int(lifespan_df['lifespan'].max()) + 11, 10))
     lifespan_bins = []
     for i in range(len(bins) - 1):
         bin_label = f"{bins[i]}-{bins[i + 1]}"
         bin_data = {'range': bin_label}
         for demo_type in demolition_types:
-            count = len(lifespan_df[
-                            (lifespan_df['worktype'] == demo_type) &
-                            (lifespan_df['lifespan'] >= bins[i]) &
-                            (lifespan_df['lifespan'] < bins[i + 1])
-                            ])
+            count = len(lifespan_df[(lifespan_df['worktype'] == demo_type) &
+                                    (lifespan_df['lifespan'] >= bins[i]) &
+                                    (lifespan_df['lifespan'] < bins[i + 1])])
             bin_data[demo_type] = count
         if any(bin_data[dt] > 0 for dt in demolition_types):
             lifespan_bins.append(bin_data)
     all_data['lifespan_distribution'] = lifespan_bins
 
-    # Create lifespan distribution (5-year bins)
+    # Lifespan distribution (5-year bins)
     bins_5 = list(range(0, int(lifespan_df['lifespan'].max()) + 6, 5))
     lifespan_bins_5 = []
     for i in range(len(bins_5) - 1):
         bin_label = f"{bins_5[i]}-{bins_5[i + 1]}"
         bin_data = {'range': bin_label}
         for demo_type in demolition_types:
-            count = len(lifespan_df[
-                            (lifespan_df['worktype'] == demo_type) &
-                            (lifespan_df['lifespan'] >= bins_5[i]) &
-                            (lifespan_df['lifespan'] < bins_5[i + 1])
-                            ])
+            count = len(lifespan_df[(lifespan_df['worktype'] == demo_type) &
+                                    (lifespan_df['lifespan'] >= bins_5[i]) &
+                                    (lifespan_df['lifespan'] < bins_5[i + 1])])
             bin_data[demo_type] = count
         if any(bin_data[dt] > 0 for dt in demolition_types):
             lifespan_bins_5.append(bin_data)
     all_data['lifespan_distribution_5yr'] = lifespan_bins_5
 
-    # Demolition type pie chart data
-    all_data['demolition_types'] = [
-        {'type': demo_type, 'count': type_counts.get(demo_type, 0)}
-        for demo_type in demolition_types
-    ]
+    all_data['demolition_types'] = [{'type': demo_type, 'count': type_counts.get(demo_type, 0)}
+                                    for demo_type in demolition_types]
 
-    # Average lifespan by type
     lifespan_by_type_df = lifespan_df.groupby('worktype')['lifespan'].agg(['mean', 'median', 'count']).reset_index()
     all_data['lifespan_by_type'] = [
-        {
-            'type': row['worktype'],
-            'average': float(row['mean']),
-            'median': float(row['median']),
-            'count': int(row['count'])
-        }
+        {'type': row['worktype'], 'average': float(row['mean']),
+         'median': float(row['median']), 'count': int(row['count'])}
         for index, row in lifespan_by_type_df.iterrows()
     ]
 
-    # --- 6. Generate data for Lifespan by Year Box Plot ---
-    print("Generating data for lifespan by year box plot...")
-    lifespan_by_year_boxplot = []
-    # Ensure demolition_year is integer for consistent sorting and JSON serialization
+    # --- NEW: Add current building age distribution to data ---
+    all_data['current_building_age_distribution'] = current_age_distribution
+
+    # --- 8. Yearly Age Distribution ---
+    print("Performing accurate calculation for Yearly Age Distribution chart...")
+    age_bins_definition = [
+        {'label': '0-5 years', 'min': 0, 'max': 5},
+        {'label': '5-10 years', 'min': 5, 'max': 10},
+        {'label': '10-20 years', 'min': 10, 'max': 20},
+        {'label': '20-30 years', 'min': 20, 'max': 30},
+        {'label': '30-50 years', 'min': 30, 'max': 50},
+        {'label': '50-75 years', 'min': 50, 'max': 75},
+        {'label': '75-100 years', 'min': 75, 'max': 100},
+        {'label': '100-150 years', 'min': 100, 'max': 150},
+        {'label': '150+ years', 'min': 150, 'max': float('inf')}
+    ]
+
+    yearly_age_distribution = {}
     lifespan_df['demolition_year'] = lifespan_df['demolition_year'].astype(int)
-    for year in sorted(lifespan_df['demolition_year'].unique()):
-        lifespans_for_year = lifespan_df[lifespan_df['demolition_year'] == year]['lifespan'].tolist()
-        if lifespans_for_year:
-            lifespan_by_year_boxplot.append({
-                'year': int(year),
-                'lifespans': lifespans_for_year
-            })
+
+    for year in years:
+        yearly_age_distribution[year] = {}
+        year_df = lifespan_df[lifespan_df['demolition_year'] == year]
+        types_to_calculate = ['All'] + demolition_types
+
+        for demo_type in types_to_calculate:
+            if demo_type == 'All':
+                type_df = year_df
+            else:
+                type_df = year_df[year_df['worktype'] == demo_type]
+
+            age_counts = {b['label']: 0 for b in age_bins_definition}
+
+            if not type_df.empty:
+                bin_ranges = [b['min'] for b in age_bins_definition] + [age_bins_definition[-1]['max']]
+                bin_labels = [b['label'] for b in age_bins_definition]
+                bin_ranges[-2] = 150
+                bin_ranges[-1] = float('inf')
+
+                lifespan_series = pd.cut(
+                    type_df['lifespan'],
+                    bins=bin_ranges,
+                    labels=bin_labels,
+                    right=False,
+                    include_lowest=True
+                )
+                value_counts = lifespan_series.value_counts().to_dict()
+                age_counts.update(value_counts)
+
+            yearly_age_distribution[year][demo_type] = age_counts
+
+    all_data['yearly_age_distribution'] = yearly_age_distribution
+
+    # --- NEW: Construction Era Distribution ---
+    print("Calculating construction era distribution...")
+    construction_eras = [
+        {'label': 'Pre-1900', 'min': 0, 'max': 1900},
+        {'label': '1900-1920', 'min': 1900, 'max': 1920},
+        {'label': '1920-1940', 'min': 1920, 'max': 1940},
+        {'label': '1940-1960', 'min': 1940, 'max': 1960},
+        {'label': '1960-1980', 'min': 1960, 'max': 1980},
+        {'label': '1980-2000', 'min': 1980, 'max': 2000},
+        {'label': '2000-2010', 'min': 2000, 'max': 2010},
+        {'label': '2010-2020', 'min': 2010, 'max': 2020},
+        {'label': '2020+', 'min': 2020, 'max': float('inf')}
+    ]
+
+    yearly_construction_era = {}
+    for year in years:
+        yearly_construction_era[year] = {}
+        year_df = lifespan_df[lifespan_df['demolition_year'] == year]
+
+        types_to_calculate = ['All'] + demolition_types
+        for demo_type in types_to_calculate:
+            if demo_type == 'All':
+                type_df = year_df
+            else:
+                type_df = year_df[year_df['worktype'] == demo_type]
+
+            era_counts = {era['label']: 0 for era in construction_eras}
+
+            if not type_df.empty:
+                for era in construction_eras:
+                    if era['max'] == float('inf'):
+                        count = len(type_df[type_df['build_year'] >= era['min']])
+                    else:
+                        count = len(type_df[(type_df['build_year'] >= era['min']) &
+                                            (type_df['build_year'] < era['max'])])
+                    era_counts[era['label']] = count
+
+            yearly_construction_era[year][demo_type] = era_counts
+
+    all_data['yearly_construction_era'] = yearly_construction_era
+
+    # Box plot data - filtering by type
+    print("Generating data for lifespan by year box plot...")
+    lifespan_by_year_boxplot = {}
+
+    for demo_type in ['All'] + demolition_types:
+        type_data = []
+        for year in sorted(lifespan_df['demolition_year'].unique()):
+            if demo_type == 'All':
+                year_df = lifespan_df[lifespan_df['demolition_year'] == year]
+            else:
+                year_df = lifespan_df[(lifespan_df['demolition_year'] == year) &
+                                      (lifespan_df['worktype'] == demo_type)]
+
+            lifespans_for_year = year_df['lifespan'].tolist()
+            if lifespans_for_year:
+                type_data.append({'year': int(year), 'lifespans': lifespans_for_year})
+
+        lifespan_by_year_boxplot[demo_type] = type_data
+
     all_data['lifespan_by_year_boxplot'] = lifespan_by_year_boxplot
 
-    # --- 7. **NEW**: Generate data for the map plot ---
+    # Map data
     if has_geo_data:
         print("Generating data for map plot...")
         map_df = lifespan_df[['y_latitude', 'x_longitude', 'worktype', 'lifespan']].copy()
-        map_df.rename(columns={
-            'y_latitude': 'lat',
-            'x_longitude': 'lng',
-            'worktype': 'type'
-        }, inplace=True)
+        map_df.rename(columns={'y_latitude': 'lat', 'x_longitude': 'lng', 'worktype': 'type'}, inplace=True)
         all_data['map_points'] = map_df.to_dict(orient='records')
     else:
-        all_data['map_points'] = []  # Add empty list if no geo data
+        all_data['map_points'] = []
 
     # Metadata
     all_data['metadata'] = {
@@ -226,14 +296,9 @@ def process_demolition_data(assessment_file, permit_file):
 
 
 def save_json_files(data, output_prefix='boston_demolition'):
-    """
-    Save processed data to JSON files
-    """
     if not data:
         print("No data to save")
         return
-
-    # Save main data file
     main_file = f"{output_prefix}_data.json"
     with open(main_file, 'w') as f:
         json.dump(data, f, indent=2)
@@ -241,21 +306,12 @@ def save_json_files(data, output_prefix='boston_demolition'):
 
 
 def main():
-    """
-    Main function to process data and generate JSON files
-    """
-    # File paths - update these to match your file names
     assessment_file = 'fy2025-property-assessment-data_12_30_2024.csv'
     permit_file = 'tmpbtz4x7bc.csv'
-
     print("Starting Boston Demolition Data Processing...")
     print("=" * 50)
-
-    # Process the data
     processed_data = process_demolition_data(assessment_file, permit_file)
-
     if processed_data:
-        # Save to JSON files
         save_json_files(processed_data)
         print("\n" + "=" * 50)
         print("PROCESSING COMPLETE!")
