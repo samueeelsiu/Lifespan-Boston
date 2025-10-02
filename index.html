@@ -407,6 +407,32 @@
             single: 'rgba(126, 3, 168, 1)'
         };
 
+
+        // Parse a "start-end" label (e.g., "320-330") into numeric [start, end]
+        function parseRange(str) {
+        const m = String(str).match(/(\d+)\s*-\s*(\d+)/);
+        return m ? [parseInt(m[1]), parseInt(m[2])] : [0, 0];
+        }
+
+        // Get the maximum right edge from a series of { range: "a-b", ... }
+        function getUpperFromSeries(series = []) {
+        let max = 0;
+        series.forEach(d => {
+            const [, end] = parseRange(d.range);
+            if (end > max) max = end;
+        });
+        return max;
+        }
+
+        // Compute a global max age upper bound across current-building and demolition series
+        function computeGlobalMaxAge(data) {
+        const maxCurrent = getUpperFromSeries(data.current_building_age_distribution || []);
+        const maxDem10   = getUpperFromSeries(data.lifespan_distribution || []);
+        const maxDem5    = getUpperFromSeries(data.lifespan_distribution_5yr || []);
+        return Math.max(maxCurrent, maxDem10, maxDem5);
+        }
+
+
         async function loadDataFromJSON() {
             try {
                 const response = await fetch('boston_demolition_data.json');
@@ -493,13 +519,21 @@
             const demolitionFilter = document.getElementById('demolitionFilter').value;
             const viewMode = document.getElementById('viewMode').value;
             const binSize = parseInt(document.getElementById('binSize').value);
+            const globalMaxAge = computeGlobalMaxAge(currentData);
 
             updateAverageLifespan(demolitionFilter, currentData);
 
             createMapPlot(currentData, demolitionFilter);
             createYearlyChart(currentData.yearly_stacked, chartType, demolitionFilter, viewMode);
-            createLifespanChart(currentData.lifespan_distribution, chartType, demolitionFilter, viewMode, binSize);
-            createCurrentAgeChart(currentData.current_building_age_distribution); // NEW
+            createLifespanChart(
+            currentData.lifespan_distribution,
+            chartType,
+            demolitionFilter,
+            viewMode,
+            binSize,
+            globalMaxAge // <-- new argument
+            );
+            createCurrentAgeChart(currentData.current_building_age_distribution, binSize); // NEW
             createTypeChart(currentData.demolition_types, demolitionFilter);
             createAgeDistributionChart(currentData, demolitionFilter);
             createConstructionEraChart(currentData, demolitionFilter); // NEW
@@ -657,238 +691,242 @@
             charts.yearly = new Chart(ctx, chartConfig);
         }
 
-        // MODIFIED: Updated y-axis label
-        function createLifespanChart(lifespanData, chartType, filter, viewMode, binSize) {
-            const ctx = document.getElementById('lifespanChart').getContext('2d');
-            
-            if (charts.lifespan) charts.lifespan.destroy();
-            
-            let dataToUse;
-            if (binSize === 5 && currentData.lifespan_distribution_5yr) {
-                dataToUse = currentData.lifespan_distribution_5yr;
-            } else if (binSize === 10) {
-                dataToUse = lifespanData;
-            } else {
-                dataToUse = [];
-                const maxAge = 200;
-                for (let i = 0; i <= maxAge; i += binSize) {
-                    let binData = {
-                        range: `${i}-${i+binSize}`,
-                        EXTDEM: 0,
-                        INTDEM: 0,
-                        RAZE: 0
-                    };
-                    
-                    lifespanData.forEach(d => {
-                        const rangeMatch = d.range.match(/(\d+)-(\d+)/);
-                        if (rangeMatch) {
-                            const start = parseInt(rangeMatch[1]);
-                            const end = parseInt(rangeMatch[2]);
-                            if (start >= i && start < i + binSize) {
-                                binData.EXTDEM += d.EXTDEM || 0;
-                                binData.INTDEM += d.INTDEM || 0;
-                                binData.RAZE += d.RAZE || 0;
-                            }
-                        }
-                    });
-                    
-                    if (binData.EXTDEM + binData.INTDEM + binData.RAZE > 0) {
-                        dataToUse.push(binData);
-                    }
-                }
+        function createLifespanChart(lifespanData, chartType, filter, viewMode, binSize, globalMaxAge) {
+        const ctx = document.getElementById('lifespanChart').getContext('2d');
+        if (charts.lifespan) charts.lifespan.destroy();
+
+        const baseSeries = (binSize === 5 && currentData.lifespan_distribution_5yr)
+            ? currentData.lifespan_distribution_5yr
+            : currentData.lifespan_distribution || [];
+
+        function sumCountsInRange(series, s, e) {
+            const acc = { EXTDEM: 0, INTDEM: 0, RAZE: 0 };
+            series.forEach(d => {
+            const [a, b] = parseRange(d.range);
+            if (a >= s && b <= e) {
+                acc.EXTDEM += d.EXTDEM || 0;
+                acc.INTDEM += d.INTDEM || 0;
+                acc.RAZE   += d.RAZE   || 0;
             }
-            
-            let finalData;
-            if (filter === 'all') {
-                finalData = dataToUse;
-            } else {
-                let lastIndexWithData = -1;
-                for (let i = dataToUse.length - 1; i >= 0; i--) {
-                    if ((dataToUse[i][filter] || 0) > 0) {
-                        lastIndexWithData = i;
-                        break;
-                    }
-                }
-
-                if (lastIndexWithData > -1) {
-                    finalData = dataToUse.slice(0, lastIndexWithData + 1);
-                } else {
-                    finalData = [];
-                }
-            }
-
-            const labels = finalData.map(d => d.range);
-            let datasets = [];
-
-            if (filter === 'all') {
-                ['RAZE', 'EXTDEM', 'INTDEM'].forEach(type => {
-                    let data = finalData.map(d => d[type] || 0);
-                    
-                    if (viewMode === 'percentage') {
-                        data = finalData.map(d => {
-                            const total = (d.EXTDEM || 0) + (d.INTDEM || 0) + (d.RAZE || 0);
-                            return total > 0 ? ((d[type] || 0) / total) * 100 : 0;
-                        });
-                    }
-                    
-                    datasets.push({
-                        label: type,
-                        data: data,
-                        backgroundColor: colors[type],
-                        borderColor: borderColors[type],
-                        borderWidth: chartType === 'line' ? 2 : 1,
-                        fill: chartType === 'area' ? 'stack' : false,
-                        tension: 0.1
-                    });
-                });
-            } else {
-                let data = finalData.map(d => d[filter] || 0);
-                
-                datasets.push({
-                    label: filter,
-                    data: data,
-                    backgroundColor: colors[filter],
-                    borderColor: borderColors[filter],
-                    borderWidth: chartType === 'line' ? 2 : 1,
-                    fill: chartType === 'area',
-                    tension: 0.1
-                });
-            }
-
-            const chartConfig = {
-                type: chartType === 'area' ? 'line' : chartType,
-                data: {
-                    labels: labels,
-                    datasets: datasets
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        x: {
-                            stacked: filter === 'all' && chartType !== 'line',
-                            grid: { display: false },
-                            title: { display: true, text: 'Lifespan (Years)' },
-                            ticks: {
-                                maxRotation: 45,
-                                minRotation: 45,
-                                autoSkip: false,
-                                callback: function(value, index) {
-                                    if (binSize === 5 && labels.length > 20) {
-                                        return index % 2 === 0 ? labels[index] : '';
-                                    }
-                                    return labels[index];
-                                }
-                            }
-                        },
-                        y: {
-                            stacked: filter === 'all' && chartType !== 'line',
-                            grid: { borderDash: [2, 2] },
-                            title: {
-                                display: true,
-                                text: viewMode === 'percentage' ? 'Percentage (%)' : 'Number of Buildings Demolished' // MODIFIED
-                            }
-                        }
-                    },
-                    plugins: {
-                        legend: { display: filter === 'all' },
-                        tooltip: { mode: 'index', intersect: false }
-                    }
-                }
-            };
-
-            charts.lifespan = new Chart(ctx, chartConfig);
+            });
+            return acc;
         }
+
+        const labels = [];
+        for (let start = 0; start < globalMaxAge; start += binSize) {
+            labels.push(`${start}-${start + binSize}`);
+        }
+
+
+        const finalData = labels.map(lbl => {
+            const [s, e] = parseRange(lbl);
+            const counts = (binSize === 20)
+       
+            ? sumCountsInRange(baseSeries, s, e)
+
+            : sumCountsInRange(baseSeries, s, e);
+            return { range: lbl, ...counts };
+        });
+
+
+        let datasets = [];
+        if (filter === 'all') {
+            ['RAZE', 'EXTDEM', 'INTDEM'].forEach(type => {
+            let dataArr = finalData.map(d => d[type] || 0);
+            if (viewMode === 'percentage') {
+                dataArr = finalData.map(d => {
+                const total = (d.EXTDEM || 0) + (d.INTDEM || 0) + (d.RAZE || 0);
+                return total > 0 ? ((d[type] || 0) / total) * 100 : 0;
+                });
+            }
+            datasets.push({
+                label: type,
+                data: dataArr,
+                backgroundColor: colors[type],
+                borderColor: borderColors[type],
+                borderWidth: chartType === 'line' ? 2 : 1,
+                fill: chartType === 'area' ? 'stack' : false,
+                tension: 0.1
+            });
+            });
+        } else {
+            let dataArr = finalData.map(d => d[filter] || 0);
+            datasets.push({
+            label: filter,
+            data: dataArr,
+            backgroundColor: colors[filter],
+            borderColor: borderColors[filter],
+            borderWidth: chartType === 'line' ? 2 : 1,
+            fill: chartType === 'area',
+            tension: 0.1
+            });
+        }
+
+        const chartConfig = {
+            type: chartType === 'area' ? 'line' : chartType,
+            data: { labels, datasets },
+            options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                x: {
+                stacked: filter === 'all' && chartType !== 'line',
+                grid: { display: false },
+                title: { display: true, text: 'Lifespan (Years)' },
+                ticks: {
+                    maxRotation: 45,
+                    minRotation: 45,
+                    autoSkip: false,
+                    callback: function(_, index) {
+                    if (binSize === 5 && labels.length > 20) {
+                        return index % 2 === 0 ? labels[index] : '';
+                    }
+                    return labels[index];
+                    }
+                }
+                },
+                y: {
+                stacked: filter === 'all' && chartType !== 'line',
+                grid: { borderDash: [2, 2] },
+                title: {
+                    display: true,
+                    text: viewMode === 'percentage' ? 'Percentage (%)' : 'Number of Buildings Demolished'
+                },
+                beginAtZero: true
+                }
+            },
+            plugins: {
+                legend: { display: filter === 'all' },
+                tooltip: { mode: 'index', intersect: false }
+            }
+            }
+        };
+
+        charts.lifespan = new Chart(ctx, chartConfig);
+        }
+
 
         // NEW: Function to create current building age chart
-        function createCurrentAgeChart(ageData) {
-            const ctx = document.getElementById('currentAgeChart').getContext('2d');
-            
-            if (charts.currentAge) charts.currentAge.destroy();
-            
-            if (!ageData) {
-                console.warn('No current building age data available');
-                return;
+        // Replaces the original function. Now supports 5/10/20-year bins via the binSize argument.
+        function createCurrentAgeChart(ageData10yr, binSize) {
+        const ctx = document.getElementById('currentAgeChart').getContext('2d');
+
+        if (charts.currentAge) charts.currentAge.destroy();
+        if (!ageData10yr) {
+            console.warn('No current building age data available');
+            return;
+        }
+
+        // Local helper to parse a "start-end" string label (e.g., "120-130") into [start, end]
+        function parseRangeLocal(str) {
+            const m = String(str).match(/(\d+)\s*-\s*(\d+)/);
+            return m ? [parseInt(m[1]), parseInt(m[2])] : [0, 0];
+        }
+
+        // Select base series: 10-year is provided as function input; 5-year (if present) is read from JSON.
+        const base10 = Array.isArray(ageData10yr) ? ageData10yr : [];
+        const base5  = (currentData && Array.isArray(currentData.current_building_age_distribution_5yr))
+            ? currentData.current_building_age_distribution_5yr
+            : [];
+
+        let seriesToPlot = [];
+
+        if (binSize === 5 && base5.length) {
+            // Use the 5-year distribution directly (highest fidelity).
+            seriesToPlot = base5;
+        } else if (binSize === 10) {
+            // Use the 10-year distribution as-is (backward compatible).
+            seriesToPlot = base10;
+        } else {
+            // 20-year bins: aggregate from the 10-year distribution (or 5-year if 10-year is missing).
+            const src = base10.length ? base10 : base5;
+            // Compute the maximum right edge to know how far to bin.
+            let maxEnd = 0;
+            src.forEach(d => {
+            const [, e] = parseRangeLocal(d.range);
+            if (e > maxEnd) maxEnd = e;
+            });
+            const aggregated = [];
+            for (let start = 0; start < maxEnd; start += 20) {
+            let count = 0;
+            src.forEach(d => {
+                const [a, b] = parseRangeLocal(d.range);
+                // Only count base bins fully inside the 20-year target bin
+                if (a >= start && b <= start + 20) count += d.count || 0;
+            });
+            if (count > 0) aggregated.push({ range: `${start}-${start + 20}`, count });
             }
+            seriesToPlot = aggregated;
+        }
 
+        // Trim trailing empty bins to keep the right edge clean
+        let lastMeaningfulIndex = -1;
+        for (let i = seriesToPlot.length - 1; i >= 0; i--) {
+            if ((seriesToPlot[i].count || 0) > 0) { lastMeaningfulIndex = i; break; }
+        }
+        const trimmedData = lastMeaningfulIndex >= 0 ? seriesToPlot.slice(0, lastMeaningfulIndex + 1) : seriesToPlot;
 
-            let lastMeaningfulIndex = -1;
-            for (let i = ageData.length - 1; i >= 0; i--) {
-                if (ageData[i].count > 0) {  
-                    lastMeaningfulIndex = i;
-                    break;
-                }
-            }
-            
+        const labels = trimmedData.map(d => d.range);
+        const data   = trimmedData.map(d => d.count);
 
-            const trimmedData = lastMeaningfulIndex >= 0 
-                ? ageData.slice(0, lastMeaningfulIndex + 1) 
-                : ageData;
-            
-            const labels = trimmedData.map(d => d.range);
-            const data = trimmedData.map(d => d.count);
-
-            const chartConfig = {
-                type: 'bar',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        label: 'Current Buildings',
-                        data: data,
-                        backgroundColor: 'rgba(52, 152, 219, 0.8)',
-                        borderColor: 'rgba(52, 152, 219, 1)',
-                        borderWidth: 1,
-                        minBarLength: 2  
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    interaction: {
-                        mode: 'index',
-                        intersect: false 
-                    },
-                    scales: {
-                        x: {
-                            grid: { display: false },
-                            title: { display: true, text: 'Building Age (Years)' },
-                            ticks: {
-                                maxRotation: 45,
-                                minRotation: 45,
-                                autoSkip: false,
-                                callback: function(value, index) {
-                                    if (labels.length > 20) {
-                                        return index % 2 === 0 ? labels[index] : '';
-                                    }
-                                    return labels[index];
-                                }
-                            }
-                        },
-                        y: {
-                            grid: { borderDash: [2, 2] },
-                            title: { display: true, text: 'Number of Current Buildings' },
-                            beginAtZero: true
-                        }
-                    },
-                    plugins: {
-                        legend: { display: false },
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    const value = context.parsed.y;
-                                    if (value < 10) {
-                                        return `Buildings: ${value} (very few buildings)`;
-                                    }
-                                    return `Buildings: ${value.toLocaleString()}`;
-                                }
-                            }
-                        }
+        const chartConfig = {
+            type: 'bar',
+            data: {
+            labels,
+            datasets: [{
+                label: 'Current Buildings',
+                data,
+                backgroundColor: 'rgba(52, 152, 219, 0.8)',
+                borderColor: 'rgba(52, 152, 219, 1)',
+                borderWidth: 1,
+                minBarLength: 2
+            }]
+            },
+            options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            interaction: { mode: 'index', intersect: false },
+            scales: {
+                x: {
+                grid: { display: false },
+                // Unify x-axis annotation with the top chart
+                title: { display: true, text: 'Building Age (Years)' },
+                ticks: {
+                    maxRotation: 45,
+                    minRotation: 45,
+                    autoSkip: false,
+                    // Thin out labels only when we are in dense 5-year mode
+                    callback: function(value, index) {
+                    if (binSize === 5 && labels.length > 20) {
+                        return index % 2 === 0 ? labels[index] : '';
+                    }
+                    return labels[index];
                     }
                 }
-            };
+                },
+                y: {
+                grid: { borderDash: [2, 2] },
+                title: { display: true, text: 'Number of Current Buildings' },
+                beginAtZero: true
+                }
+            },
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                callbacks: {
+                    label: function(context) {
+                    const value = context.parsed.y;
+                    return ` ${value.toLocaleString()}`;
+                    }
+                }
+                }
+            }
+            }
+        };
 
-            charts.currentAge = new Chart(ctx, chartConfig);
+        charts.currentAge = new Chart(ctx, chartConfig);
         }
+
 
         function createTypeChart(typesData, filter) {
             const ctx = document.getElementById('typeChart').getContext('2d');

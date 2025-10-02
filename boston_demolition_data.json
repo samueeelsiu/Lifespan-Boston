@@ -697,6 +697,358 @@
       "count": 1
     }
   ],
+  "current_building_age_distribution_10yr": [
+    {
+      "range": "0-10",
+      "count": 11903
+    },
+    {
+      "range": "10-20",
+      "count": 7364
+    },
+    {
+      "range": "20-30",
+      "count": 9872
+    },
+    {
+      "range": "30-40",
+      "count": 5823
+    },
+    {
+      "range": "40-50",
+      "count": 1559
+    },
+    {
+      "range": "50-60",
+      "count": 3606
+    },
+    {
+      "range": "60-70",
+      "count": 6819
+    },
+    {
+      "range": "70-80",
+      "count": 5980
+    },
+    {
+      "range": "80-90",
+      "count": 3553
+    },
+    {
+      "range": "90-100",
+      "count": 9149
+    },
+    {
+      "range": "100-110",
+      "count": 17772
+    },
+    {
+      "range": "110-120",
+      "count": 15555
+    },
+    {
+      "range": "120-130",
+      "count": 39649
+    },
+    {
+      "range": "130-140",
+      "count": 10763
+    },
+    {
+      "range": "140-150",
+      "count": 5436
+    },
+    {
+      "range": "150-160",
+      "count": 2780
+    },
+    {
+      "range": "160-170",
+      "count": 1476
+    },
+    {
+      "range": "170-180",
+      "count": 1144
+    },
+    {
+      "range": "180-190",
+      "count": 171
+    },
+    {
+      "range": "190-200",
+      "count": 203
+    },
+    {
+      "range": "200-210",
+      "count": 79
+    },
+    {
+      "range": "210-220",
+      "count": 32
+    },
+    {
+      "range": "220-230",
+      "count": 71
+    },
+    {
+      "range": "230-240",
+      "count": 6
+    },
+    {
+      "range": "240-250",
+      "count": 4
+    },
+    {
+      "range": "250-260",
+      "count": 1
+    },
+    {
+      "range": "260-270",
+      "count": 1
+    },
+    {
+      "range": "270-280",
+      "count": 2
+    },
+    {
+      "range": "300-310",
+      "count": 2
+    },
+    {
+      "range": "310-320",
+      "count": 1
+    },
+    {
+      "range": "320-330",
+      "count": 1
+    }
+  ],
+  "current_building_age_distribution_5yr": [
+    {
+      "range": "0-5",
+      "count": 2414
+    },
+    {
+      "range": "5-10",
+      "count": 9489
+    },
+    {
+      "range": "10-15",
+      "count": 2994
+    },
+    {
+      "range": "15-20",
+      "count": 4370
+    },
+    {
+      "range": "20-25",
+      "count": 4179
+    },
+    {
+      "range": "25-30",
+      "count": 5693
+    },
+    {
+      "range": "30-35",
+      "count": 801
+    },
+    {
+      "range": "35-40",
+      "count": 5022
+    },
+    {
+      "range": "40-45",
+      "count": 1220
+    },
+    {
+      "range": "45-50",
+      "count": 339
+    },
+    {
+      "range": "50-55",
+      "count": 1125
+    },
+    {
+      "range": "55-60",
+      "count": 2481
+    },
+    {
+      "range": "60-65",
+      "count": 3638
+    },
+    {
+      "range": "65-70",
+      "count": 3181
+    },
+    {
+      "range": "70-75",
+      "count": 2055
+    },
+    {
+      "range": "75-80",
+      "count": 3925
+    },
+    {
+      "range": "80-85",
+      "count": 1154
+    },
+    {
+      "range": "85-90",
+      "count": 2399
+    },
+    {
+      "range": "90-95",
+      "count": 2876
+    },
+    {
+      "range": "95-100",
+      "count": 6273
+    },
+    {
+      "range": "100-105",
+      "count": 4691
+    },
+    {
+      "range": "105-110",
+      "count": 13081
+    },
+    {
+      "range": "110-115",
+      "count": 3021
+    },
+    {
+      "range": "115-120",
+      "count": 12534
+    },
+    {
+      "range": "120-125",
+      "count": 11208
+    },
+    {
+      "range": "125-130",
+      "count": 28441
+    },
+    {
+      "range": "130-135",
+      "count": 1237
+    },
+    {
+      "range": "135-140",
+      "count": 9526
+    },
+    {
+      "range": "140-145",
+      "count": 1908
+    },
+    {
+      "range": "145-150",
+      "count": 3528
+    },
+    {
+      "range": "150-155",
+      "count": 1584
+    },
+    {
+      "range": "155-160",
+      "count": 1196
+    },
+    {
+      "range": "160-165",
+      "count": 545
+    },
+    {
+      "range": "165-170",
+      "count": 931
+    },
+    {
+      "range": "170-175",
+      "count": 266
+    },
+    {
+      "range": "175-180",
+      "count": 878
+    },
+    {
+      "range": "180-185",
+      "count": 55
+    },
+    {
+      "range": "185-190",
+      "count": 116
+    },
+    {
+      "range": "190-195",
+      "count": 124
+    },
+    {
+      "range": "195-200",
+      "count": 79
+    },
+    {
+      "range": "200-205",
+      "count": 41
+    },
+    {
+      "range": "205-210",
+      "count": 38
+    },
+    {
+      "range": "210-215",
+      "count": 8
+    },
+    {
+      "range": "215-220",
+      "count": 24
+    },
+    {
+      "range": "220-225",
+      "count": 9
+    },
+    {
+      "range": "225-230",
+      "count": 62
+    },
+    {
+      "range": "230-235",
+      "count": 2
+    },
+    {
+      "range": "235-240",
+      "count": 4
+    },
+    {
+      "range": "240-245",
+      "count": 2
+    },
+    {
+      "range": "245-250",
+      "count": 2
+    },
+    {
+      "range": "250-255",
+      "count": 1
+    },
+    {
+      "range": "265-270",
+      "count": 1
+    },
+    {
+      "range": "270-275",
+      "count": 2
+    },
+    {
+      "range": "300-305",
+      "count": 2
+    },
+    {
+      "range": "315-320",
+      "count": 1
+    },
+    {
+      "range": "325-330",
+      "count": 1
+    }
+  ],
   "yearly_age_distribution": {
     "2009": {
       "All": {
@@ -49493,7 +49845,7 @@
     }
   ],
   "metadata": {
-    "generated_date": "2025-09-24T19:45:08.356741",
+    "generated_date": "2025-10-02T18:55:34.931608",
     "total_parcels_analyzed": 5878,
     "year_range": "2009-2025",
     "data_source": "Boston Property Assessment & Building Permits",

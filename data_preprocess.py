@@ -25,24 +25,31 @@ def process_demolition_data(assessment_file, permit_file):
     build_years = assessment_data.groupby('PID')['YR_BUILT'].min().reset_index()
     build_years.rename(columns={'YR_BUILT': 'build_year'}, inplace=True)
 
-    # --- NEW: Calculate current building age distribution ---
-    print("Calculating current building age distribution...")
-    current_year = 2025  # Using 2025 as current year
+    # --- NEW: Calculate current building age distribution (5-year and 10-year) ---
+    print("Calculating current building age distribution (5yr & 10yr)...")
+    current_year = 2025  # Keep consistent with the rest of the analysis
     all_buildings = prop_ass_df[['YR_BUILT']].copy()
     all_buildings = all_buildings[all_buildings['YR_BUILT'] > 0]
     all_buildings['age'] = current_year - all_buildings['YR_BUILT']
 
-    # Create age distribution for current buildings
-    age_bins = list(range(0, int(all_buildings['age'].max()) + 11, 10))
-    current_age_distribution = []
-    for i in range(len(age_bins) - 1):
-        bin_count = len(all_buildings[(all_buildings['age'] >= age_bins[i]) &
-                                      (all_buildings['age'] < age_bins[i + 1])])
-        if bin_count > 0:
-            current_age_distribution.append({
-                'range': f"{age_bins[i]}-{age_bins[i + 1]}",
-                'count': bin_count
-            })
+    def make_hist(df, width):
+        """
+        Build a right-open histogram [start, end) for the given bin width.
+        Returns a list of dicts like {'range': '0-10', 'count': 123}.
+        """
+        max_age = int(df['age'].max())
+        edges = list(range(0, max_age + width + 1, width))
+        out = []
+        for i in range(len(edges) - 1):
+            s, e = edges[i], edges[i + 1]
+            cnt = len(df[(df['age'] >= s) & (df['age'] < e)])
+            if cnt > 0:  # keep output compact: drop trailing all-zero bins
+                out.append({'range': f"{s}-{e}", 'count': int(cnt)})
+        return out
+
+    # Build both 5-year and 10-year distributions
+    current_age_distribution_5yr = make_hist(all_buildings, 5)
+    current_age_distribution_10yr = make_hist(all_buildings, 10)
 
     # --- 3. Process all demolition permits together ---
     print("Processing demolition permits with de-duplication...")
@@ -156,8 +163,12 @@ def process_demolition_data(assessment_file, permit_file):
         for index, row in lifespan_by_type_df.iterrows()
     ]
 
-    # --- NEW: Add current building age distribution to data ---
-    all_data['current_building_age_distribution'] = current_age_distribution
+    # --- NEW: Add current building age distributions (5yr & 10yr) to data ---
+    # Backward-compatible key (10-year bins):
+    all_data['current_building_age_distribution'] = current_age_distribution_10yr
+    # Explicit keys for clarity:
+    all_data['current_building_age_distribution_10yr'] = current_age_distribution_10yr
+    all_data['current_building_age_distribution_5yr'] = current_age_distribution_5yr
 
     # --- 8. Yearly Age Distribution ---
     print("Performing accurate calculation for Yearly Age Distribution chart...")
