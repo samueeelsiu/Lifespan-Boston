@@ -253,7 +253,7 @@
                 </p>
                 <p>
                     <strong>Demolition Permit Types:</strong><br>
-                    RAZE: Building Demolition.<br>
+                    RAZE: Building Demolition(Instead of the 'demolished and replaced' part in Demolitions by Year plot, every plot's RAZE ONLY reflect positive life-span).<br>
                     EXTDEM: Exterior Demolition(without razing the structure).<br>
                     INTDEM: Interior Demolition(without razing the structure).
                 <br><br>
@@ -262,55 +262,15 @@
             </div>
         </div>
 
-        <div class="controls">
-            <div class="control-group">
-                <label>Chart Type</label>
-                <select id="chartType" onchange="updateCharts()">
-                    <option value="bar">Bar Chart</option>
-                    <option value="area">Area Chart</option>
-                    <option value="line">Line Chart</option>
-                </select>
-            </div>
-            
-            <div class="control-group">
-                <label>Demolition Type</label>
-                <select id="demolitionFilter" onchange="updateCharts()">
-                    <option value="all">All Types (Stacked)</option>
-                    <option value="EXTDEM">Exterior Demolition Only</option>
-                    <option value="INTDEM">Interior Demolition Only</option>
-                    <option value="RAZE">Raze Only</option>
-                </select>
-            </div>
-            
-            <div class="control-group">
-                <label>View Mode</label>
-                <select id="viewMode" onchange="updateCharts()">
-                    <option value="absolute">Absolute Numbers</option>
-                    <option value="percentage">Percentage</option>
-                </select>
-            </div>
-            
-            <div class="control-group">
-                <label>Lifespan Bin Size</label>
-                <select id="binSize" onchange="updateCharts()">
-                    <option value="5">5 Years</option>
-                    <option value="10" selected>10 Years</option>
-                    <option value="20">20 Years</option>
-                </select>
-            </div>
-            
-            <div class="control-group">
-                <button onclick="window.location.reload()">Reload Page</button>
-            </div>
-        </div>
+
 
         <div class="stats-grid">
             <div class="stat-card">
-                <div class="stat-label">Total Demolitions</div>
+                <div class="stat-label">Raze(Positive-lifespan)</div>
                 <div class="stat-value" id="totalDemo">0</div>
             </div>
             <div class="stat-card">
-                <div class="stat-label">Average Lifespan</div>
+                <div class="stat-label">Average Lifespan <span class="stat-unit">(RAZE)</span></div>
                 <div class="stat-value" id="avgLifespan">0 <span class="stat-unit">years</span></div>
             </div>
             <div class="stat-card">
@@ -322,17 +282,84 @@
                 <div class="stat-value" id="intdemCount">0</div>
             </div>
         </div>
+        
+
+        <!-- RAZE Lifespan Summary (placed ABOVE the Demolition Locations Map container) -->
+        <div class="chart-container" id="raze-lifespan-summary-container">
+        <h2 class="chart-title">RAZE Lifespan Summary</h2>
+
+        <!-- compact 4-up stat row -->
+        <div id="razeLifespanSummary" style="display:flex; gap:16px; flex-wrap:wrap;">
+            <div class="mini-stat" style="padding:8px 10px; border:1px solid #eee; border-radius:8px; min-width:150px;">
+            <div style="font-size:12px; opacity:.75;">RAZE lifespan &gt; 0</div>
+            <div id="razePosCount" style="font-weight:600; font-size:16px;">—</div>
+            </div>
+            <div class="mini-stat" style="padding:8px 10px; border:1px solid #eee; border-radius:8px; min-width:150px;">
+            <div style="font-size:12px; opacity:.75;">RAZE lifespan = 0</div>
+            <div id="razeZeroCount" style="font-weight:600; font-size:16px;">—</div>
+            </div>
+            <div class="mini-stat" style="padding:8px 10px; border:1px solid #eee; border-radius:8px; min-width:150px;">
+            <div style="font-size:12px; opacity:.75;">RAZE lifespan &lt; 0</div>
+            <div id="razeNegCount" style="font-weight:600; font-size:16px;">—</div>
+            </div>
+            <div class="mini-stat" style="padding:8px 10px; border:1px solid #eee; border-radius:8px; min-width:150px;">
+            <div style="font-size:12px; opacity:.75;">RAZE total (by lifespan)</div>
+            <div id="razeTotalCount" style="font-weight:700; font-size:16px;">—</div>
+            </div>
+        </div>
+        </div>
+
 
         <div class="chart-container">
             <h2 class="chart-title">Demolition Locations Map</h2>
             <p style="color: #666; font-size: 0.9em; margin-bottom: 15px;">
                 Each point represents a demolished building. Color indicates demolition type. Hover over a point to see its lifespan.
             </p>
+
+            <div class="control-group" style="margin-bottom: 10px;">
+            <label>Demolition Type</label>
+            <select id="demolitionFilter" onchange="updateCharts()">
+                <option value="all">All Types (Stacked)</option>
+                <option value="EXTDEM">Exterior Demolition Only</option>
+                <option value="INTDEM">Interior Demolition Only</option>
+                <option value="RAZE" selected>Raze Only</option>
+            </select>
+            </div>
+
             <div id="map"></div>
         </div>
 
         <div class="chart-container">
             <h2 class="chart-title">Demolitions by Year</h2>
+
+            <div style="display:flex; gap:24px; flex-wrap:wrap; margin-bottom:10px;">
+            <div class="control-group">
+                <label>Chart Type</label>
+                <select id="chartType" onchange="updateCharts()">
+                <option value="bar">Bar Chart</option>
+                <option value="area">Area Chart</option>
+                <option value="line">Line Chart</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label>View Mode</label>
+                <select id="viewMode" onchange="updateCharts()">
+                <option value="absolute">Absolute Numbers</option>
+                <option value="percentage">Percentage</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label>Lifespan Bin Size</label>
+                <select id="binSize" onchange="updateCharts()">
+                <option value="5">5 Years</option>
+                <option value="10" selected>10 Years</option>
+                <option value="20">20 Years</option>
+                </select>
+            </div>
+            </div>
+
             <canvas id="yearlyChart"></canvas>
         </div>
 
@@ -397,15 +424,43 @@
             RAZE: 'rgba(13, 8, 135, 0.8)',
             EXTDEM: 'rgba(204, 71, 120, 0.8)',
             INTDEM: 'rgba(254, 206, 50, 0.8)',
-            single: 'rgba(126, 3, 168, 0.8)'
+            single: 'rgba(126, 3, 168, 0.8)',
+            demolished_and_replaced: 'rgba(0, 0, 0, 0.75)'
         };
 
         const borderColors = {
             RAZE: 'rgba(13, 8, 135, 1)',
             EXTDEM: 'rgba(204, 71, 120, 1)',
             INTDEM: 'rgba(254, 206, 50, 0.8)',
-            single: 'rgba(126, 3, 168, 1)'
+            single: 'rgba(126, 3, 168, 1)',
+            demolished_and_replaced: 'rgba(0, 0, 0, 0.75)'
+
         };
+
+
+        // Update the RAZE lifespan summary (the container ABOVE the map).
+        // Numbers are city-wide (not affected by the map dropdown).
+        function updateRazeLifespanSummary(currentData) {
+        if (!currentData || !currentData.summary_stats) return;
+
+        const s = currentData.summary_stats;
+
+        // Positive-lifespan RAZE: prefer city-wide count before geo; fall back to geo-filtered.
+        const pos  = (typeof s.raze_count_before_geo === 'number') ? s.raze_count_before_geo : (s.raze_count || 0);
+        const zero = s.zero_raze_count || 0;
+        const neg  = s.negative_raze_count || 0;
+        const total = pos + zero + neg;
+
+        const elPos   = document.getElementById('razePosCount');
+        const elZero  = document.getElementById('razeZeroCount');
+        const elNeg   = document.getElementById('razeNegCount');
+        const elTotal = document.getElementById('razeTotalCount');
+
+        if (elPos)   elPos.textContent   = pos.toLocaleString();
+        if (elZero)  elZero.textContent  = zero.toLocaleString();
+        if (elNeg)   elNeg.textContent   = neg.toLocaleString();
+        if (elTotal) elTotal.textContent = total.toLocaleString();
+        }
 
 
         // Parse a "start-end" label (e.g., "320-330") into numeric [start, end]
@@ -477,7 +532,8 @@
 
         function updateDashboard(data) {
             const stats = data.summary_stats;
-            document.getElementById('totalDemo').textContent = stats.total_demolitions.toLocaleString();
+            // Show RAZE-only count in the top KPI
+            document.getElementById('totalDemo').textContent = stats.raze_count.toLocaleString();
             document.getElementById('extdemCount').textContent = stats.extdem_count.toLocaleString();
             document.getElementById('intdemCount').textContent = stats.intdem_count.toLocaleString();
             
@@ -516,28 +572,24 @@
             if (!currentData) return;
 
             const chartType = document.getElementById('chartType').value;
-            const demolitionFilter = document.getElementById('demolitionFilter').value;
+            const selectedForMap = document.getElementById('demolitionFilter').value;
+            const chartTypeFilter = 'RAZE'; // lock all non-map visuals to RAZE
             const viewMode = document.getElementById('viewMode').value;
             const binSize = parseInt(document.getElementById('binSize').value);
             const globalMaxAge = computeGlobalMaxAge(currentData);
 
-            updateAverageLifespan(demolitionFilter, currentData);
+            updateAverageLifespan('RAZE', currentData);
 
-            createMapPlot(currentData, demolitionFilter);
-            createYearlyChart(currentData.yearly_stacked, chartType, demolitionFilter, viewMode);
-            createLifespanChart(
-            currentData.lifespan_distribution,
-            chartType,
-            demolitionFilter,
-            viewMode,
-            binSize,
-            globalMaxAge // <-- new argument
-            );
-            createCurrentAgeChart(currentData.current_building_age_distribution, binSize); // NEW
-            createTypeChart(currentData.demolition_types, demolitionFilter);
-            createAgeDistributionChart(currentData, demolitionFilter);
-            createConstructionEraChart(currentData, demolitionFilter); // NEW
-            createLifespanStripPlot(currentData, demolitionFilter); // MODIFIED
+
+            createMapPlot(currentData, selectedForMap);  
+            createYearlyChart(currentData.yearly_stacked, chartType, chartTypeFilter, viewMode);
+            createLifespanChart(currentData.lifespan_distribution, chartType, chartTypeFilter, viewMode, binSize, globalMaxAge);
+            createCurrentAgeChart(currentData.current_building_age_distribution, binSize);
+            createTypeChart(currentData.demolition_types, chartTypeFilter);
+            createAgeDistributionChart(currentData, chartTypeFilter);
+            createConstructionEraChart(currentData, chartTypeFilter);
+            createLifespanStripPlot(currentData, chartTypeFilter);
+            updateRazeLifespanSummary(currentData);
         }
         
         function initMap() {
@@ -623,19 +675,54 @@
                         tension: 0.1
                     });
                 });
-            } else {
-                let data = yearlyData.map(d => d[filter] || 0);
-                
-                datasets.push({
-                    label: filter,
-                    data: data,
-                    backgroundColor: colors[filter],
-                    borderColor: borderColors[filter],
-                    borderWidth: chartType === 'line' ? 2 : 1,
-                    fill: chartType === 'area',
-                    tension: 0.1
-                });
+            } else if (filter === 'RAZE') {
+            // Split RAZE into two stacked series:
+            //  - RAZE: positive-age RAZE counts
+            //  - demolished and replaced: negative-age RAZE counts
+            let razePos = yearlyData.map(d => d['RAZE'] || 0);
+            let razeNeg = yearlyData.map(d => d['demolished_and_replaced'] || 0);
+
+            if (viewMode === 'percentage') {
+                // use (RAZE + demolished_and_replaced) as the per-year total
+                const totals = yearlyData.map(d => (d['RAZE'] || 0) + (d['demolished_and_replaced'] || 0));
+                razePos = razePos.map((v, i) => totals[i] ? (v / totals[i]) * 100 : 0);
+                razeNeg = razeNeg.map((v, i) => totals[i] ? (v / totals[i]) * 100 : 0);
             }
+
+            datasets.push({
+                label: 'RAZE',
+                data: razePos,
+                backgroundColor: colors['RAZE'],
+                borderColor: borderColors['RAZE'],
+                borderWidth: chartType === 'line' ? 2 : 1,
+                fill: chartType === 'area',
+                tension: 0.1
+            });
+
+            datasets.push({
+                label: 'demolished and replaced (life-span <= 0)',
+                data: razeNeg,
+                backgroundColor: colors['demolished_and_replaced'],
+                borderColor: borderColors['demolished_and_replaced'],
+                borderWidth: chartType === 'line' ? 2 : 1,
+                fill: chartType === 'area',
+                tension: 0.1
+            });
+
+            } else {
+            // Non-RAZE single-series fallback (kept for completeness)
+            let data = yearlyData.map(d => d[filter] || 0);
+            datasets.push({
+                label: filter,
+                data: data,
+                backgroundColor: colors[filter],
+                borderColor: borderColors[filter],
+                borderWidth: chartType === 'line' ? 2 : 1,
+                fill: chartType === 'area',
+                tension: 0.1
+            });
+            }
+
 
             const chartConfig = {
                 type: chartType === 'area' ? 'line' : chartType,
@@ -648,7 +735,7 @@
                     maintainAspectRatio: false,
                     scales: {
                         x: {
-                            stacked: filter === 'all' && chartType !== 'line',
+                            stacked: (filter === 'all' || filter === 'RAZE') && chartType !== 'line',
                             grid: { display: false },
                             ticks: {
                                 callback: function(value, index) {
@@ -673,7 +760,7 @@
                             title: { display: true, text: 'Demolition Year' }
                         },
                         y: {
-                            stacked: filter === 'all' && chartType !== 'line',
+                            stacked: (filter === 'all' || filter === 'RAZE') && chartType !== 'line',
                             grid: { borderDash: [2, 2] },
                             title: {
                                 display: true,
@@ -682,7 +769,7 @@
                         }
                     },
                     plugins: {
-                        legend: { display: filter === 'all' },
+                        legend: { display: (filter === 'all' || filter === 'RAZE') },
                         tooltip: { mode: 'index', intersect: false }
                     }
                 }
@@ -695,38 +782,51 @@
         const ctx = document.getElementById('lifespanChart').getContext('2d');
         if (charts.lifespan) charts.lifespan.destroy();
 
-        const baseSeries = (binSize === 5 && currentData.lifespan_distribution_5yr)
-            ? currentData.lifespan_distribution_5yr
-            : currentData.lifespan_distribution || [];
+        // Pick a source series that always exists.
+        // If we need 5-year bins → prefer 5yr series; otherwise prefer 10yr series.
+        // When the preferred one is missing, gracefully fall back to the other,
+        // and we will aggregate by summing base bins fully inside each target bin.
+        const series5  = Array.isArray(currentData.lifespan_distribution_5yr)
+        ? currentData.lifespan_distribution_5yr : [];
+        const series10 = Array.isArray(currentData.lifespan_distribution)
+        ? currentData.lifespan_distribution : [];
 
+        let baseSeries;
+        if (binSize === 5) {
+        baseSeries = series5.length ? series5 : series10;
+        } else {
+        // 10-year or 20-year views prefer 10yr source; else fall back to 5yr.
+        baseSeries = series10.length ? series10 : series5;
+        }
+
+        // Sum base bins that are fully inside the target [s, e) range.
+        // Works for both 5→10/20 聚合和 10→20 聚合。
         function sumCountsInRange(series, s, e) {
-            const acc = { EXTDEM: 0, INTDEM: 0, RAZE: 0 };
-            series.forEach(d => {
+        const acc = { EXTDEM: 0, INTDEM: 0, RAZE: 0 };
+        series.forEach(d => {
             const [a, b] = parseRange(d.range);
             if (a >= s && b <= e) {
-                acc.EXTDEM += d.EXTDEM || 0;
-                acc.INTDEM += d.INTDEM || 0;
-                acc.RAZE   += d.RAZE   || 0;
+            acc.EXTDEM += d.EXTDEM || 0;
+            acc.INTDEM += d.INTDEM || 0;
+            acc.RAZE   += d.RAZE   || 0;
             }
-            });
-            return acc;
+        });
+        return acc;
         }
 
+        // Build target labels with the chosen bin size, up to the global max age.
         const labels = [];
         for (let start = 0; start < globalMaxAge; start += binSize) {
-            labels.push(`${start}-${start + binSize}`);
+        labels.push(`${start}-${start + binSize}`);
         }
 
-
+        // Aggregate counts into the target bins.
         const finalData = labels.map(lbl => {
-            const [s, e] = parseRange(lbl);
-            const counts = (binSize === 20)
-       
-            ? sumCountsInRange(baseSeries, s, e)
-
-            : sumCountsInRange(baseSeries, s, e);
-            return { range: lbl, ...counts };
+        const [s, e] = parseRange(lbl);
+        const counts = sumCountsInRange(baseSeries, s, e);
+        return { range: lbl, ...counts };
         });
+
 
 
         let datasets = [];
