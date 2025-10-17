@@ -241,23 +241,35 @@
             <div class="methodology">
                 <h3>Data Source & Methodology</h3>
                 <p>
-                    This analysis combines data from the <strong>Boston Property Assessment Dataset</strong> 
-                    and <strong>Boston Approved Building Permits</strong>. The methodology involves matching 
-                    demolition records from the permit dataset with buildings from the property assessment data using building IDs. 
-                    Building lifespan is calculated by subtracting the construction year from the demolition year. 
-                    After cleaning (removing records with lifespan less than 1 year and removing all repeated records, only counting the most recent demolition record), 
-                    the final dataset contains valid building records.      
-                    <br><br>
-                    <strong>Note:</strong> While buildings date back to the 1900s, the demolition permit records primarily cover recent years (2009-2025)
-                    <br><br>
+                    This analysis combines data from the <strong>Boston Property Assessment Dataset</strong> (a snapshot of currently existing buildings) and the <strong>Boston Approved Building Permits</strong> (a historical record of work from 2009-2025). The methodology is designed to accurately link historical demolitions to the correct building records and interpret the results.
                 </p>
-                <p>
+                <ol style="margin-left: 20px; padding-left: 10px; line-height: 1.8;">
+                    <li style="margin-bottom: 10px;">
+                        <strong>Building-Centric Matching:</strong> To analyze entire buildings, not just individual condo units, a unified <strong>'Building ID'</strong> is created. For condominiums, this ID is based on the shared <code>CM_ID</code>; for other properties, the <code>PID</code> is used. This ensures demolition permits for apartment buildings are correctly matched to the entire structure.
+                    </li>
+                    <li style="margin-bottom: 10px;">
+                        <strong>Identifying a Single Demolition Event:</strong> A key challenge is that one building may have multiple <code>RAZE</code> (full demolition) permits in the dataset due to administrative updates or redevelopment cycles. The logic enforces a <strong>"one building, one final demolition"</strong> rule by:
+                        <ul style="margin-top: 5px; margin-left: 20px;">
+                            <li>Prioritizing permits that result in a positive lifespan (demolition year > build year).</li>
+                            <li>Then, selecting only the most recent permit for that building.</li>
+                            <li>Additionally, identical permits (same parcel and type) issued within a <strong>24-hour window</strong> are consolidated to remove data entry noise.</li>
+                        </ul>
+                    </li>
+                    <li style="margin-bottom: 10px;">
+                        <strong>Interpreting Lifespan:</strong> Building lifespan is calculated by subtracting the construction year from the demolition year. The results are interpreted in two distinct ways:
+                        <ul style="margin-top: 5px; margin-left: 20px;">
+                            <li>A <strong>positive lifespan</strong> represents an observable, complete life cycle of a demolished building. These records are used to calculate statistics like average lifespan.</li>
+                            <li>A <strong>non-positive lifespan (≤ 0)</strong> is not an error. It's a powerful signal of urban renewal, indicating that a historic demolition occurred on a parcel that has since been redeveloped with a newer building. These are categorized as <strong>"Demolished and Replaced"</strong> events.</li>
+                        </ul>
+                    </li>
+                </ol>
+                <p style="margin-top: 15px;">
                     <strong>Demolition Permit Types:</strong><br>
-                    RAZE: Building Demolition(Instead of the 'demolished and replaced' part in Demolitions by Year plot, every plot's RAZE ONLY reflect positive life-span).<br>
-                    EXTDEM: Exterior Demolition(without razing the structure).<br>
-                    INTDEM: Interior Demolition(without razing the structure).
+                    <strong>RAZE:</strong> Building Demolition(Instead of the 'demolished and replaced' part in Demolitions by Year plot, every plot's RAZE ONLY reflect positive life-span).<br>
+                    <strong>EXTDEM:</strong> Exterior Demolition (without razing the structure).<br>
+                    <strong>INTDEM:</strong> Interior Demolition (without razing the structure).
                 <br><br>
-                （Please note: As official definitions for these permit codes are unavailable, the explanations provided are based on standard industry terminology!）
+                <em>(Please note: As official definitions for these permit codes are unavailable, the explanations provided are based on standard industry terminology.)</em>
                 </p>
             </div>
         </div>

@@ -5,7 +5,7 @@ from datetime import datetime
 
 
 # Keep only the latest record within a given time window for the same group
-def drop_near_duplicates(df, time_col, group_cols, window='1H'):
+def drop_near_duplicates(df, time_col, group_cols, window='24h'):
     """
     For each group (e.g., same parcel_id + worktype), keep only the latest
     permit within any rolling time window (default: 1 hour). Assumes `time_col`
@@ -13,7 +13,7 @@ def drop_near_duplicates(df, time_col, group_cols, window='1H'):
     """
     # Sort so that the newest rows come first within each group
     sort_cols = group_cols + [time_col]
-    df = df.sort_values(sort_cols, ascending=[True]*len(group_cols) + [False]).copy()
+    df = df.sort_values(sort_cols, ascending=[True] * len(group_cols) + [False]).copy()
 
     keep_idx = []
     # Iterate group by group, selecting newest first and skipping any earlier
@@ -45,10 +45,28 @@ def process_demolition_data(assessment_file, permit_file):
 
     # --- 2. Prepare property assessment data ---
     print("Processing property assessment data...")
-    assessment_data = prop_ass_df[['PID', 'YR_BUILT']].copy()
+    # Load more columns to identify buildings correctly
+    assessment_cols = ['PID', 'CM_ID', 'YR_BUILT']
+    if 'CM_ID' not in prop_ass_df.columns:
+        print("Warning: 'CM_ID' not found in assessment data. Condominium logic will be skipped.")
+        assessment_cols = ['PID', 'YR_BUILT']
+
+    assessment_data = prop_ass_df[assessment_cols].copy()
     assessment_data.dropna(subset=['YR_BUILT'], inplace=True)
     assessment_data = assessment_data[assessment_data['YR_BUILT'] > 0]
-    build_years = assessment_data.groupby('PID')['YR_BUILT'].min().reset_index()
+
+    # --- NEW LOGIC: Create a unified 'building_id' ---
+    # For condominiums, multiple PIDs (units) share a CM_ID (the building).
+    # We use CM_ID as the building identifier if it exists, otherwise fall back to PID.
+    if 'CM_ID' in assessment_data.columns:
+        # Fill missing CM_ID with the PID of the same row
+        assessment_data['building_id'] = assessment_data['CM_ID'].fillna(assessment_data['PID'])
+    else:
+        assessment_data['building_id'] = assessment_data['PID']
+
+    print("Aggregating build years by 'building_id' (handling condos)...")
+    # Group by the new building_id and find the earliest construction year for that building.
+    build_years = assessment_data.groupby('building_id')['YR_BUILT'].min().reset_index()
     build_years.rename(columns={'YR_BUILT': 'build_year'}, inplace=True)
 
     # --- NEW: Calculate current building age distribution (5-year and 10-year) ---
@@ -69,7 +87,7 @@ def process_demolition_data(assessment_file, permit_file):
         for i in range(len(edges) - 1):
             s, e = edges[i], edges[i + 1]
             cnt = len(df[(df['age'] >= s) & (df['age'] < e)])
-            if cnt > 0:  # keep output compact: drop trailing all-zero bins
+            if cnt > 0:
                 out.append({'range': f"{s}-{e}", 'count': int(cnt)})
         return out
 
@@ -90,32 +108,54 @@ def process_demolition_data(assessment_file, permit_file):
         print("No demolition permits found of types EXTDEM, INTDEM, or RAZE.")
         return None
 
-    # Parse datetime and drop rows with invalid dates
     demolition_permits['issued_date'] = pd.to_datetime(demolition_permits['issued_date'], errors='coerce')
     demolition_permits.dropna(subset=['issued_date'], inplace=True)
 
-    # De-duplicate: same parcel_id + same worktype within 1 hour → keep the latest
     dedup_permits = drop_near_duplicates(
         demolition_permits,
         time_col='issued_date',
         group_cols=['parcel_id', 'worktype'],
-        window='1H'
+        window='24h'
     ).copy()
 
-    # Derive demolition year after de-dup
     dedup_permits['demolition_year'] = dedup_permits['issued_date'].dt.year
 
-    # --- 4. Merge with build years and calculate lifespan (split positive vs negative) ---
+    # --- 4. Merge with build years and calculate lifespan ---
     print("Merging data and calculating lifespan...")
-    lifespan_df_all = pd.merge(dedup_permits, build_years, left_on='parcel_id', right_on='PID', how='inner')
+    lifespan_df_all = pd.merge(dedup_permits, build_years, left_on='parcel_id', right_on='building_id', how='inner')
     lifespan_df_all['lifespan'] = lifespan_df_all['demolition_year'] - lifespan_df_all['build_year']
 
-    # Negative-age RAZE (to be stacked as 'demolished and replaced')
-    replaced_raze_df = lifespan_df_all[(lifespan_df_all['worktype'] == 'RAZE') & (lifespan_df_all['lifespan'] <= 0)].copy()
+    # --- NEW: Enforce one final RAZE event per building ---
+    print("Enforcing a single, definitive RAZE event per building...")
 
+
+    raze_df = lifespan_df_all[lifespan_df_all['worktype'] == 'RAZE'].copy()
+    other_permits_df = lifespan_df_all[lifespan_df_all['worktype'] != 'RAZE'].copy()
+
+
+    if not raze_df.empty:
+        raze_df_sorted = raze_df.sort_values(
+            by=['building_id', 'lifespan', 'demolition_year'],
+            ascending=[True, False, False]
+        )
+
+        final_raze_df = raze_df_sorted.drop_duplicates(subset=['building_id'], keep='first')
+    else:
+        final_raze_df = pd.DataFrame()
+
+
+    lifespan_df_all_cleaned = pd.concat([final_raze_df, other_permits_df], ignore_index=True)
+
+    print(f"RAZE permits reduced from {len(raze_df)} to {len(final_raze_df)} after applying logic.")
+
+    # --- 5. Split data based on the CLEANED dataframe ---
+    # Negative-age RAZE (to be stacked as 'demolished and replaced')
+    replaced_raze_df = lifespan_df_all_cleaned[
+        (lifespan_df_all_cleaned['worktype'] == 'RAZE') & (lifespan_df_all_cleaned['lifespan'] <= 0)
+        ].copy()
 
     # Keep positive lifespans for the main analyses
-    lifespan_df = lifespan_df_all[lifespan_df_all['lifespan'] > 0].copy()
+    lifespan_df = lifespan_df_all_cleaned[lifespan_df_all_cleaned['lifespan'] > 0].copy()
 
     initial_record_count = len(lifespan_df_all)
     final_record_count = len(lifespan_df)
@@ -123,20 +163,20 @@ def process_demolition_data(assessment_file, permit_file):
     print(f"\nRecords after merge: {initial_record_count} (all)")
     print(f"Final valid records (lifespan > 0): {final_record_count}")
 
-    # Detect geo columns
     has_geo_data = 'y_latitude' in lifespan_df_all.columns and 'x_longitude' in lifespan_df_all.columns
     if has_geo_data:
-        # Only keep geo rows within rough Boston bounds for positive-lifespan data
         lifespan_df.dropna(subset=['y_latitude', 'x_longitude'], inplace=True)
         lifespan_df = lifespan_df[lifespan_df['y_latitude'].between(42, 43)]
         lifespan_df = lifespan_df[lifespan_df['x_longitude'].between(-72, -70)]
         print(f"Final valid records with coordinates (lifespan > 0): {len(lifespan_df)}")
 
-    # If both positive-lifespan data and replaced (<=0) RAZE are empty, stop.
     if lifespan_df.empty and replaced_raze_df.empty:
         print("No valid records after merging and cleaning.")
         return None
 
+    # --- The rest of the function remains the same...
+
+    # ... (rest of your script from line 125 onwards is unchanged)
     # --- Yearly stacked data (RAZE <=0 goes to 'demolished_and_replaced') ---
     all_data = {}
 
@@ -161,31 +201,25 @@ def process_demolition_data(assessment_file, permit_file):
         'max_lifespan': int(lifespan_df['lifespan'].max()) if final_record_count else 0,
         'extdem_count': type_counts_pos.get('EXTDEM', 0),
         'intdem_count': type_counts_pos.get('INTDEM', 0),
-        'raze_count': type_counts_pos.get('RAZE', 0),  # NOTE: this is after geo-filter (positive-lifespan only)
-        # clear counts for RAZE by lifespan sign (based on merged ALL data, before geo filter)
+        'raze_count': type_counts_pos.get('RAZE', 0),
         'negative_raze_count': int(((lifespan_df_all['worktype'] == 'RAZE') & (lifespan_df_all['lifespan'] < 0)).sum()),
         'zero_raze_count': int(((lifespan_df_all['worktype'] == 'RAZE') & (lifespan_df_all['lifespan'] == 0)).sum()),
-        'demolished_and_replaced_count': int(len(replaced_raze_df))  # RAZE with lifespan <= 0
+        'demolished_and_replaced_count': int(len(replaced_raze_df))
     }
 
-    # Build yearly stacked series
     yearly_data = []
     for year in years:
-        # counts from positive-lifespan data
         y_pos = lifespan_df[lifespan_df['demolition_year'] == year]
         row = {
             'year': int(year),
             'RAZE': int((y_pos['worktype'] == 'RAZE').sum()),
             'EXTDEM': int((y_pos['worktype'] == 'EXTDEM').sum()),
             'INTDEM': int((y_pos['worktype'] == 'INTDEM').sum()),
-            # extra stack: negative-age RAZE
             'demolished_and_replaced': int((replaced_raze_df['demolition_year'] == year).sum())
         }
         yearly_data.append(row)
-
     all_data['yearly_stacked'] = yearly_data
 
-    # Lifespan distribution (5-year bins)
     bins_5 = list(range(0, int(lifespan_df['lifespan'].max()) + 6, 5))
     lifespan_bins_5 = []
     for i in range(len(bins_5) - 1):
@@ -210,14 +244,10 @@ def process_demolition_data(assessment_file, permit_file):
         for index, row in lifespan_by_type_df.iterrows()
     ]
 
-    # --- NEW: Add current building age distributions (5yr & 10yr) to data ---
-    # Backward-compatible key (10-year bins):
     all_data['current_building_age_distribution'] = current_age_distribution_10yr
-    # Explicit keys for clarity:
     all_data['current_building_age_distribution_10yr'] = current_age_distribution_10yr
     all_data['current_building_age_distribution_5yr'] = current_age_distribution_5yr
 
-    # --- 8. Yearly Age Distribution ---
     print("Performing accurate calculation for Yearly Age Distribution chart...")
     age_bins_definition = [
         {'label': '0-5 years', 'min': 0, 'max': 5},
@@ -244,30 +274,19 @@ def process_demolition_data(assessment_file, permit_file):
                 type_df = year_df
             else:
                 type_df = year_df[year_df['worktype'] == demo_type]
-
             age_counts = {b['label']: 0 for b in age_bins_definition}
-
             if not type_df.empty:
                 bin_ranges = [b['min'] for b in age_bins_definition] + [age_bins_definition[-1]['max']]
                 bin_labels = [b['label'] for b in age_bins_definition]
                 bin_ranges[-2] = 150
                 bin_ranges[-1] = float('inf')
-
-                lifespan_series = pd.cut(
-                    type_df['lifespan'],
-                    bins=bin_ranges,
-                    labels=bin_labels,
-                    right=False,
-                    include_lowest=True
-                )
+                lifespan_series = pd.cut(type_df['lifespan'], bins=bin_ranges, labels=bin_labels, right=False,
+                                         include_lowest=True)
                 value_counts = lifespan_series.value_counts().to_dict()
                 age_counts.update(value_counts)
-
             yearly_age_distribution[year][demo_type] = age_counts
-
     all_data['yearly_age_distribution'] = yearly_age_distribution
 
-    # --- NEW: Construction Era Distribution ---
     print("Calculating construction era distribution...")
     construction_eras = [
         {'label': 'Pre-1900', 'min': 0, 'max': 1900},
@@ -285,51 +304,39 @@ def process_demolition_data(assessment_file, permit_file):
     for year in years:
         yearly_construction_era[year] = {}
         year_df = lifespan_df[lifespan_df['demolition_year'] == year]
-
         types_to_calculate = ['All'] + demolition_types
         for demo_type in types_to_calculate:
             if demo_type == 'All':
                 type_df = year_df
             else:
                 type_df = year_df[year_df['worktype'] == demo_type]
-
             era_counts = {era['label']: 0 for era in construction_eras}
-
             if not type_df.empty:
                 for era in construction_eras:
                     if era['max'] == float('inf'):
                         count = len(type_df[type_df['build_year'] >= era['min']])
                     else:
-                        count = len(type_df[(type_df['build_year'] >= era['min']) &
-                                            (type_df['build_year'] < era['max'])])
+                        count = len(
+                            type_df[(type_df['build_year'] >= era['min']) & (type_df['build_year'] < era['max'])])
                     era_counts[era['label']] = count
-
             yearly_construction_era[year][demo_type] = era_counts
-
     all_data['yearly_construction_era'] = yearly_construction_era
 
-    # Box plot data - filtering by type
     print("Generating data for lifespan by year box plot...")
     lifespan_by_year_boxplot = {}
-
     for demo_type in ['All'] + demolition_types:
         type_data = []
         for year in sorted(lifespan_df['demolition_year'].unique()):
             if demo_type == 'All':
                 year_df = lifespan_df[lifespan_df['demolition_year'] == year]
             else:
-                year_df = lifespan_df[(lifespan_df['demolition_year'] == year) &
-                                      (lifespan_df['worktype'] == demo_type)]
-
+                year_df = lifespan_df[(lifespan_df['demolition_year'] == year) & (lifespan_df['worktype'] == demo_type)]
             lifespans_for_year = year_df['lifespan'].tolist()
             if lifespans_for_year:
                 type_data.append({'year': int(year), 'lifespans': lifespans_for_year})
-
         lifespan_by_year_boxplot[demo_type] = type_data
-
     all_data['lifespan_by_year_boxplot'] = lifespan_by_year_boxplot
 
-    # Map data
     if has_geo_data:
         print("Generating data for map plot...")
         map_df = lifespan_df[['y_latitude', 'x_longitude', 'worktype', 'lifespan']].copy()
@@ -338,7 +345,6 @@ def process_demolition_data(assessment_file, permit_file):
     else:
         all_data['map_points'] = []
 
-    # Metadata
     all_data['metadata'] = {
         'generated_date': datetime.now().isoformat(),
         'total_parcels_analyzed': final_record_count,
@@ -349,7 +355,6 @@ def process_demolition_data(assessment_file, permit_file):
         'matched_records': initial_record_count,
         'final_valid_records': final_record_count
     }
-
     return all_data
 
 
