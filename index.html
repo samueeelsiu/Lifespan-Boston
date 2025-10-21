@@ -282,9 +282,16 @@
                 <div class="stat-value" id="totalDemo">0</div>
             </div>
             <div class="stat-card">
-                <div class="stat-label">Average Lifespan <span class="stat-unit">(RAZE)</span></div>
+                <div class="stat-label">Average Lifespan <span class="stat-unit">(Positive RAZE Only)</span></div>
                 <div class="stat-value" id="avgLifespan">0 <span class="stat-unit">years</span></div>
             </div>
+
+        <div class="stat-card">
+                <div class="stat-label">Avg Age of Current Buildings (Boston)</div>
+                <div class="stat-value" id="avgCurrentAge">0 <span class="stat-unit">years</span></div>
+            </div>
+
+
             <div class="stat-card">
                 <div class="stat-label">Exterior Demolitions</div>
                 <div class="stat-value" id="extdemCount">0</div>
@@ -457,6 +464,20 @@
 
         const s = currentData.summary_stats;
 
+        // Avg Age of Current Buildings (Boston) — backend only
+        const el = document.getElementById('avgCurrentAge');
+        const avgCurrent = Number(s?.avg_current_building_age);
+
+        if (el) {
+        el.innerHTML =
+            Number.isFinite(avgCurrent) && avgCurrent > 0
+            ? `${avgCurrent.toFixed(1)} <span class="stat-unit">years</span>`
+            : 'N/A';
+        }
+
+
+
+
         // Positive-lifespan RAZE: prefer city-wide count before geo; fall back to geo-filtered.
         const pos  = (typeof s.raze_count_before_geo === 'number') ? s.raze_count_before_geo : (s.raze_count || 0);
         const zero = s.zero_raze_count || 0;
@@ -467,6 +488,8 @@
         const elZero  = document.getElementById('razeZeroCount');
         const elNeg   = document.getElementById('razeNegCount');
         const elTotal = document.getElementById('razeTotalCount');
+
+
 
         if (elPos)   elPos.textContent   = pos.toLocaleString();
         if (elZero)  elZero.textContent  = zero.toLocaleString();
@@ -540,6 +563,7 @@
             document.getElementById('avgLifespan').innerHTML = 'N/A';
             document.getElementById('extdemCount').textContent = 'N/A';
             document.getElementById('intdemCount').textContent = 'N/A';
+            document.getElementById('avgCurrentAge').innerHTML = 'N/A';
         }
 
         function updateDashboard(data) {

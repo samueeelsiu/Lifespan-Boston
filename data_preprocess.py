@@ -75,6 +75,8 @@ def process_demolition_data(assessment_file, permit_file):
     all_buildings = prop_ass_df[['YR_BUILT']].copy()
     all_buildings = all_buildings[all_buildings['YR_BUILT'] > 0]
     all_buildings['age'] = current_year - all_buildings['YR_BUILT']
+    avg_current_age = float(all_buildings['age'].mean()) if not all_buildings.empty else 0.0
+
 
     def make_hist(df, width):
         """
@@ -204,7 +206,8 @@ def process_demolition_data(assessment_file, permit_file):
         'raze_count': type_counts_pos.get('RAZE', 0),
         'negative_raze_count': int(((lifespan_df_all['worktype'] == 'RAZE') & (lifespan_df_all['lifespan'] < 0)).sum()),
         'zero_raze_count': int(((lifespan_df_all['worktype'] == 'RAZE') & (lifespan_df_all['lifespan'] == 0)).sum()),
-        'demolished_and_replaced_count': int(len(replaced_raze_df))
+        'demolished_and_replaced_count': int(len(replaced_raze_df)),
+        'avg_current_building_age': avg_current_age
     }
 
     yearly_data = []
