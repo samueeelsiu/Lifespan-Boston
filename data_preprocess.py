@@ -100,12 +100,22 @@ def process_demolition_data(assessment_file, permit_file):
     # --- 3. Process all demolition permits together (with 1-hour de-dup per parcel+type) ---
     print("Processing demolition permits with de-duplication (1-hour window per parcel+type)...")
     demolition_types = ['EXTDEM', 'INTDEM', 'RAZE']
-    permit_cols = ['worktype', 'issued_date', 'parcel_id', 'y_latitude', 'x_longitude']
-    if not all(col in bldg_permit_df.columns for col in permit_cols):
-        print("Error: Permit file is missing required columns. Proceeding without map data.")
-        permit_cols = ['worktype', 'issued_date', 'parcel_id']
+
+
+    base_cols = ['worktype', 'issued_date', 'parcel_id']
+    present_cols = [c for c in base_cols if c in bldg_permit_df.columns]
+    if len(present_cols) < len(base_cols):
+        print("Error: Permit file is missing required columns among", base_cols)
+
+    geo_cols = [c for c in ['y_latitude', 'x_longitude'] if c in bldg_permit_df.columns]
+
+    status_candidates = ['status', 'STATUS', 'permit_status', 'PERMIT_STATUS', 'current_status', 'Current Status']
+    status_col = next((c for c in status_candidates if c in bldg_permit_df.columns), None)
+
+    permit_cols = present_cols + geo_cols + ([status_col] if status_col else [])
 
     demolition_permits = bldg_permit_df[bldg_permit_df['worktype'].isin(demolition_types)][permit_cols].copy()
+
     if demolition_permits.empty:
         print("No demolition permits found of types EXTDEM, INTDEM, or RAZE.")
         return None
@@ -132,6 +142,52 @@ def process_demolition_data(assessment_file, permit_file):
 
 
     raze_df = lifespan_df_all[lifespan_df_all['worktype'] == 'RAZE'].copy()
+
+    multi_raze_records = []
+    if not raze_df.empty:
+
+        use_cols = ['building_id', 'build_year', 'demolition_year', 'issued_date']
+        if 'issued_date' not in raze_df.columns:
+            raze_df['issued_date'] = pd.NaT
+        if status_col and status_col in raze_df.columns:
+            use_cols.append(status_col)
+
+        tmp = raze_df[use_cols].dropna(subset=['building_id', 'demolition_year']).copy()
+
+
+        tmp['demolition_year'] = tmp['demolition_year'].astype(int, errors='ignore')
+        if 'build_year' in tmp.columns:
+            tmp['build_year'] = pd.to_numeric(tmp['build_year'], errors='coerce')
+
+
+        for bid, g in tmp.groupby('building_id', sort=False):
+
+            g = g.sort_values(['demolition_year', 'issued_date']).copy()
+            per_year = g.groupby('demolition_year', as_index=False).last()
+
+
+            permits = []
+            for _, r in per_year.iterrows():
+                permits.append({
+                    'year': int(r['demolition_year']),
+                    'status': (str(r[status_col]) if (status_col and pd.notna(r[status_col])) else None)
+                })
+
+
+            if len(permits) >= 2:
+
+                by = pd.to_numeric(g['build_year'], errors='coerce').dropna()
+                build_year_value = int(by.iloc[0]) if not by.empty else None
+
+                multi_raze_records.append({
+                    'building_id': str(bid),
+                    'build_year': build_year_value,
+                    'raze_permits': sorted(permits, key=lambda x: x['year'])  # 升序
+                })
+
+
+
+
     other_permits_df = lifespan_df_all[lifespan_df_all['worktype'] != 'RAZE'].copy()
 
 
@@ -181,7 +237,7 @@ def process_demolition_data(assessment_file, permit_file):
     # ... (rest of your script from line 125 onwards is unchanged)
     # --- Yearly stacked data (RAZE <=0 goes to 'demolished_and_replaced') ---
     all_data = {}
-
+    all_data['multi_raze_parcels'] = multi_raze_records
     type_counts_pos = lifespan_df['worktype'].value_counts().to_dict()
 
     # Define year span from BOTH positive-lifespan data and replaced (<=0) RAZE
@@ -195,6 +251,49 @@ def process_demolition_data(assessment_file, permit_file):
     years = list(range(min_year, max_year + 1)) if min_year <= max_year else []
 
     # Summary Stats (positive lifespans only, plus explicit RAZE <=0 counts)
+    # --- Normalize STATUS to 'Close' / 'Open' once ---
+    status_candidates = ['status', 'STATUS', 'permit_status', 'PERMIT_STATUS', 'current_status', 'Current Status']
+    status_col_detected = next((c for c in status_candidates if c in lifespan_df_all.columns), None)
+
+    def normalize_status(val):
+        if pd.isna(val):
+            return None
+        s = str(val).strip().upper()
+
+        if s in ('Closed','CLOSE', 'CLOSED', 'CLOSED OUT', 'COMPLETE', 'COMPLETED'):
+            return 'Close'
+        if s in ('Open','OPEN', 'ACTIVE', 'ISSUED', 'PENDING'):
+            return 'Open'
+        return None
+
+    if status_col_detected:
+        for _df in (lifespan_df_all, lifespan_df_all_cleaned, lifespan_df):
+            if status_col_detected in _df.columns:
+                _df['status_norm'] = _df[status_col_detected].map(normalize_status)
+            else:
+                _df['status_norm'] = None
+    else:
+        for _df in (lifespan_df_all, lifespan_df_all_cleaned, lifespan_df):
+            _df['status_norm'] = None
+
+    # --- Buckets used in summary ---
+    pos_mask_clean = (lifespan_df_all_cleaned['worktype'] == 'RAZE') & (lifespan_df_all_cleaned['lifespan'] > 0)
+    zero_mask_all = (lifespan_df_all['worktype'] == 'RAZE') & (lifespan_df_all['lifespan'] == 0)
+    neg_mask_all = (lifespan_df_all['worktype'] == 'RAZE') & (lifespan_df_all['lifespan'] < 0)
+    tot_mask_all = (lifespan_df_all['worktype'] == 'RAZE')
+
+    def count_co(df):
+        vc = df['status_norm'].value_counts(dropna=True).to_dict()
+        return {
+            'close': int(vc.get('Close', 0)),
+            'open': int(vc.get('Open', 0))
+        }
+
+    sb_positive = count_co(lifespan_df_all_cleaned[pos_mask_clean])
+    sb_zero = count_co(lifespan_df_all[zero_mask_all])
+    sb_negative = count_co(lifespan_df_all[neg_mask_all])
+    sb_total = count_co(lifespan_df_all[tot_mask_all])
+
     all_data['summary_stats'] = {
         'total_demolitions': final_record_count,
         'average_lifespan': float(lifespan_df['lifespan'].mean()) if final_record_count else 0.0,
@@ -203,11 +302,18 @@ def process_demolition_data(assessment_file, permit_file):
         'max_lifespan': int(lifespan_df['lifespan'].max()) if final_record_count else 0,
         'extdem_count': type_counts_pos.get('EXTDEM', 0),
         'intdem_count': type_counts_pos.get('INTDEM', 0),
-        'raze_count': type_counts_pos.get('RAZE', 0),
-        'negative_raze_count': int(((lifespan_df_all['worktype'] == 'RAZE') & (lifespan_df_all['lifespan'] < 0)).sum()),
-        'zero_raze_count': int(((lifespan_df_all['worktype'] == 'RAZE') & (lifespan_df_all['lifespan'] == 0)).sum()),
+        'raze_count': type_counts_pos.get('RAZE', 0),  # positive-lifespan RAZE
+        'negative_raze_count': int(neg_mask_all.sum()),
+        'zero_raze_count': int(zero_mask_all.sum()),
         'demolished_and_replaced_count': int(len(replaced_raze_df)),
-        'avg_current_building_age': avg_current_age
+        'avg_current_building_age': avg_current_age,
+
+        'raze_status_by_lifespan': {
+            'positive': sb_positive,
+            'zero': sb_zero,
+            'negative': sb_negative,
+            'total': sb_total
+        }
     }
 
     yearly_data = []

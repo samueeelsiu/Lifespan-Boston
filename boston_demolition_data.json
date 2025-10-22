@@ -1,4 +1,188 @@
 {
+  "multi_raze_parcels": [
+    {
+      "building_id": "100603000.0",
+      "build_year": 1905,
+      "raze_permits": [
+        {
+          "year": 2012,
+          "status": "Open"
+        },
+        {
+          "year": 2019,
+          "status": "Open"
+        }
+      ]
+    },
+    {
+      "building_id": "102280000.0",
+      "build_year": 1952,
+      "raze_permits": [
+        {
+          "year": 2017,
+          "status": "Closed"
+        },
+        {
+          "year": 2021,
+          "status": "Open"
+        }
+      ]
+    },
+    {
+      "building_id": "103919002.0",
+      "build_year": 1950,
+      "raze_permits": [
+        {
+          "year": 2019,
+          "status": "Open"
+        },
+        {
+          "year": 2025,
+          "status": "Open"
+        }
+      ]
+    },
+    {
+      "building_id": "603515000.0",
+      "build_year": 1910,
+      "raze_permits": [
+        {
+          "year": 2014,
+          "status": "Open"
+        },
+        {
+          "year": 2015,
+          "status": "Open"
+        }
+      ]
+    },
+    {
+      "building_id": "703502000.0",
+      "build_year": 1900,
+      "raze_permits": [
+        {
+          "year": 2023,
+          "status": "Open"
+        },
+        {
+          "year": 2024,
+          "status": "Open"
+        }
+      ]
+    },
+    {
+      "building_id": "1101208030.0",
+      "build_year": 1899,
+      "raze_permits": [
+        {
+          "year": 2021,
+          "status": "Open"
+        },
+        {
+          "year": 2025,
+          "status": "Closed"
+        }
+      ]
+    },
+    {
+      "building_id": "1101233100.0",
+      "build_year": 1960,
+      "raze_permits": [
+        {
+          "year": 2016,
+          "status": "Open"
+        },
+        {
+          "year": 2018,
+          "status": "Open"
+        }
+      ]
+    },
+    {
+      "building_id": "1102017000.0",
+      "build_year": 2018,
+      "raze_permits": [
+        {
+          "year": 2015,
+          "status": "Open"
+        },
+        {
+          "year": 2018,
+          "status": "Open"
+        }
+      ]
+    },
+    {
+      "building_id": "1701289010.0",
+      "build_year": 1936,
+      "raze_permits": [
+        {
+          "year": 2011,
+          "status": "Open"
+        },
+        {
+          "year": 2012,
+          "status": "Open"
+        }
+      ]
+    },
+    {
+      "building_id": "2102473001.0",
+      "build_year": 1979,
+      "raze_permits": [
+        {
+          "year": 2016,
+          "status": "Open"
+        },
+        {
+          "year": 2019,
+          "status": "Open"
+        }
+      ]
+    },
+    {
+      "building_id": "2200520000.0",
+      "build_year": 2018,
+      "raze_permits": [
+        {
+          "year": 2015,
+          "status": "Closed"
+        },
+        {
+          "year": 2023,
+          "status": "Open"
+        }
+      ]
+    },
+    {
+      "building_id": "2200534000.0",
+      "build_year": 1957,
+      "raze_permits": [
+        {
+          "year": 2014,
+          "status": "Open"
+        },
+        {
+          "year": 2023,
+          "status": "Open"
+        }
+      ]
+    },
+    {
+      "building_id": "2201822010.0",
+      "build_year": 2021,
+      "raze_permits": [
+        {
+          "year": 2014,
+          "status": "Open"
+        },
+        {
+          "year": 2019,
+          "status": "Open"
+        }
+      ]
+    }
+  ],
   "summary_stats": {
     "total_demolitions": 8609,
     "average_lifespan": 94.2463446017078,
@@ -11,7 +195,25 @@
     "negative_raze_count": 217,
     "zero_raze_count": 112,
     "demolished_and_replaced_count": 316,
-    "avg_current_building_age": 91.22234385301472
+    "avg_current_building_age": 91.22234385301472,
+    "raze_status_by_lifespan": {
+      "positive": {
+        "close": 39,
+        "open": 321
+      },
+      "zero": {
+        "close": 4,
+        "open": 108
+      },
+      "negative": {
+        "close": 10,
+        "open": 207
+      },
+      "total": {
+        "close": 56,
+        "open": 652
+      }
+    }
   },
   "yearly_stacked": [
     {
@@ -71232,7 +71434,7 @@
     }
   ],
   "metadata": {
-    "generated_date": "2025-10-21T17:11:12.512121",
+    "generated_date": "2025-10-22T00:09:17.595498",
     "total_parcels_analyzed": 8609,
     "year_range": "2009-2025",
     "data_source": "Boston Property Assessment & Building Permits",

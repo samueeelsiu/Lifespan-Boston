@@ -230,6 +230,16 @@
                 width: 100%;
             }
         }
+
+        .badge {
+        display:inline-block; padding:2px 10px; border-radius:999px;
+        font-size:12px; line-height:1.6; border:1px solid; margin-right:6px;
+        white-space:nowrap;
+        }
+        .badge-close { background:#e6ffed; border-color:#22c55e; color:#166534; }
+        .badge-open  { background:#fff7ed; border-color:#f97316; color:#9a3412; }
+        .mini-stat .status-row { margin-top:6px; }
+
     </style>
 </head>
 <body>
@@ -308,24 +318,42 @@
         <h2 class="chart-title">RAZE Lifespan Summary</h2>
 
         <!-- compact 4-up stat row -->
-        <div id="razeLifespanSummary" style="display:flex; gap:16px; flex-wrap:wrap;">
-            <div class="mini-stat" style="padding:8px 10px; border:1px solid #eee; border-radius:8px; min-width:150px;">
-            <div style="font-size:12px; opacity:.75;">RAZE lifespan &gt; 0</div>
-            <div id="razePosCount" style="font-weight:600; font-size:16px;">—</div>
-            </div>
-            <div class="mini-stat" style="padding:8px 10px; border:1px solid #eee; border-radius:8px; min-width:150px;">
-            <div style="font-size:12px; opacity:.75;">RAZE lifespan = 0</div>
-            <div id="razeZeroCount" style="font-weight:600; font-size:16px;">—</div>
-            </div>
-            <div class="mini-stat" style="padding:8px 10px; border:1px solid #eee; border-radius:8px; min-width:150px;">
-            <div style="font-size:12px; opacity:.75;">RAZE lifespan &lt; 0</div>
-            <div id="razeNegCount" style="font-weight:600; font-size:16px;">—</div>
-            </div>
-            <div class="mini-stat" style="padding:8px 10px; border:1px solid #eee; border-radius:8px; min-width:150px;">
-            <div style="font-size:12px; opacity:.75;">RAZE total (by lifespan)</div>
-            <div id="razeTotalCount" style="font-weight:700; font-size:16px;">—</div>
-            </div>
+        <div class="mini-stat" style="padding:8px 10px; border:1px solid #eee; border-radius:8px; min-width:200px;">
+        <div style="font-size:12px; opacity:.75;">RAZE lifespan &gt; 0</div>
+        <div id="razePosCount" style="font-weight:600; font-size:16px;">—</div>
+        <div class="status-row">
+            <span id="razePosClose" class="badge badge-close">— Close</span>
+            <span id="razePosOpen"  class="badge badge-open">— Open</span>
         </div>
+        </div>
+
+        <div class="mini-stat" style="padding:8px 10px; border:1px solid #eee; border-radius:8px; min-width:200px;">
+        <div style="font-size:12px; opacity:.75;">RAZE lifespan = 0</div>
+        <div id="razeZeroCount" style="font-weight:600; font-size:16px;">—</div>
+        <div class="status-row">
+            <span id="razeZeroClose" class="badge badge-close">— Close</span>
+            <span id="razeZeroOpen"  class="badge badge-open">— Open</span>
+        </div>
+        </div>
+
+        <div class="mini-stat" style="padding:8px 10px; border:1px solid #eee; border-radius:8px; min-width:200px;">
+        <div style="font-size:12px; opacity:.75;">RAZE lifespan &lt; 0</div>
+        <div id="razeNegCount" style="font-weight:600; font-size:16px;">—</div>
+        <div class="status-row">
+            <span id="razeNegClose" class="badge badge-close">— Close</span>
+            <span id="razeNegOpen"  class="badge badge-open">— Open</span>
+        </div>
+        </div>
+
+        <div class="mini-stat" style="padding:8px 10px; border:1px solid #eee; border-radius:8px; min-width:220px;">
+        <div style="font-size:12px; opacity:.75;">RAZE total (by lifespan)</div>
+        <div id="razeTotalCount" style="font-weight:700; font-size:16px;">—</div>
+        <div class="status-row">
+            <span id="razeTotalClose" class="badge badge-close">— Close</span>
+            <span id="razeTotalOpen"  class="badge badge-open">— Open</span>
+        </div>
+        </div>
+
         </div>
 
 
@@ -347,6 +375,20 @@
 
             <div id="map"></div>
         </div>
+
+        <div class="chart-container">
+        <h2 class="chart-title">Parcels with Multiple RAZE Permits</h2>
+        <p style="color:#666; font-size:0.9em; margin-bottom:12px;">
+        Shows only parcels (building_id) with multiple RAZE permits. The x-axis is the year; the y-axis is the parcel (building_id).
+        For each parcel: the <span style="font-weight:600;">build year</span> is shown as a
+        <span style="font-weight:600; color:#22c55e;">green square (■)</span>,
+        the <span style="font-weight:600;">latest</span> RAZE is a
+        <span style="font-weight:600; color:#ef4444;">red triangle (▲)</span>,
+        and the remaining RAZE permits are <span style="font-weight:600;">circles (●)</span>.
+        </p>
+        <canvas id="multiRazeDotPlot" style="height:420px;"></canvas>
+        </div>
+
 
         <div class="chart-container">
             <h2 class="chart-title">Demolitions by Year</h2>
@@ -464,21 +506,16 @@
 
         const s = currentData.summary_stats;
 
-        // Avg Age of Current Buildings (Boston) — backend only
-        const el = document.getElementById('avgCurrentAge');
+        // Avg Age of Current Buildings (Boston)
+        const elAge = document.getElementById('avgCurrentAge');
         const avgCurrent = Number(s?.avg_current_building_age);
-
-        if (el) {
-        el.innerHTML =
-            Number.isFinite(avgCurrent) && avgCurrent > 0
+        if (elAge) {
+            elAge.innerHTML = Number.isFinite(avgCurrent) && avgCurrent > 0
             ? `${avgCurrent.toFixed(1)} <span class="stat-unit">years</span>`
             : 'N/A';
         }
 
-
-
-
-        // Positive-lifespan RAZE: prefer city-wide count before geo; fall back to geo-filtered.
+        // RAZE counts
         const pos  = (typeof s.raze_count_before_geo === 'number') ? s.raze_count_before_geo : (s.raze_count || 0);
         const zero = s.zero_raze_count || 0;
         const neg  = s.negative_raze_count || 0;
@@ -489,13 +526,34 @@
         const elNeg   = document.getElementById('razeNegCount');
         const elTotal = document.getElementById('razeTotalCount');
 
-
-
         if (elPos)   elPos.textContent   = pos.toLocaleString();
         if (elZero)  elZero.textContent  = zero.toLocaleString();
         if (elNeg)   elNeg.textContent   = neg.toLocaleString();
         if (elTotal) elTotal.textContent = total.toLocaleString();
+
+        // Status badges per bucket
+        const sb = s.raze_status_by_lifespan || {};
+
+        function setBadge(id, count, label){
+            const el = document.getElementById(id);
+            if (el) el.textContent = `${(count || 0).toLocaleString()} ${label}`;
         }
+
+        const P = sb.positive || {}, Z = sb.zero || {}, N = sb.negative || {}, T = sb.total || {};
+
+        setBadge('razePosClose',  P.close, 'Close');
+        setBadge('razePosOpen',   P.open,  'Open');
+
+        setBadge('razeZeroClose', Z.close, 'Close');
+        setBadge('razeZeroOpen',  Z.open,  'Open');
+
+        setBadge('razeNegClose',  N.close, 'Close');
+        setBadge('razeNegOpen',   N.open,  'Open');
+
+        setBadge('razeTotalClose',T.close, 'Close');
+        setBadge('razeTotalOpen', T.open,  'Open');
+        }
+
 
 
         // Parse a "start-end" label (e.g., "320-330") into numeric [start, end]
@@ -618,6 +676,7 @@
 
 
             createMapPlot(currentData, selectedForMap);  
+            createMultiRazeDotPlot(currentData.multi_raze_parcels);
             createYearlyChart(currentData.yearly_stacked, chartType, chartTypeFilter, viewMode);
             createLifespanChart(currentData.lifespan_distribution, chartType, chartTypeFilter, viewMode, binSize, globalMaxAge);
             createCurrentAgeChart(currentData.current_building_age_distribution, binSize);
@@ -681,6 +740,169 @@
             pointLayer = L.layerGroup(markers);
             pointLayer.addTo(map);
         }
+
+        function createMultiRazeDotPlot(multi) {
+        const canvas = document.getElementById('multiRazeDotPlot');
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+        if (charts.multiRazeDot) charts.multiRazeDot.destroy();
+
+        // 把 "703502000.0" → "703502000"
+        const idToStr = (v) => {
+            const s = String(v).trim();
+            const m = s.match(/^(\d+)\.0+$/);
+            return m ? m[1] : s;
+        };
+
+        if (!Array.isArray(multi) || !multi.length) return;
+
+        // 统一为 { building_id, build_year, raze_permits:[{year, status}] } 结构
+        const normalized = multi.map(d => {
+            const id = idToStr(d.building_id);
+            const by = Number(d.build_year);
+            let permits = [];
+
+            if (Array.isArray(d.raze_permits)) {
+            permits = d.raze_permits
+                .map(p => ({ year: Number(p.year), status: (p.status ?? null) }))
+                .filter(p => Number.isFinite(p.year))
+                .sort((a, b) => a.year - b.year);
+            } else if (Array.isArray(d.raze_years)) {
+            // 兼容旧 JSON：没有 status，只能给 null
+            permits = d.raze_years
+                .map(y => ({ year: Number(y), status: null }))
+                .filter(p => Number.isFinite(p.year))
+                .sort((a, b) => a.year - b.year);
+            }
+
+            return { building_id: id, build_year: Number.isFinite(by) ? by : null, raze_permits: permits };
+        }).filter(d => d.raze_permits.length >= 2);
+
+        // 排序：按“最新 RAZE 年份”
+        const items = normalized.sort((a, b) => {
+            const lastA = a.raze_permits[a.raze_permits.length - 1]?.year ?? -Infinity;
+            const lastB = b.raze_permits[b.raze_permits.length - 1]?.year ?? -Infinity;
+            if (lastA !== lastB) return lastA - lastB;
+            return a.building_id.localeCompare(b.building_id);
+        });
+
+        const yLabels = items.map(d => d.building_id);
+
+        const builtPoints = [];
+        const latestPoints = [];
+        const earlierPoints = [];
+
+        items.forEach(row => {
+            const id = row.building_id;
+            const y  = id;
+
+            if (Number.isFinite(row.build_year)) {
+            builtPoints.push({ x: row.build_year, y, building_id: id, year: row.build_year, kind: 'Built' });
+            }
+
+            const last = row.raze_permits[row.raze_permits.length - 1];
+            if (last) {
+            latestPoints.push({
+                x: last.year, y, building_id: id, year: last.year, kind: 'Latest RAZE',
+                total: row.raze_permits.length, status: last.status ?? null
+            });
+            }
+            row.raze_permits.slice(0, -1).forEach(p => {
+            earlierPoints.push({
+                x: p.year, y, building_id: id, year: p.year, kind: 'RAZE',
+                total: row.raze_permits.length, status: p.status ?? null
+            });
+            });
+        });
+
+        const allX = builtPoints.concat(latestPoints, earlierPoints).map(p => p.x);
+        if (!allX.length) return;
+        const xMin = Math.min(...allX);
+        const xMax = Math.max(...allX);
+
+        charts.multiRazeDot = new Chart(ctx, {
+            type: 'scatter',
+            data: {
+            datasets: [
+                { // 绿色方形：建成年
+                label: 'Built Year (■)',
+                data: builtPoints,
+                pointStyle: 'rect',
+                pointRadius: 5,
+                pointHoverRadius: 6,
+                backgroundColor: '#22c55e',
+                borderColor: '#16a34a'
+                },
+                { // 红色三角：最新 RAZE
+                label: 'Latest RAZE (▲)',
+                data: latestPoints,
+                pointStyle: 'triangle',
+                pointRadius: 6,
+                pointHoverRadius: 7,
+                backgroundColor: '#ef4444',
+                borderColor: '#b91c1c'
+                },
+                { // 圆点：其它 RAZE
+                label: 'RAZE (others ●)',
+                data: earlierPoints,
+                pointStyle: 'circle',
+                pointRadius: 4,
+                pointHoverRadius: 5,
+                backgroundColor: colors.RAZE,
+                borderColor: borderColors.RAZE
+                }
+            ]
+            },
+            options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            parsing: false,
+            scales: {
+                x: {
+                type: 'linear',
+                title: { display: true, text: 'Year' },
+                min: xMin - 1,
+                max: xMax + 1,
+                grid: { display: false },
+                ticks: {
+                    callback: (value) => {
+                    const range = xMax - xMin;
+                    if (range <= 20) return value;
+                    if (range <= 30) return value % 2 === 0 ? value : '';
+                    if (range <= 50) return value % 5 === 0 ? value : '';
+                    return value % 10 === 0 ? value : '';
+                    }
+                }
+                },
+                y: {
+                type: 'category',
+                labels: yLabels,
+                title: { display: true, text: 'Parcel (building_id)' },
+                grid: { color: 'rgba(0,0,0,0.05)' },
+                ticks: { autoSkip: false, maxRotation: 0, minRotation: 0 }
+                }
+            },
+            plugins: {
+                legend: { labels: { usePointStyle: true } },
+                tooltip: {
+                callbacks: {
+                    label: (ctx) => {
+                    const r = ctx.raw || {};
+                    const status = (r.status && String(r.status).trim()) ? String(r.status) : '—';
+                    const tail = (r.kind === 'Latest RAZE' || r.kind === 'RAZE') && r.total ? ` (total RAZE: ${r.total})` : '';
+                    // 显示 Status
+                    return `${r.building_id} — ${r.kind}: ${r.year}${tail} | Status: ${status}`;
+                    }
+                }
+                }
+            },
+            elements: { point: { borderWidth: 1 } }
+            }
+        });
+        }
+
+
+
 
         function createYearlyChart(yearlyData, chartType, filter, viewMode) {
             const ctx = document.getElementById('yearlyChart').getContext('2d');
