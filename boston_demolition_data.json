@@ -195,11 +195,11 @@
     "negative_raze_count": 217,
     "zero_raze_count": 112,
     "demolished_and_replaced_count": 316,
-    "avg_current_building_age": 91.22234385301472,
+    "avg_current_building_age": 91.33594357401867,
     "raze_status_by_lifespan": {
       "positive": {
         "close": 39,
-        "open": 321
+        "open": 319
       },
       "zero": {
         "close": 4,
@@ -210,8 +210,8 @@
         "open": 207
       },
       "total": {
-        "close": 56,
-        "open": 652
+        "close": 53,
+        "open": 634
       }
     }
   },
@@ -71434,7 +71434,7 @@
     }
   ],
   "metadata": {
-    "generated_date": "2025-10-22T00:09:17.595498",
+    "generated_date": "2025-10-22T13:57:23.672933",
     "total_parcels_analyzed": 8609,
     "year_range": "2009-2025",
     "data_source": "Boston Property Assessment & Building Permits",

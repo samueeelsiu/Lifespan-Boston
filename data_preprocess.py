@@ -73,7 +73,10 @@ def process_demolition_data(assessment_file, permit_file):
     print("Calculating current building age distribution (5yr & 10yr)...")
     current_year = 2025  # Keep consistent with the rest of the analysis
     all_buildings = prop_ass_df[['YR_BUILT']].copy()
-    all_buildings = all_buildings[all_buildings['YR_BUILT'] > 0]
+    all_buildings = all_buildings[
+        (all_buildings['YR_BUILT'] > 0) &
+        (all_buildings['YR_BUILT'] <= current_year)
+        ]
     all_buildings['age'] = current_year - all_buildings['YR_BUILT']
     avg_current_age = float(all_buildings['age'].mean()) if not all_buildings.empty else 0.0
 
@@ -223,9 +226,8 @@ def process_demolition_data(assessment_file, permit_file):
 
     has_geo_data = 'y_latitude' in lifespan_df_all.columns and 'x_longitude' in lifespan_df_all.columns
     if has_geo_data:
-        lifespan_df.dropna(subset=['y_latitude', 'x_longitude'], inplace=True)
-        lifespan_df = lifespan_df[lifespan_df['y_latitude'].between(42, 43)]
-        lifespan_df = lifespan_df[lifespan_df['x_longitude'].between(-72, -70)]
+        lifespan_df = lifespan_df.dropna(subset=['y_latitude', 'x_longitude']).copy()
+
         print(f"Final valid records with coordinates (lifespan > 0): {len(lifespan_df)}")
 
     if lifespan_df.empty and replaced_raze_df.empty:
@@ -277,7 +279,7 @@ def process_demolition_data(assessment_file, permit_file):
             _df['status_norm'] = None
 
     # --- Buckets used in summary ---
-    pos_mask_clean = (lifespan_df_all_cleaned['worktype'] == 'RAZE') & (lifespan_df_all_cleaned['lifespan'] > 0)
+
     zero_mask_all = (lifespan_df_all['worktype'] == 'RAZE') & (lifespan_df_all['lifespan'] == 0)
     neg_mask_all = (lifespan_df_all['worktype'] == 'RAZE') & (lifespan_df_all['lifespan'] < 0)
     tot_mask_all = (lifespan_df_all['worktype'] == 'RAZE')
@@ -289,10 +291,13 @@ def process_demolition_data(assessment_file, permit_file):
             'open': int(vc.get('Open', 0))
         }
 
-    sb_positive = count_co(lifespan_df_all_cleaned[pos_mask_clean])
+    sb_positive = count_co(lifespan_df[lifespan_df['worktype'] == 'RAZE'])
     sb_zero = count_co(lifespan_df_all[zero_mask_all])
     sb_negative = count_co(lifespan_df_all[neg_mask_all])
-    sb_total = count_co(lifespan_df_all[tot_mask_all])
+    sb_total = {
+        'close': sb_positive['close'] + sb_zero['close'] + sb_negative['close'],
+        'open': sb_positive['open'] + sb_zero['open'] + sb_negative['open'],
+    }
 
     all_data['summary_stats'] = {
         'total_demolitions': final_record_count,
