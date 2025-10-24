@@ -286,6 +286,7 @@
 
 
 
+
         <div class="stats-grid">
             <div class="stat-card">
                 <div class="stat-label">Raze(Positive-lifespan)</div>
@@ -313,6 +314,8 @@
         </div>
         
 
+
+        
         <!-- RAZE Lifespan Summary (placed ABOVE the Demolition Locations Map container) -->
         <div class="chart-container" id="raze-lifespan-summary-container">
         <h2 class="chart-title">RAZE Lifespan Summary</h2>
@@ -324,7 +327,6 @@
         <div class="status-row">
             <span id="razePosClose" class="badge badge-close">— Close</span>
             <span id="razePosOpen"  class="badge badge-open">— Open</span>
-        </div>
         </div>
 
         <div class="mini-stat" style="padding:8px 10px; border:1px solid #eee; border-radius:8px; min-width:200px;">
@@ -356,6 +358,17 @@
 
         </div>
 
+                </div> <div class="controls">
+            <div class="control-group" style="display: flex; align-items: center; margin-bottom: 5px;">
+                <input type="checkbox" id="statusFilter" onchange="updateCharts()" style="width: auto; height: auto; margin-right: 10px; cursor: pointer; transform: scale(1.1);">
+                <label for="statusFilter" style="margin-bottom: 0; font-weight: 500; cursor: pointer; user-select: none; font-size: 1em;">
+                    Show only 'Closed' status permits
+                </label>
+            </div>
+            <p style="color: #666; font-size: 0.9em; margin-left: 30px;">
+                This filter applies to statistics, the map, and all charts below (except the RAZE Lifespan Summary & Multi-RAZE plot).
+            </p>
+        </div>
 
         <div class="chart-container">
             <h2 class="chart-title">Demolition Locations Map</h2>
@@ -476,473 +489,661 @@
     </div>
 
     <script>
-        let currentData = null;
-        let charts = {};
-        let map = null;
-        let pointLayer = null;
+// --- GLOBAL VARIABLES ---
+    let currentData = null; // Will hold all the data loaded from 'boston_demolition_data.json'
+    let charts = {}; // An object to store all our Chart.js instances. We need this to destroy old charts before creating new ones.
+    let map = null; // Will hold the Leaflet map instance
+    let pointLayer = null; // Will hold the Leaflet layer group that contains all the demolition points
 
-        const colors = {
-            RAZE: 'rgba(13, 8, 135, 0.8)',
-            EXTDEM: 'rgba(204, 71, 120, 0.8)',
-            INTDEM: 'rgba(254, 206, 50, 0.8)',
-            single: 'rgba(126, 3, 168, 0.8)',
-            demolished_and_replaced: 'rgba(0, 0, 0, 0.75)'
-        };
+    // --- CONSTANTS ---
+    // Color palette for the fill color of charts
+    const colors = {
+        RAZE: 'rgba(13, 8, 135, 0.8)',
+        EXTDEM: 'rgba(204, 71, 120, 0.8)',
+        INTDEM: 'rgba(254, 206, 50, 0.8)',
+        single: 'rgba(126, 3, 168, 0.8)', // Fallback color
+        demolished_and_replaced: 'rgba(0, 0, 0, 0.75)' // Special color for negative-lifespan RAZE
+    };
 
-        const borderColors = {
-            RAZE: 'rgba(13, 8, 135, 1)',
-            EXTDEM: 'rgba(204, 71, 120, 1)',
-            INTDEM: 'rgba(254, 206, 50, 0.8)',
-            single: 'rgba(126, 3, 168, 1)',
-            demolished_and_replaced: 'rgba(0, 0, 0, 0.75)'
+    // Color palette for the border color of charts
+    const borderColors = {
+        RAZE: 'rgba(13, 8, 135, 1)',
+        EXTDEM: 'rgba(204, 71, 120, 1)',
+        INTDEM: 'rgba(254, 206, 50, 0.8)',
+        single: 'rgba(126, 3, 168, 1)',
+        demolished_and_replaced: 'rgba(0, 0, 0, 0.75)'
+    };
 
-        };
 
+    /**
+     * Updates the "RAZE Lifespan Summary" box (the one with the small badges).
+     * NOTE: This summary is special. It is NOT affected by the global "Closed Only" filter.
+     * It always shows the city-wide, unfiltered totals.
+     * @param {object} currentData - The main data object.
+     */
+    function updateRazeLifespanSummary(currentData) {
+        if (!currentData || !currentData.summary_stats) return; // Safety check
 
-        // Update the RAZE lifespan summary (the container ABOVE the map).
-        // Numbers are city-wide (not affected by the map dropdown).
-        function updateRazeLifespanSummary(currentData) {
-        if (!currentData || !currentData.summary_stats) return;
-
+        // Get the main summary_stats object
         const s = currentData.summary_stats;
 
-        // Avg Age of Current Buildings (Boston)
+        // Update the 'Average Age of Current Buildings' card
         const elAge = document.getElementById('avgCurrentAge');
         const avgCurrent = Number(s?.avg_current_building_age);
         if (elAge) {
             elAge.innerHTML = Number.isFinite(avgCurrent) && avgCurrent > 0
-            ? `${avgCurrent.toFixed(1)} <span class="stat-unit">years</span>`
-            : 'N/A';
+                ? `${avgCurrent.toFixed(1)} <span class="stat-unit">years</span>`
+                : 'N/A';
         }
 
-        // RAZE counts
-        const pos  = (typeof s.raze_count_before_geo === 'number') ? s.raze_count_before_geo : (s.raze_count || 0);
+        // Get counts for positive, zero, and negative lifespan RAZE events
+        const pos = (typeof s.raze_count_before_geo === 'number') ? s.raze_count_before_geo : (s.raze_count || 0);
         const zero = s.zero_raze_count || 0;
-        const neg  = s.negative_raze_count || 0;
+        const neg = s.negative_raze_count || 0;
         const total = pos + zero + neg;
 
-        const elPos   = document.getElementById('razePosCount');
-        const elZero  = document.getElementById('razeZeroCount');
-        const elNeg   = document.getElementById('razeNegCount');
+        // Get the HTML elements for the counts
+        const elPos = document.getElementById('razePosCount');
+        const elZero = document.getElementById('razeZeroCount');
+        const elNeg = document.getElementById('razeNegCount');
         const elTotal = document.getElementById('razeTotalCount');
 
-        if (elPos)   elPos.textContent   = pos.toLocaleString();
-        if (elZero)  elZero.textContent  = zero.toLocaleString();
-        if (elNeg)   elNeg.textContent   = neg.toLocaleString();
+        // Update the text content of the count elements
+        if (elPos) elPos.textContent = pos.toLocaleString();
+        if (elZero) elZero.textContent = zero.toLocaleString();
+        if (elNeg) elNeg.textContent = neg.toLocaleString();
         if (elTotal) elTotal.textContent = total.toLocaleString();
 
-        // Status badges per bucket
+        // Get the status breakdown (Open/Close) for each lifespan bucket
         const sb = s.raze_status_by_lifespan || {};
 
-        function setBadge(id, count, label){
+        /**
+         * Helper function to update the text of the small status badges.
+         * @param {string} id - The HTML element ID of the badge.
+         * @param {number} count - The count to display.
+         * @param {string} label - The label (e.g., "Close" or "Open").
+         */
+        function setBadge(id, count, label) {
             const el = document.getElementById(id);
             if (el) el.textContent = `${(count || 0).toLocaleString()} ${label}`;
         }
 
+        // Get counts for each bucket, with fallbacks for missing data
         const P = sb.positive || {}, Z = sb.zero || {}, N = sb.negative || {}, T = sb.total || {};
 
-        setBadge('razePosClose',  P.close, 'Close');
-        setBadge('razePosOpen',   P.open,  'Open');
+        // Set the text for all 8 badges
+        setBadge('razePosClose', P.close, 'Close');
+        setBadge('razePosOpen', P.open, 'Open');
 
         setBadge('razeZeroClose', Z.close, 'Close');
-        setBadge('razeZeroOpen',  Z.open,  'Open');
+        setBadge('razeZeroOpen', Z.open, 'Open');
 
-        setBadge('razeNegClose',  N.close, 'Close');
-        setBadge('razeNegOpen',   N.open,  'Open');
+        setBadge('razeNegClose', N.close, 'Close');
+        setBadge('razeNegOpen', N.open, 'Open');
 
-        setBadge('razeTotalClose',T.close, 'Close');
-        setBadge('razeTotalOpen', T.open,  'Open');
-        }
+        setBadge('razeTotalClose', T.close, 'Close');
+        setBadge('razeTotalOpen', T.open, 'Open');
+    }
 
 
+    /**
+     * Helper function: Parses a string label like "10-20" into a number array [10, 20].
+     * @param {string} str - The range string.
+     * @returns {Array<number>} An array [start, end].
+     */
+    function parseRange(str) {
+        const m = String(str).match(/(\d+)\s*-\s*(\d+)/); // Regex to find two numbers separated by a dash
+        return m ? [parseInt(m[1]), parseInt(m[2])] : [0, 0]; // Return [start, end] or [0, 0] if no match
+    }
 
-        // Parse a "start-end" label (e.g., "320-330") into numeric [start, end]
-        function parseRange(str) {
-        const m = String(str).match(/(\d+)\s*-\s*(\d+)/);
-        return m ? [parseInt(m[1]), parseInt(m[2])] : [0, 0];
-        }
-
-        // Get the maximum right edge from a series of { range: "a-b", ... }
-        function getUpperFromSeries(series = []) {
+    /**
+     * Helper function: Finds the highest 'end' value from a series of range objects.
+     * Used to determine the x-axis limit for age charts.
+     * @param {Array<object>} series - An array of objects (e.g., [{range: "0-10"}, {range: "10-20"}]).
+     * @returns {number} The maximum 'end' value found.
+     */
+    function getUpperFromSeries(series = []) {
         let max = 0;
         series.forEach(d => {
-            const [, end] = parseRange(d.range);
+            const [, end] = parseRange(d.range); // Get the 'end' value from the range
             if (end > max) max = end;
         });
         return max;
-        }
+    }
 
-        // Compute a global max age upper bound across current-building and demolition series
-        function computeGlobalMaxAge(data) {
+    /**
+     * Helper function: Calculates the maximum age bin needed across multiple datasets.
+     * This ensures all age-based charts share the same x-axis scale.
+     * @param {object} data - An object containing the different age distribution arrays.
+     * @returns {number} The global maximum age bin.
+     */
+    function computeGlobalMaxAge(data) {
         const maxCurrent = getUpperFromSeries(data.current_building_age_distribution || []);
-        const maxDem10   = getUpperFromSeries(data.lifespan_distribution || []);
-        const maxDem5    = getUpperFromSeries(data.lifespan_distribution_5yr || []);
-        return Math.max(maxCurrent, maxDem10, maxDem5);
-        }
+        const maxDem10 = getUpperFromSeries(data.lifespan_distribution || []);
+        const maxDem5 = getUpperFromSeries(data.lifespan_distribution_5yr || []);
+        return Math.max(maxCurrent, maxDem10, maxDem5); // Return the largest of the three
+    }
 
 
-        async function loadDataFromJSON() {
-            try {
-                const response = await fetch('boston_demolition_data.json');
-                if (!response.ok) {
-                    showError();
-                    return;
-                }
-                const data = await response.json();
-                currentData = data;
-                
-                if (!data.lifespan_distribution_5yr && data.lifespan_distribution) {
-                    data.lifespan_distribution_5yr = data.lifespan_distribution;
-                }
-                
-                updateDashboard(data);
-                console.log('Successfully loaded Boston demolition data from JSON');
-                
-            } catch (error) {
-                console.error('Error loading JSON:', error);
+    /**
+     * Main data loading function. Fetches 'boston_demolition_data.json' asynchronously.
+     */
+    async function loadDataFromJSON() {
+        try {
+            // Fetch the JSON file
+            const response = await fetch('boston_demolition_data.json');
+            
+            // If the file is not found or there's an error (e.g., 404), show an error
+            if (!response.ok) {
                 showError();
-            }
-        }
-        
-        function showError() {
-            const errorDiv = document.createElement('div');
-            errorDiv.className = 'error-message';
-            errorDiv.innerHTML = `
-                <strong>Error:</strong> Unable to load boston_demolition_data.json. 
-                <br>Please ensure the JSON file is in the same directory as this HTML file.
-            `;
-            
-            const header = document.querySelector('.header');
-            if (header && header.parentNode) {
-                header.parentNode.insertBefore(errorDiv, header.nextSibling);
-            }
-            
-            document.getElementById('totalDemo').textContent = 'N/A';
-            document.getElementById('avgLifespan').innerHTML = 'N/A';
-            document.getElementById('extdemCount').textContent = 'N/A';
-            document.getElementById('intdemCount').textContent = 'N/A';
-            document.getElementById('avgCurrentAge').innerHTML = 'N/A';
-        }
-
-        function updateDashboard(data) {
-            const stats = data.summary_stats;
-            // Show RAZE-only count in the top KPI
-            document.getElementById('totalDemo').textContent = stats.raze_count.toLocaleString();
-            document.getElementById('extdemCount').textContent = stats.extdem_count.toLocaleString();
-            document.getElementById('intdemCount').textContent = stats.intdem_count.toLocaleString();
-            
-            if (data.metadata && data.metadata.year_range) {
-                document.getElementById('subtitle').textContent = 
-                    `Building Lifecycle and Demolition Patterns (${data.metadata.year_range})`;
-            }
-
-            initMap();
-            updateCharts();
-        }
-
-        function updateAverageLifespan(filter, data) {
-            let lifespan = 0;
-            const lifespanElement = document.getElementById('avgLifespan');
-
-            if (filter === 'all') {
-                lifespan = data.summary_stats.average_lifespan;
-            } else {
-                const typeData = data.lifespan_by_type.find(d => d.type === filter);
-                if (typeData && typeData.average) {
-                    lifespan = typeData.average;
-                } else {
-                    lifespan = 0; 
-                }
-            }
-
-            if (lifespan > 0) {
-                 lifespanElement.innerHTML = lifespan.toFixed(1) + ' <span class="stat-unit">years</span>';
-            } else {
-                 lifespanElement.innerHTML = 'N/A';
-            }
-        }
-
-        function updateCharts() {
-            if (!currentData) return;
-
-            const chartType = document.getElementById('chartType').value;
-            const selectedForMap = document.getElementById('demolitionFilter').value;
-            const chartTypeFilter = 'RAZE'; // lock all non-map visuals to RAZE
-            const viewMode = document.getElementById('viewMode').value;
-            const binSize = parseInt(document.getElementById('binSize').value);
-            const globalMaxAge = computeGlobalMaxAge(currentData);
-
-            updateAverageLifespan('RAZE', currentData);
-
-
-            createMapPlot(currentData, selectedForMap);  
-            createMultiRazeDotPlot(currentData.multi_raze_parcels);
-            createYearlyChart(currentData.yearly_stacked, chartType, chartTypeFilter, viewMode);
-            createLifespanChart(currentData.lifespan_distribution, chartType, chartTypeFilter, viewMode, binSize, globalMaxAge);
-            createCurrentAgeChart(currentData.current_building_age_distribution, binSize);
-            createTypeChart(currentData.demolition_types, chartTypeFilter);
-            createAgeDistributionChart(currentData, chartTypeFilter);
-            createConstructionEraChart(currentData, chartTypeFilter);
-            createLifespanStripPlot(currentData, chartTypeFilter);
-            updateRazeLifespanSummary(currentData);
-        }
-        
-        function initMap() {
-            if (!map) {
-                map = L.map('map').setView([42.3601, -71.0589], 12);
-
-                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                }).addTo(map);
-            }
-        }
-
-        function createMapPlot(data, filter) {
-            if (!map) return;
-
-            if (pointLayer) {
-                map.removeLayer(pointLayer);
-            }
-
-            if (!data.map_points) {
-                console.error("Map data ('map_points') is missing from the JSON file.");
                 return;
             }
             
-            let points_to_plot = data.map_points;
-
-            if (filter !== 'all') {
-                points_to_plot = data.map_points.filter(p => p.type === filter);
-            }
+            // Parse the JSON response
+            const data = await response.json();
             
-            const markers = [];
-            points_to_plot.forEach(point => {
-                if (point.lat && point.lng) {
-                    const markerColor = colors[point.type] || colors.single;
-                    
-                    const circleMarker = L.circleMarker([point.lat, point.lng], {
-                        radius: 4,      
-                        fillColor: markerColor, 
-                        color: borderColors[point.type] || borderColors.single,
-                        weight: 1,       
-                        opacity: 0.6,   
-                        fillOpacity: 1 
-                    });
+            // Store the loaded data in our global variable
+            currentData = data;
 
-                    circleMarker.bindTooltip(`
-                        <strong>Type:</strong> ${point.type}<br>
-                        <strong>Lifespan:</strong> ${point.lifespan} years
-                    `);
-                    markers.push(circleMarker);
-                }
-            });
+            // Fallback logic: If 5-year bin data is missing, use the 10-year bin data as a replacement
+            if (!data.lifespan_distribution_5yr && data.lifespan_distribution) {
+                data.lifespan_distribution_5yr = data.lifespan_distribution;
+            }
 
-            pointLayer = L.layerGroup(markers);
-            pointLayer.addTo(map);
+            // Once data is successfully loaded, initialize the dashboard
+            updateDashboard(data);
+            console.log('Successfully loaded Boston demolition data from JSON');
+
+        } catch (error) {
+            // If any other error occurs (e.g., JSON parsing error), log it and show an error
+            console.error('Error loading JSON:', error);
+            showError();
+        }
+    }
+
+    /**
+     * Displays a user-friendly error message in the UI if the JSON file fails to load.
+     */
+    function showError() {
+        const errorDiv = document.createElement('div');
+        errorDiv.className = 'error-message';
+        errorDiv.innerHTML = `
+            <strong>Error:</strong> Unable to load boston_demolition_data.json. 
+            <br>Please ensure the JSON file is in the same directory as this HTML file.
+        `;
+
+        // Insert the error message after the header
+        const header = document.querySelector('.header');
+        if (header && header.parentNode) {
+            header.parentNode.insertBefore(errorDiv, header.nextSibling);
         }
 
-        function createMultiRazeDotPlot(multi) {
+        // Set all KPI cards to 'N/A'
+        document.getElementById('totalDemo').textContent = 'N/A';
+        document.getElementById('avgLifespan').innerHTML = 'N/A';
+        document.getElementById('extdemCount').textContent = 'N/A';
+        document.getElementById('intdemCount').textContent = 'N/A';
+        document.getElementById('avgCurrentAge').innerHTML = 'N/A';
+    }
+
+    /**
+     * First function called after data is successfully loaded.
+     * It sets up the map and calls the main `updateCharts` function.
+     * @param {object} data - The loaded JSON data.
+     */
+    function updateDashboard(data) {
+        // MODIFIED: The main stats (KPIs) are no longer set here.
+        // They are now set inside updateCharts() because they need to react to the "Closed Only" filter.
+        
+        // Update the dashboard subtitle with the year range from metadata
+        if (data.metadata && data.metadata.year_range) {
+            document.getElementById('subtitle').textContent =
+                `Building Lifecycle and Demolition Patterns (${data.metadata.year_range})`;
+        }
+
+        // Initialize the Leaflet map container (only happens once)
+        initMap();
+        
+        // Call the main update function to draw all charts for the first time
+        updateCharts();
+    }
+
+    /**
+     * NEW FUNCTION: Updates the main KPI (Key Performance Indicator) cards at the top of the page.
+     * This function is now separate so it can be updated by the "Closed Only" filter.
+     * @param {object} data - The main data object.
+     * @param {boolean} showClosedOnly - The state of the "Closed Only" checkbox.
+     */
+    function updateMainStats(data, showClosedOnly) {
+        // Select the correct data object:
+        // If showClosedOnly is true AND 'summary_stats_closed' exists, use it.
+        // Otherwise, use the default 'summary_stats'.
+        const stats = (showClosedOnly && data.summary_stats_closed) ? data.summary_stats_closed : data.summary_stats;
+
+        // If stats object is missing, show N/A and exit
+        if (!stats) {
+            console.warn('summary_stats object is missing for the selected filter.');
+            document.getElementById('totalDemo').textContent = 'N/A';
+            document.getElementById('extdemCount').textContent = 'N/A';
+            document.getElementById('intdemCount').textContent = 'N/A';
+            return;
+        }
+
+        // Update the KPI cards with the selected data
+        document.getElementById('totalDemo').textContent = (stats.raze_count || 0).toLocaleString();
+        document.getElementById('extdemCount').textContent = (stats.extdem_count || 0).toLocaleString();
+        document.getElementById('intdemCount').textContent = (stats.intdem_count || 0).toLocaleString();
+    }
+
+
+    /**
+     * MODIFIED: Updates the "Average Lifespan" KPI card.
+     * Now accepts the 'showClosedOnly' flag to select the correct data.
+     * @param {string} filter - The filter type (e.g., 'RAZE').
+     * @param {object} data - The main data object.
+     * @param {boolean} showClosedOnly - The state of the "Closed Only" checkbox.
+     */
+    function updateAverageLifespan(filter, data, showClosedOnly) {
+        let lifespan = 0;
+        const lifespanElement = document.getElementById('avgLifespan');
+
+        // NEW: Select the correct stats object based on the filter
+        const stats = (showClosedOnly && data.summary_stats_closed) ? data.summary_stats_closed : data.summary_stats;
+        const lifespanData = (showClosedOnly && data.lifespan_by_type_closed) ? data.lifespan_by_type_closed : (data.lifespan_by_type || []);
+
+        if (!stats) {
+            lifespanElement.innerHTML = 'N/A';
+            return;
+        }
+
+        if (filter === 'all') {
+            lifespan = stats.average_lifespan;
+        } else {
+            // Find the specific type (e.g., RAZE) in the lifespan_by_type array
+            const typeData = lifespanData.find(d => d.type === filter);
+            if (typeData && typeData.average) {
+                lifespan = typeData.average;
+            } else if (filter === 'RAZE') {
+                // Fallback: If 'RAZE' isn't in the array, use the main average_lifespan from summary_stats
+                lifespan = stats.average_lifespan;
+            } else {
+                lifespan = 0;
+            }
+        }
+
+        // Display the result
+        if (lifespan > 0) {
+            lifespanElement.innerHTML = lifespan.toFixed(1) + ' <span class="stat-unit">years</span>';
+        } else {
+            lifespanElement.innerHTML = 'N/A';
+        }
+    }
+
+    /**
+     * --- THIS IS THE MAIN CONTROLLER FUNCTION ---
+     * It runs every time any filter (dropdown, checkbox) is changed.
+     * It reads all filter values, selects the correct data, and calls all the functions to redraw the charts.
+     */
+    function updateCharts() {
+        if (!currentData) return; // Don't run if data isn't loaded yet
+
+        // 1. Read values from all user controls
+        const chartType = document.getElementById('chartType').value;
+        const selectedForMap = document.getElementById('demolitionFilter').value;
+        const chartTypeFilter = 'RAZE'; // Lock all non-map visuals to RAZE
+        const viewMode = document.getElementById('viewMode').value;
+        const binSize = parseInt(document.getElementById('binSize').value);
+
+        // MODIFIED: Read the state of our new "Closed Only" checkbox
+        const showClosedOnly = document.getElementById('statusFilter').checked;
+
+        // 2. Select the correct data source based on the 'showClosedOnly' flag
+        //    This assumes the JSON has parallel data structures (e.g., 'yearly_stacked' and 'yearly_stacked_closed')
+        const yearlyData = (showClosedOnly && currentData.yearly_stacked_closed) ? currentData.yearly_stacked_closed : currentData.yearly_stacked;
+        const lifespan5yr = (showClosedOnly && currentData.lifespan_distribution_5yr_closed) ? currentData.lifespan_distribution_5yr_closed : currentData.lifespan_distribution_5yr;
+        const lifespan10yr = (showClosedOnly && currentData.lifespan_distribution_closed) ? currentData.lifespan_distribution_closed : currentData.lifespan_distribution;
+        const ageDistData = (showClosedOnly && currentData.yearly_age_distribution_closed) ? currentData.yearly_age_distribution_closed : currentData.yearly_age_distribution;
+        const eraData = (showClosedOnly && currentData.yearly_construction_era_closed) ? currentData.yearly_construction_era_closed : currentData.yearly_construction_era;
+        const boxplotData = (showClosedOnly && currentData.lifespan_by_year_boxplot_closed) ? currentData.lifespan_by_year_boxplot_closed : currentData.lifespan_by_year_boxplot;
+
+        // 3. Recalculate the global max age based on the *selected* data (for consistent x-axes)
+        const globalMaxAgeData = {
+            current_building_age_distribution: currentData.current_building_age_distribution, // Current age is NOT filtered
+            lifespan_distribution: lifespan10yr,
+            lifespan_distribution_5yr: lifespan5yr
+        };
+        const globalMaxAge = computeGlobalMaxAge(globalMaxAgeData);
+
+
+        // 4. Call all update/create functions, passing the correct data and filter state
+        
+        // Update KPIs (filter-aware)
+        updateMainStats(currentData, showClosedOnly); // NEW call
+        updateAverageLifespan('RAZE', currentData, showClosedOnly); // MODIFIED call
+
+        // Redraw charts (some are filter-aware, some are not)
+        createMapPlot(currentData, selectedForMap, showClosedOnly); // MODIFIED (filter-aware)
+        createMultiRazeDotPlot(currentData.multi_raze_parcels); // NOT filtered
+        createYearlyChart(yearlyData, chartType, chartTypeFilter, viewMode, showClosedOnly); // MODIFIED (filter-aware)
+        createLifespanChart(lifespan10yr, lifespan5yr, chartType, chartTypeFilter, viewMode, binSize, globalMaxAge, showClosedOnly); // MODIFIED (filter-aware)
+        createCurrentAgeChart(currentData.current_building_age_distribution, binSize); // NOT filtered
+        createTypeChart(currentData.demolition_types, chartTypeFilter); // NOT filtered
+        createAgeDistributionChart(ageDistData, chartTypeFilter, showClosedOnly); // MODIFIED (filter-aware)
+        createConstructionEraChart(eraData, chartTypeFilter, showClosedOnly); // MODIFIED (filter-aware)
+        createLifespanStripPlot(boxplotData, chartTypeFilter, showClosedOnly); // MODIFIED (filter-aware)
+        updateRazeLifespanSummary(currentData); // NOT filtered
+    }
+
+    /**
+     * Initializes the Leaflet map container on the first page load.
+     */
+    function initMap() {
+        if (!map) { // Only run this code ONCE
+            map = L.map('map').setView([42.3601, -71.0589], 12); // Center on Boston
+
+            // Add the OpenStreetMap tile layer
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            }).addTo(map);
+        }
+    }
+
+    /**
+     * MODIFIED: Creates the Leaflet map with demolition points.
+     * Now accepts the 'showClosedOnly' flag to filter points.
+     * @param {object} data - The main data object.
+     * @param {string} filter - The dropdown filter value (e.g., 'RAZE', 'all').
+     * @param {boolean} showClosedOnly - The state of the "Closed Only" checkbox.
+     */
+    function createMapPlot(data, filter, showClosedOnly) {
+        if (!map) return; // Don't run if map isn't initialized
+
+        // Clear any existing points from the map
+        if (pointLayer) {
+            map.removeLayer(pointLayer);
+        }
+
+        if (!data.map_points) {
+            console.error("Map data ('map_points') is missing from the JSON file.");
+            return;
+        }
+
+        // Start with all points
+        let points_to_plot = data.map_points;
+
+        // NEW: First, filter by status if the checkbox is checked
+        if (showClosedOnly) {
+            // This assumes each point in 'map_points' has a 'status' property (e.g., p.status === 'Close')
+            points_to_plot = points_to_plot.filter(p => p.status === 'Close');
+        }
+
+        // Then, filter by the dropdown selection (RAZE, EXTDEM, etc.)
+        if (filter !== 'all') {
+            points_to_plot = points_to_plot.filter(p => p.type === filter);
+        }
+
+        // Create an array of Leaflet circle markers
+        const markers = [];
+        points_to_plot.forEach(point => {
+            if (point.lat && point.lng) {
+                const markerColor = colors[point.type] || colors.single;
+
+                const circleMarker = L.circleMarker([point.lat, point.lng], {
+                    radius: 4,
+                    fillColor: markerColor,
+                    color: borderColors[point.type] || borderColors.single,
+                    weight: 1,
+                    opacity: 0.6,
+                    fillOpacity: 1
+                });
+
+                // Add a tooltip to each marker
+                circleMarker.bindTooltip(`
+                    <strong>Type:</strong> ${point.type}<br>
+                    <strong>Lifespan:</strong> ${point.lifespan} years
+                `);
+                markers.push(circleMarker);
+            }
+        });
+
+        // Add all markers to a layer group and add the group to the map
+        pointLayer = L.layerGroup(markers);
+        pointLayer.addTo(map);
+    }
+
+    /**
+     * Creates the dot plot for parcels that have multiple RAZE permits.
+     * This chart is NOT affected by the "Closed Only" filter.
+     * @param {Array<object>} multi - The multi_raze_parcels data array.
+     */
+    function createMultiRazeDotPlot(multi) {
         const canvas = document.getElementById('multiRazeDotPlot');
         if (!canvas) return;
         const ctx = canvas.getContext('2d');
-        if (charts.multiRazeDot) charts.multiRazeDot.destroy();
+        if (charts.multiRazeDot) charts.multiRazeDot.destroy(); // Destroy old chart
 
-        // 把 "703502000.0" → "703502000"
+        // Helper to convert "703502000.0" to "703502000"
         const idToStr = (v) => {
             const s = String(v).trim();
             const m = s.match(/^(\d+)\.0+$/);
             return m ? m[1] : s;
         };
 
-        if (!Array.isArray(multi) || !multi.length) return;
+        if (!Array.isArray(multi) || !multi.length) return; // Exit if no data
 
-        // 统一为 { building_id, build_year, raze_permits:[{year, status}] } 结构
+        // Normalize data into a standard structure: { building_id, build_year, raze_permits }
         const normalized = multi.map(d => {
             const id = idToStr(d.building_id);
             const by = Number(d.build_year);
             let permits = [];
 
             if (Array.isArray(d.raze_permits)) {
-            permits = d.raze_permits
-                .map(p => ({ year: Number(p.year), status: (p.status ?? null) }))
-                .filter(p => Number.isFinite(p.year))
-                .sort((a, b) => a.year - b.year);
+                // New JSON format
+                permits = d.raze_permits
+                    .map(p => ({ year: Number(p.year), status: (p.status ?? null) }))
+                    .filter(p => Number.isFinite(p.year))
+                    .sort((a, b) => a.year - b.year);
             } else if (Array.isArray(d.raze_years)) {
-            // 兼容旧 JSON：没有 status，只能给 null
-            permits = d.raze_years
-                .map(y => ({ year: Number(y), status: null }))
-                .filter(p => Number.isFinite(p.year))
-                .sort((a, b) => a.year - b.year);
+                // Compatibility for old JSON: no status, just assign null
+                permits = d.raze_years
+                    .map(y => ({ year: Number(y), status: null }))
+                    .filter(p => Number.isFinite(p.year))
+                    .sort((a, b) => a.year - b.year);
             }
 
             return { building_id: id, build_year: Number.isFinite(by) ? by : null, raze_permits: permits };
-        }).filter(d => d.raze_permits.length >= 2);
+        }).filter(d => d.raze_permits.length >= 2); // Only keep parcels with 2+ RAZE permits
 
-        // 排序：按“最新 RAZE 年份”
+        // Sort items by the latest RAZE year for cleaner y-axis ordering
         const items = normalized.sort((a, b) => {
             const lastA = a.raze_permits[a.raze_permits.length - 1]?.year ?? -Infinity;
             const lastB = b.raze_permits[b.raze_permits.length - 1]?.year ?? -Infinity;
             if (lastA !== lastB) return lastA - lastB;
-            return a.building_id.localeCompare(b.building_id);
+            return a.building_id.localeCompare(b.building_id); // As a tie-breaker
         });
 
-        const yLabels = items.map(d => d.building_id);
+        const yLabels = items.map(d => d.building_id); // Get y-axis labels
 
+        // Create data point arrays for Chart.js
         const builtPoints = [];
         const latestPoints = [];
         const earlierPoints = [];
 
         items.forEach(row => {
             const id = row.building_id;
-            const y  = id;
+            const y = id; // Use the ID as the y-category
 
+            // Green squares: Built Year
             if (Number.isFinite(row.build_year)) {
-            builtPoints.push({ x: row.build_year, y, building_id: id, year: row.build_year, kind: 'Built' });
+                builtPoints.push({ x: row.build_year, y, building_id: id, year: row.build_year, kind: 'Built' });
             }
 
+            // Red triangles: Latest RAZE
             const last = row.raze_permits[row.raze_permits.length - 1];
             if (last) {
-            latestPoints.push({
-                x: last.year, y, building_id: id, year: last.year, kind: 'Latest RAZE',
-                total: row.raze_permits.length, status: last.status ?? null
-            });
+                latestPoints.push({
+                    x: last.year, y, building_id: id, year: last.year, kind: 'Latest RAZE',
+                    total: row.raze_permits.length, status: last.status ?? null
+                });
             }
+            // Circles: Other RAZE permits
             row.raze_permits.slice(0, -1).forEach(p => {
-            earlierPoints.push({
-                x: p.year, y, building_id: id, year: p.year, kind: 'RAZE',
-                total: row.raze_permits.length, status: p.status ?? null
-            });
+                earlierPoints.push({
+                    x: p.year, y, building_id: id, year: p.year, kind: 'RAZE',
+                    total: row.raze_permits.length, status: p.status ?? null
+                });
             });
         });
 
+        // Find min/max years for x-axis scale
         const allX = builtPoints.concat(latestPoints, earlierPoints).map(p => p.x);
         if (!allX.length) return;
         const xMin = Math.min(...allX);
         const xMax = Math.max(...allX);
 
+        // Create the Chart.js scatter plot
         charts.multiRazeDot = new Chart(ctx, {
             type: 'scatter',
             data: {
-            datasets: [
-                { // 绿色方形：建成年
-                label: 'Built Year (■)',
-                data: builtPoints,
-                pointStyle: 'rect',
-                pointRadius: 5,
-                pointHoverRadius: 6,
-                backgroundColor: '#22c55e',
-                borderColor: '#16a34a'
-                },
-                { // 红色三角：最新 RAZE
-                label: 'Latest RAZE (▲)',
-                data: latestPoints,
-                pointStyle: 'triangle',
-                pointRadius: 6,
-                pointHoverRadius: 7,
-                backgroundColor: '#ef4444',
-                borderColor: '#b91c1c'
-                },
-                { // 圆点：其它 RAZE
-                label: 'RAZE (others ●)',
-                data: earlierPoints,
-                pointStyle: 'circle',
-                pointRadius: 4,
-                pointHoverRadius: 5,
-                backgroundColor: colors.RAZE,
-                borderColor: borderColors.RAZE
-                }
-            ]
+                datasets: [
+                    {
+                        label: 'Built Year (■)',
+                        data: builtPoints,
+                        pointStyle: 'rect',
+                        pointRadius: 5,
+                        pointHoverRadius: 6,
+                        backgroundColor: '#22c55e',
+                        borderColor: '#16a34a'
+                    },
+                    {
+                        label: 'Latest RAZE (▲)',
+                        data: latestPoints,
+                        pointStyle: 'triangle',
+                        pointRadius: 6,
+                        pointHoverRadius: 7,
+                        backgroundColor: '#ef4444',
+                        borderColor: '#b91c1c'
+                    },
+                    {
+                        label: 'RAZE (others ●)',
+                        data: earlierPoints,
+                        pointStyle: 'circle',
+                        pointRadius: 4,
+                        pointHoverRadius: 5,
+                        backgroundColor: colors.RAZE,
+                        borderColor: borderColors.RAZE
+                    }
+                ]
             },
             options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            parsing: false,
-            scales: {
-                x: {
-                type: 'linear',
-                title: { display: true, text: 'Year' },
-                min: xMin - 1,
-                max: xMax + 1,
-                grid: { display: false },
-                ticks: {
-                    callback: (value) => {
-                    const range = xMax - xMin;
-                    if (range <= 20) return value;
-                    if (range <= 30) return value % 2 === 0 ? value : '';
-                    if (range <= 50) return value % 5 === 0 ? value : '';
-                    return value % 10 === 0 ? value : '';
+                responsive: true,
+                maintainAspectRatio: false,
+                parsing: false, // We provide data in {x, y} format, so parsing is not needed
+                scales: {
+                    x: {
+                        type: 'linear',
+                        title: { display: true, text: 'Year' },
+                        min: xMin - 1,
+                        max: xMax + 1,
+                        grid: { display: false },
+                        ticks: {
+                            // Dynamic tick skipping based on year range
+                            callback: (value) => {
+                                const range = xMax - xMin;
+                                if (range <= 20) return value;
+                                if (range <= 30) return value % 2 === 0 ? value : '';
+                                if (range <= 50) return value % 5 === 0 ? value : '';
+                                return value % 10 === 0 ? value : '';
+                            }
+                        }
+                    },
+                    y: {
+                        type: 'category',
+                        labels: yLabels,
+                        title: { display: true, text: 'Parcel (building_id)' },
+                        grid: { color: 'rgba(0,0,0,0.05)' },
+                        ticks: { autoSkip: false, maxRotation: 0, minRotation: 0 }
                     }
-                }
                 },
-                y: {
-                type: 'category',
-                labels: yLabels,
-                title: { display: true, text: 'Parcel (building_id)' },
-                grid: { color: 'rgba(0,0,0,0.05)' },
-                ticks: { autoSkip: false, maxRotation: 0, minRotation: 0 }
-                }
-            },
-            plugins: {
-                legend: { labels: { usePointStyle: true } },
-                tooltip: {
-                callbacks: {
-                    label: (ctx) => {
-                    const r = ctx.raw || {};
-                    const status = (r.status && String(r.status).trim()) ? String(r.status) : '—';
-                    const tail = (r.kind === 'Latest RAZE' || r.kind === 'RAZE') && r.total ? ` (total RAZE: ${r.total})` : '';
-                    // 显示 Status
-                    return `${r.building_id} — ${r.kind}: ${r.year}${tail} | Status: ${status}`;
+                plugins: {
+                    legend: { labels: { usePointStyle: true } }, // Use point styles in legend
+                    tooltip: {
+                        callbacks: {
+                            // Custom tooltip content
+                            label: (ctx) => {
+                                const r = ctx.raw || {};
+                                const status = (r.status && String(r.status).trim()) ? String(r.status) : '—';
+                                const tail = (r.kind === 'Latest RAZE' || r.kind === 'RAZE') && r.total ? ` (total RAZE: ${r.total})` : '';
+                                // Show Status in tooltip
+                                return `${r.building_id} — ${r.kind}: ${r.year}${tail} | Status: ${status}`;
+                            }
+                        }
                     }
-                }
-                }
-            },
-            elements: { point: { borderWidth: 1 } }
+                },
+                elements: { point: { borderWidth: 1 } }
             }
         });
-        }
+    }
 
 
+    /**
+     * MODIFIED: Creates the "Demolitions by Year" chart.
+     * Accepts 'yearlyData' (which is pre-filtered by 'updateCharts') and 'showClosedOnly'.
+     * @param {Array<object>} yearlyData - The data array (e.g., currentData.yearly_stacked or currentData.yearly_stacked_closed).
+     * @param {string} chartType - 'bar', 'line', or 'area'.
+     * @param {string} filter - 'RAZE', 'EXTDEM', etc. (Locked to 'RAZE' for this chart).
+     * @param {string} viewMode - 'absolute' or 'percentage'.
+     * @param {boolean} showClosedOnly - The state of the "Closed Only" checkbox.
+     */
+    function createYearlyChart(yearlyData, chartType, filter, viewMode, showClosedOnly) {
+        const ctx = document.getElementById('yearlyChart').getContext('2d');
 
+        if (charts.yearly) charts.yearly.destroy(); // Destroy old chart
 
-        function createYearlyChart(yearlyData, chartType, filter, viewMode) {
-            const ctx = document.getElementById('yearlyChart').getContext('2d');
-            
-            if (charts.yearly) charts.yearly.destroy();
-            
-            const years = yearlyData.map(d => d.year);
-            let datasets = [];
+        // NEW: Define the data key suffix based on the filter.
+        // e.g., '_closed' or '' (empty string)
+        // This assumes the JSON has keys like 'RAZE' and 'RAZE_closed'.
+        const suffix = showClosedOnly ? '_closed' : '';
 
-            if (filter === 'all') {
-                ['RAZE', 'EXTDEM', 'INTDEM'].forEach(type => {
-                    let data = yearlyData.map(d => d[type] || 0);
-                    
-                    if (viewMode === 'percentage') {
-                        data = yearlyData.map(d => {
-                            const total = (d.EXTDEM || 0) + (d.INTDEM || 0) + (d.RAZE || 0);
-                            return total > 0 ? ((d[type] || 0) / total) * 100 : 0;
-                        });
-                    }
-                    
-                    datasets.push({
-                        label: type,
-                        data: data,
-                        backgroundColor: colors[type],
-                        borderColor: borderColors[type],
-                        borderWidth: chartType === 'line' ? 2 : 1,
-                        fill: chartType === 'area' ? 'stack' : false,
-                        tension: 0.1
+        const years = yearlyData.map(d => d.year);
+        let datasets = [];
+
+        if (filter === 'all') {
+            ['RAZE', 'EXTDEM', 'INTDEM'].forEach(type => {
+                // MODIFIED: Use the dynamic key (e.g., d['RAZE_closed'] or d['RAZE'])
+                let data = yearlyData.map(d => d[type + suffix] || 0);
+
+                if (viewMode === 'percentage') {
+                    data = yearlyData.map(d => {
+                        // MODIFIED: Use dynamic keys for percentage calculation
+                        const total = (d['EXTDEM' + suffix] || 0) + (d['INTDEM' + suffix] || 0) + (d['RAZE' + suffix] || 0);
+                        return total > 0 ? ((d[type + suffix] || 0) / total) * 100 : 0;
                     });
+                }
+
+                datasets.push({
+                    label: type,
+                    data: data,
+                    backgroundColor: colors[type],
+                    borderColor: borderColors[type],
+                    borderWidth: chartType === 'line' ? 2 : 1,
+                    fill: chartType === 'area' ? 'stack' : false,
+                    tension: 0.1
                 });
-            } else if (filter === 'RAZE') {
+            });
+        } else if (filter === 'RAZE') {
+            // This chart is locked to 'RAZE', so this block will always run.
             // Split RAZE into two stacked series:
             //  - RAZE: positive-age RAZE counts
             //  - demolished and replaced: negative-age RAZE counts
-            let razePos = yearlyData.map(d => d['RAZE'] || 0);
-            let razeNeg = yearlyData.map(d => d['demolished_and_replaced'] || 0);
+
+            // MODIFIED: Use dynamic keys
+            let razePos = yearlyData.map(d => d['RAZE' + suffix] || 0);
+            let razeNeg = yearlyData.map(d => d['demolished_and_replaced' + suffix] || 0);
 
             if (viewMode === 'percentage') {
-                // use (RAZE + demolished_and_replaced) as the per-year total
-                const totals = yearlyData.map(d => (d['RAZE'] || 0) + (d['demolished_and_replaced'] || 0));
+                // MODIFIED: Use dynamic keys for total
+                const totals = yearlyData.map(d => (d['RAZE' + suffix] || 0) + (d['demolished_and_replaced' + suffix] || 0));
                 razePos = razePos.map((v, i) => totals[i] ? (v / totals[i]) * 100 : 0);
                 razeNeg = razeNeg.map((v, i) => totals[i] ? (v / totals[i]) * 100 : 0);
             }
@@ -967,9 +1168,10 @@
                 tension: 0.1
             });
 
-            } else {
-            // Non-RAZE single-series fallback (kept for completeness)
-            let data = yearlyData.map(d => d[filter] || 0);
+        } else {
+            // Fallback for non-RAZE (e.g., if chartTypeFilter was changed)
+            // MODIFIED: Use dynamic key
+            let data = yearlyData.map(d => d[filter + suffix] || 0);
             datasets.push({
                 label: filter,
                 data: data,
@@ -979,194 +1181,216 @@
                 fill: chartType === 'area',
                 tension: 0.1
             });
-            }
-
-
-            const chartConfig = {
-                type: chartType === 'area' ? 'line' : chartType,
-                data: {
-                    labels: years,
-                    datasets: datasets
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        x: {
-                            stacked: (filter === 'all' || filter === 'RAZE') && chartType !== 'line',
-                            grid: { display: false },
-                            ticks: {
-                                callback: function(value, index) {
-                                    const year = years[index];
-                                    const yearRange = years[years.length - 1] - years[0];
-                                    
-                                    if (yearRange <= 20) {
-                                        return year;
-                                    } else if (yearRange <= 30) {
-                                        return year % 2 === 0 ? year : '';
-                                    } else if (yearRange <= 50) {
-                                        return year % 5 === 0 ? year : '';
-                                    } else {
-                                        return year % 10 === 0 ? year : '';
-                                    }
-                                },
-                                autoSkip: false,
-                                maxRotation: 45,
-                                minRotation: 45,
-                                font: { size: 10 }
-                            },
-                            title: { display: true, text: 'Demolition Year' }
-                        },
-                        y: {
-                            stacked: (filter === 'all' || filter === 'RAZE') && chartType !== 'line',
-                            grid: { borderDash: [2, 2] },
-                            title: {
-                                display: true,
-                                text: viewMode === 'percentage' ? 'Percentage (%)' : 'Number of Demolitions'
-                            }
-                        }
-                    },
-                    plugins: {
-                        legend: { display: (filter === 'all' || filter === 'RAZE') },
-                        tooltip: { mode: 'index', intersect: false }
-                    }
-                }
-            };
-
-            charts.yearly = new Chart(ctx, chartConfig);
         }
 
-        function createLifespanChart(lifespanData, chartType, filter, viewMode, binSize, globalMaxAge) {
+
+        const chartConfig = {
+            type: chartType === 'area' ? 'line' : chartType,
+            data: {
+                labels: years,
+                datasets: datasets
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: {
+                        stacked: (filter === 'all' || filter === 'RAZE') && chartType !== 'line',
+                        grid: { display: false },
+                        ticks: {
+                            // Dynamic tick skipping for x-axis labels
+                            callback: function (value, index) {
+                                const year = years[index];
+                                const yearRange = years[years.length - 1] - years[0];
+
+                                if (yearRange <= 20) {
+                                    return year;
+                                } else if (yearRange <= 30) {
+                                    return year % 2 === 0 ? year : '';
+                                } else if (yearRange <= 50) {
+                                    return year % 5 === 0 ? year : '';
+                                } else {
+                                    return year % 10 === 0 ? year : '';
+                                }
+                            },
+                            autoSkip: false,
+                            maxRotation: 45,
+                            minRotation: 45,
+                            font: { size: 10 }
+                        },
+                        title: { display: true, text: 'Demolition Year' }
+                    },
+                    y: {
+                        stacked: (filter === 'all' || filter === 'RAZE') && chartType !== 'line',
+                        grid: { borderDash: [2, 2] },
+                        title: {
+                            display: true,
+                            text: viewMode === 'percentage' ? 'Percentage (%)' : 'Number of Demolitions'
+                        }
+                    }
+                },
+                plugins: {
+                    legend: { display: (filter === 'all' || filter === 'RAZE') },
+                    tooltip: { mode: 'index', intersect: false }
+                }
+            }
+        };
+
+        charts.yearly = new Chart(ctx, chartConfig);
+    }
+
+    /**
+     * MODIFIED: Creates the "Age Distribution of Demolished Buildings" chart.
+     * Accepts pre-filtered 5-year and 10-year data, and the 'showClosedOnly' flag.
+     * @param {Array<object>} lifespanData10yr - The 10-year binned data (filtered or default).
+     * @param {Array<object>} lifespanData5yr - The 5-year binned data (filtered or default).
+     * @param {string} chartType - 'bar', 'line', or 'area'.
+     * @param {string} filter - 'RAZE', 'EXTDEM', etc. (Locked to 'RAZE').
+     * @param {string} viewMode - 'absolute' or 'percentage'.
+     * @param {number} binSize - 5, 10, or 20 (from the dropdown).
+     * @param {number} globalMaxAge - The calculated max age for the x-axis.
+     * @param {boolean} showClosedOnly - The state of the "Closed Only" checkbox.
+     */
+    function createLifespanChart(lifespanData10yr, lifespanData5yr, chartType, filter, viewMode, binSize, globalMaxAge, showClosedOnly) {
         const ctx = document.getElementById('lifespanChart').getContext('2d');
         if (charts.lifespan) charts.lifespan.destroy();
 
-        // Pick a source series that always exists.
-        // If we need 5-year bins → prefer 5yr series; otherwise prefer 10yr series.
-        // When the preferred one is missing, gracefully fall back to the other,
-        // and we will aggregate by summing base bins fully inside each target bin.
-        const series5  = Array.isArray(currentData.lifespan_distribution_5yr)
-        ? currentData.lifespan_distribution_5yr : [];
-        const series10 = Array.isArray(currentData.lifespan_distribution)
-        ? currentData.lifespan_distribution : [];
+        // NEW: Define the data key suffix
+        const suffix = showClosedOnly ? '_closed' : '';
 
+        // MODIFIED: Use the passed-in data arguments, not the global currentData
+        const series5 = Array.isArray(lifespanData5yr) ? lifespanData5yr : [];
+        const series10 = Array.isArray(lifespanData10yr) ? lifespanData10yr : [];
+
+        // Select the base data (5yr or 10yr) to aggregate from
         let baseSeries;
         if (binSize === 5) {
-        baseSeries = series5.length ? series5 : series10;
+            baseSeries = series5.length ? series5 : series10; // Prefer 5yr
         } else {
-        // 10-year or 20-year views prefer 10yr source; else fall back to 5yr.
-        baseSeries = series10.length ? series10 : series5;
+            baseSeries = series10.length ? series10 : series5; // Prefer 10yr
         }
 
-        // Sum base bins that are fully inside the target [s, e) range.
-        // Works for both 5→10/20 聚合和 10→20 聚合。
+        /**
+         * MODIFIED: This inner helper function now uses the dynamic suffix
+         * to sum counts from the base series.
+         */
         function sumCountsInRange(series, s, e) {
-        const acc = { EXTDEM: 0, INTDEM: 0, RAZE: 0 };
-        series.forEach(d => {
-            const [a, b] = parseRange(d.range);
-            if (a >= s && b <= e) {
-            acc.EXTDEM += d.EXTDEM || 0;
-            acc.INTDEM += d.INTDEM || 0;
-            acc.RAZE   += d.RAZE   || 0;
-            }
-        });
-        return acc;
+            const acc = { EXTDEM: 0, INTDEM: 0, RAZE: 0 };
+            series.forEach(d => {
+                const [a, b] = parseRange(d.range);
+                if (a >= s && b <= e) {
+                    // Use dynamic key (e.g., d['RAZE_closed'] or d['RAZE'])
+                    acc.EXTDEM += d['EXTDEM' + suffix] || 0;
+                    acc.INTDEM += d['INTDEM' + suffix] || 0;
+                    acc.RAZE += d['RAZE' + suffix] || 0;
+                }
+            });
+            return acc;
         }
 
-        // Build target labels with the chosen bin size, up to the global max age.
+        // Build target labels (e.g., "0-10", "10-20") based on binSize and globalMaxAge
         const labels = [];
         for (let start = 0; start < globalMaxAge; start += binSize) {
-        labels.push(`${start}-${start + binSize}`);
+            labels.push(`${start}-${start + binSize}`);
         }
 
-        // Aggregate counts into the target bins.
+        // Aggregate counts from baseSeries into the target bins
         const finalData = labels.map(lbl => {
-        const [s, e] = parseRange(lbl);
-        const counts = sumCountsInRange(baseSeries, s, e);
-        return { range: lbl, ...counts };
+            const [s, e] = parseRange(lbl);
+            const counts = sumCountsInRange(baseSeries, s, e);
+            return { range: lbl, ...counts };
         });
 
 
-
+        // The rest of this function's logic works as-is,
+        // because 'finalData' now contains the correctly filtered counts.
         let datasets = [];
         if (filter === 'all') {
             ['RAZE', 'EXTDEM', 'INTDEM'].forEach(type => {
-            let dataArr = finalData.map(d => d[type] || 0);
-            if (viewMode === 'percentage') {
-                dataArr = finalData.map(d => {
-                const total = (d.EXTDEM || 0) + (d.INTDEM || 0) + (d.RAZE || 0);
-                return total > 0 ? ((d[type] || 0) / total) * 100 : 0;
+                let dataArr = finalData.map(d => d[type] || 0);
+                if (viewMode === 'percentage') {
+                    dataArr = finalData.map(d => {
+                        const total = (d.EXTDEM || 0) + (d.INTDEM || 0) + (d.RAZE || 0);
+                        return total > 0 ? ((d[type] || 0) / total) * 100 : 0;
+                    });
+                }
+                datasets.push({
+                    label: type,
+                    data: dataArr,
+                    backgroundColor: colors[type],
+                    borderColor: borderColors[type],
+                    borderWidth: chartType === 'line' ? 2 : 1,
+                    fill: chartType === 'area' ? 'stack' : false,
+                    tension: 0.1
                 });
-            }
-            datasets.push({
-                label: type,
-                data: dataArr,
-                backgroundColor: colors[type],
-                borderColor: borderColors[type],
-                borderWidth: chartType === 'line' ? 2 : 1,
-                fill: chartType === 'area' ? 'stack' : false,
-                tension: 0.1
-            });
             });
         } else {
+            // This chart is locked to 'RAZE', so this will run
             let dataArr = finalData.map(d => d[filter] || 0);
             datasets.push({
-            label: filter,
-            data: dataArr,
-            backgroundColor: colors[filter],
-            borderColor: borderColors[filter],
-            borderWidth: chartType === 'line' ? 2 : 1,
-            fill: chartType === 'area',
-            tension: 0.1
+                label: filter,
+                data: dataArr,
+                backgroundColor: colors[filter],
+                borderColor: borderColors[filter],
+                borderWidth: chartType === 'line' ? 2 : 1,
+                fill: chartType === 'area',
+                tension: 0.1
             });
         }
 
+        // Create the chart
         const chartConfig = {
             type: chartType === 'area' ? 'line' : chartType,
             data: { labels, datasets },
             options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            scales: {
-                x: {
-                stacked: filter === 'all' && chartType !== 'line',
-                grid: { display: false },
-                title: { display: true, text: 'Lifespan (Years)' },
-                ticks: {
-                    maxRotation: 45,
-                    minRotation: 45,
-                    autoSkip: false,
-                    callback: function(_, index) {
-                    if (binSize === 5 && labels.length > 20) {
-                        return index % 2 === 0 ? labels[index] : '';
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: {
+                        stacked: filter === 'all' && chartType !== 'line',
+                        grid: { display: false },
+                        title: { display: true, text: 'Lifespan (Years)' },
+                        ticks: {
+                            maxRotation: 45,
+                            minRotation: 45,
+                            autoSkip: false,
+                            // Skip labels if they get too crowded
+                            callback: function (_, index) {
+                                if (binSize === 5 && labels.length > 20) {
+                                    return index % 2 === 0 ? labels[index] : '';
+                                }
+                                return labels[index];
+                            }
+                        }
+                    },
+                    y: {
+                        stacked: filter === 'all' && chartType !== 'line',
+                        grid: { borderDash: [2, 2] },
+                        title: {
+                            display: true,
+                            text: viewMode === 'percentage' ? 'Percentage (%)' : 'Number of Buildings Demolished'
+                        },
+                        beginAtZero: true
                     }
-                    return labels[index];
-                    }
-                }
                 },
-                y: {
-                stacked: filter === 'all' && chartType !== 'line',
-                grid: { borderDash: [2, 2] },
-                title: {
-                    display: true,
-                    text: viewMode === 'percentage' ? 'Percentage (%)' : 'Number of Buildings Demolished'
-                },
-                beginAtZero: true
+                plugins: {
+                    legend: { display: filter === 'all' },
+                    tooltip: { mode: 'index', intersect: false }
                 }
-            },
-            plugins: {
-                legend: { display: filter === 'all' },
-                tooltip: { mode: 'index', intersect: false }
-            }
             }
         };
 
         charts.lifespan = new Chart(ctx, chartConfig);
-        }
+    }
 
 
-        // NEW: Function to create current building age chart
-        // Replaces the original function. Now supports 5/10/20-year bins via the binSize argument.
-        function createCurrentAgeChart(ageData10yr, binSize) {
+    /**
+     * Creates the "Age Distribution of Current Buildings" chart.
+     * This chart reacts to the 'binSize' dropdown but is NOT affected by the "Closed Only" filter.
+     * @param {Array<object>} ageData10yr - The 10-year binned data for *current* buildings.
+     * @param {number} binSize - 5, 10, or 20.
+     */
+    function createCurrentAgeChart(ageData10yr, binSize) {
         const ctx = document.getElementById('currentAgeChart').getContext('2d');
 
         if (charts.currentAge) charts.currentAge.destroy();
@@ -1175,49 +1399,48 @@
             return;
         }
 
-        // Local helper to parse a "start-end" string label (e.g., "120-130") into [start, end]
+        // Local helper to parse range strings
         function parseRangeLocal(str) {
             const m = String(str).match(/(\d+)\s*-\s*(\d+)/);
             return m ? [parseInt(m[1]), parseInt(m[2])] : [0, 0];
         }
 
-        // Select base series: 10-year is provided as function input; 5-year (if present) is read from JSON.
+        // Get both 10-year (passed as argument) and 5-year (from global data)
         const base10 = Array.isArray(ageData10yr) ? ageData10yr : [];
-        const base5  = (currentData && Array.isArray(currentData.current_building_age_distribution_5yr))
+        const base5 = (currentData && Array.isArray(currentData.current_building_age_distribution_5yr))
             ? currentData.current_building_age_distribution_5yr
             : [];
 
         let seriesToPlot = [];
 
         if (binSize === 5 && base5.length) {
-            // Use the 5-year distribution directly (highest fidelity).
+            // Use 5-year data directly
             seriesToPlot = base5;
         } else if (binSize === 10) {
-            // Use the 10-year distribution as-is (backward compatible).
+            // Use 10-year data directly
             seriesToPlot = base10;
         } else {
-            // 20-year bins: aggregate from the 10-year distribution (or 5-year if 10-year is missing).
-            const src = base10.length ? base10 : base5;
-            // Compute the maximum right edge to know how far to bin.
+            // Aggregate to 20-year bins
+            const src = base10.length ? base10 : base5; // Use 10yr if available, else 5yr
             let maxEnd = 0;
             src.forEach(d => {
-            const [, e] = parseRangeLocal(d.range);
-            if (e > maxEnd) maxEnd = e;
+                const [, e] = parseRangeLocal(d.range);
+                if (e > maxEnd) maxEnd = e;
             });
             const aggregated = [];
             for (let start = 0; start < maxEnd; start += 20) {
-            let count = 0;
-            src.forEach(d => {
-                const [a, b] = parseRangeLocal(d.range);
-                // Only count base bins fully inside the 20-year target bin
-                if (a >= start && b <= start + 20) count += d.count || 0;
-            });
-            if (count > 0) aggregated.push({ range: `${start}-${start + 20}`, count });
+                let count = 0;
+                src.forEach(d => {
+                    const [a, b] = parseRangeLocal(d.range);
+                    // Sum up base bins that fall inside the 20-year target bin
+                    if (a >= start && b <= start + 20) count += d.count || 0;
+                });
+                if (count > 0) aggregated.push({ range: `${start}-${start + 20}`, count });
             }
             seriesToPlot = aggregated;
         }
 
-        // Trim trailing empty bins to keep the right edge clean
+        // Trim trailing empty bins from the data
         let lastMeaningfulIndex = -1;
         for (let i = seriesToPlot.length - 1; i >= 0; i--) {
             if ((seriesToPlot[i].count || 0) > 0) { lastMeaningfulIndex = i; break; }
@@ -1225,512 +1448,593 @@
         const trimmedData = lastMeaningfulIndex >= 0 ? seriesToPlot.slice(0, lastMeaningfulIndex + 1) : seriesToPlot;
 
         const labels = trimmedData.map(d => d.range);
-        const data   = trimmedData.map(d => d.count);
+        const data = trimmedData.map(d => d.count);
 
+        // Create the bar chart
         const chartConfig = {
             type: 'bar',
             data: {
-            labels,
-            datasets: [{
-                label: 'Current Buildings',
-                data,
-                backgroundColor: 'rgba(52, 152, 219, 0.8)',
-                borderColor: 'rgba(52, 152, 219, 1)',
-                borderWidth: 1,
-                minBarLength: 2
-            }]
+                labels,
+                datasets: [{
+                    label: 'Current Buildings',
+                    data,
+                    backgroundColor: 'rgba(52, 152, 219, 0.8)',
+                    borderColor: 'rgba(52, 152, 219, 1)',
+                    borderWidth: 1,
+                    minBarLength: 2
+                }]
             },
             options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            interaction: { mode: 'index', intersect: false },
-            scales: {
-                x: {
-                grid: { display: false },
-                // Unify x-axis annotation with the top chart
-                title: { display: true, text: 'Building Age (Years)' },
-                ticks: {
-                    maxRotation: 45,
-                    minRotation: 45,
-                    autoSkip: false,
-                    // Thin out labels only when we are in dense 5-year mode
-                    callback: function(value, index) {
-                    if (binSize === 5 && labels.length > 20) {
-                        return index % 2 === 0 ? labels[index] : '';
+                responsive: true,
+                maintainAspectRatio: false,
+                interaction: { mode: 'index', intersect: false },
+                scales: {
+                    x: {
+                        grid: { display: false },
+                        title: { display: true, text: 'Building Age (Years)' },
+                        ticks: {
+                            maxRotation: 45,
+                            minRotation: 45,
+                            autoSkip: false,
+                            // Thin out labels if binSize is 5 (too dense)
+                            callback: function (value, index) {
+                                if (binSize === 5 && labels.length > 20) {
+                                    return index % 2 === 0 ? labels[index] : '';
+                                }
+                                return labels[index];
+                            }
+                        }
+                    },
+                    y: {
+                        grid: { borderDash: [2, 2] },
+                        title: { display: true, text: 'Number of Current Buildings' },
+                        beginAtZero: true
                     }
-                    return labels[index];
-                    }
-                }
                 },
-                y: {
-                grid: { borderDash: [2, 2] },
-                title: { display: true, text: 'Number of Current Buildings' },
-                beginAtZero: true
-                }
-            },
-            plugins: {
-                legend: { display: false },
-                tooltip: {
-                callbacks: {
-                    label: function(context) {
-                    const value = context.parsed.y;
-                    return ` ${value.toLocaleString()}`;
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        callbacks: {
+                            label: function (context) {
+                                const value = context.parsed.y;
+                                return ` ${value.toLocaleString()}`;
+                            }
+                        }
                     }
                 }
-                }
-            }
             }
         };
 
         charts.currentAge = new Chart(ctx, chartConfig);
-        }
+    }
 
 
-        function createTypeChart(typesData, filter) {
-            const ctx = document.getElementById('typeChart').getContext('2d');
-            
-            if (charts.type) charts.type.destroy();
-            
-            let filteredData = filter === 'all' 
-                ? typesData 
-                : typesData.filter(d => d.type === filter);
+    /**
+     * Creates the "Demolition Type Breakdown" doughnut chart.
+     * This chart is NOT affected by the "Closed Only" filter.
+     * @param {Array<object>} typesData - The demolition_types data array.
+     * @param {string} filter - 'RAZE', 'EXTDEM', etc. (Locked to 'RAZE').
+     */
+    function createTypeChart(typesData, filter) {
+        const ctx = document.getElementById('typeChart').getContext('2d');
 
-            const data = {
-                labels: filteredData.map(d => d.type),
-                datasets: [{
-                    data: filteredData.map(d => d.count),
-                    backgroundColor: filteredData.map(d => colors[d.type]),
-                    borderColor: filteredData.map(d => borderColors[d.type]),
-                    borderWidth: 2
-                }]
-            };
+        if (charts.type) charts.type.destroy();
 
-            charts.type = new Chart(ctx, {
-                type: 'doughnut',
-                data: data,
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            position: 'right',
-                            labels: {
-                                generateLabels: function(chart) {
-                                    const data = chart.data;
-                                    const total = data.datasets[0].data.reduce((a, b) => a + b, 0);
-                                    return data.labels.map((label, i) => {
-                                        const value = data.datasets[0].data[i];
-                                        const percentage = ((value / total) * 100).toFixed(1);
-                                        return {
-                                            text: `${label}: ${value.toLocaleString()} (${percentage}%)`,
-                                            fillStyle: data.datasets[0].backgroundColor[i],
-                                            hidden: false,
-                                            index: i
-                                        };
-                                    });
-                                }
-                            }
-                        }
-                    },
-                    cutout: '50%'
-                }
-            });
-        }
+        // Filter the data (this chart is locked to 'RAZE')
+        let filteredData = filter === 'all'
+            ? typesData
+            : typesData.filter(d => d.type === filter);
 
-        function createAgeDistributionChart(data, filter) {
-            const ctx = document.getElementById('ageDistributionChart').getContext('2d');
-            if (charts.ageDistribution) charts.ageDistribution.destroy();
+        const data = {
+            labels: filteredData.map(d => d.type),
+            datasets: [{
+                data: filteredData.map(d => d.count),
+                backgroundColor: filteredData.map(d => colors[d.type]),
+                borderColor: filteredData.map(d => borderColors[d.type]),
+                borderWidth: 2
+            }]
+        };
 
-            if (!data.yearly_age_distribution) {
-                console.error("Age distribution data is missing from JSON.");
-                return;
-            }
-
-            const ageBins = [
-                { dataKey: '0-5 years', displayLabel: '0-5 years (5yr span)' },
-                { dataKey: '5-10 years', displayLabel: '5-10 years (5yr span)' },
-                { dataKey: '10-20 years', displayLabel: '10-20 years (10yr span)' },
-                { dataKey: '20-30 years', displayLabel: '20-30 years (10yr span)' },
-                { dataKey: '30-50 years', displayLabel: '30-50 years (20yr span)' },
-                { dataKey: '50-75 years', displayLabel: '50-75 years (25yr span)' },
-                { dataKey: '75-100 years', displayLabel: '75-100 years (25yr span)' },
-                { dataKey: '100-150 years', displayLabel: '100-150 years (50yr span)' },
-                { dataKey: '150+ years', displayLabel: '150+ years' }
-            ];
-            
-            const plasmaColors = [
-                'rgba(13, 8, 135, 0.8)', 'rgba(84, 2, 163, 0.8)', 'rgba(139, 10, 165, 0.8)',
-                'rgba(185, 50, 137, 0.8)', 'rgba(219, 92, 104, 0.8)', 'rgba(244, 136, 73, 0.8)',
-                'rgba(254, 188, 43, 0.8)', 'rgba(240, 249, 33, 0.8)', 'rgba(240, 249, 33, 0.9)'
-            ];
-
-            const filterKey = filter === 'all' ? 'All' : filter;
-            const years = Object.keys(data.yearly_age_distribution).sort();
-            
-            const datasets = ageBins.map((bin, index) => {
-                const binData = years.map(year => {
-                    return data.yearly_age_distribution[year]?.[filterKey]?.[bin.dataKey] || 0;
-                });
-                
-                return {
-                    label: bin.displayLabel,
-                    data: binData,
-                    backgroundColor: plasmaColors[index],
-                    borderWidth: 1
-                };
-            });
-            
-            const chartConfig = {
-                type: 'bar',
-                data: {
-                    labels: years,
-                    datasets: datasets
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        x: {
-                            stacked: true,
-                            grid: { display: false },
-                            title: { display: true, text: 'Demolition Year' }
-                        },
-                        y: {
-                            stacked: true,
-                            grid: { borderDash: [2, 2] },
-                            title: { display: true, text: `Number of Buildings (${filterKey} Types)` }
-                        }
-                    },
-                    plugins: {
-                        legend: { 
-                            position: 'right', 
-                            reverse: true,
-                            onClick: (e, legendItem, legend) => {
-                                const ci = legend.chart;
-                                const clickedIndex = legendItem.datasetIndex;
-                                const totalDatasets = ci.data.datasets.length;
-                                
-                                let isAlreadyIsolated = true;
-                                for (let i = 0; i < totalDatasets; i++) {
-                                    if (i !== clickedIndex && ci.isDatasetVisible(i)) {
-                                        isAlreadyIsolated = false;
-                                        break;
-                                    }
-                                }
-
-                                if (isAlreadyIsolated && ci.isDatasetVisible(clickedIndex)) {
-                                    for (let i = 0; i < totalDatasets; i++) {
-                                        ci.show(i);
-                                    }
-                                } else {
-                                    for (let i = 0; i < totalDatasets; i++) {
-                                        if (i === clickedIndex) {
-                                            ci.show(i);
-                                        } else {
-                                            ci.hide(i);
-                                        }
-                                    }
-                                }
-                            }
-                        },
-                        tooltip: { mode: 'index', intersect: false }
-                    }
-                }
-            };
-            
-            charts.ageDistribution = new Chart(ctx, chartConfig);
-        }
-
-        // NEW: Function to create construction era chart
-        function createConstructionEraChart(data, filter) {
-            const ctx = document.getElementById('constructionEraChart').getContext('2d');
-            if (charts.constructionEra) charts.constructionEra.destroy();
-
-            if (!data.yearly_construction_era) {
-                console.error("Construction era data is missing from JSON.");
-                return;
-            }
-
-            const eras = [
-                'Pre-1900', '1900-1920', '1920-1940', '1940-1960',
-                '1960-1980', '1980-2000', '2000-2010', '2010-2020', '2020+'
-            ];
-            
-            const eraColors = [
-                'rgba(13, 8, 135, 0.8)', 'rgba(84, 2, 163, 0.8)', 'rgba(139, 10, 165, 0.8)',
-                'rgba(185, 50, 137, 0.8)', 'rgba(219, 92, 104, 0.8)', 'rgba(244, 136, 73, 0.8)',
-                'rgba(254, 188, 43, 0.8)', 'rgba(240, 249, 33, 0.8)', 'rgba(250, 250, 100, 0.9)'
-            ];
-
-            const filterKey = filter === 'all' ? 'All' : filter;
-            const years = Object.keys(data.yearly_construction_era).sort();
-            
-            const datasets = eras.map((era, index) => {
-                const eraData = years.map(year => {
-                    return data.yearly_construction_era[year]?.[filterKey]?.[era] || 0;
-                });
-                
-                return {
-                    label: era,
-                    data: eraData,
-                    backgroundColor: eraColors[index],
-                    borderWidth: 1
-                };
-            });
-            
-            const chartConfig = {
-                type: 'bar',
-                data: {
-                    labels: years,
-                    datasets: datasets
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        x: {
-                            stacked: true,
-                            grid: { display: false },
-                            title: { display: true, text: 'Demolition Year' },
-                            ticks: {
-                                callback: function(value, index) {
-                                    const year = years[index];
-                                    const yearRange = years[years.length - 1] - years[0];
-                                    if (yearRange <= 20) return year;
-                                    else if (yearRange <= 30) return year % 2 === 0 ? year : '';
-                                    else if (yearRange <= 50) return year % 5 === 0 ? year : '';
-                                    else return year % 10 === 0 ? year : '';
-                                },
-                                autoSkip: false,
-                                maxRotation: 45,
-                                minRotation: 45,
-                                font: { size: 10 }
-                            }
-                        },
-                        y: {
-                            stacked: true,
-                            grid: { borderDash: [2, 2] },
-                            title: { display: true, text: `Number of Buildings (${filterKey} Types)` }
-                        }
-                    },
-                    plugins: {
-                        legend: { 
-                            position: 'right', 
-                            reverse: true,
-                            onClick: (e, legendItem, legend) => {
-                                const ci = legend.chart;
-                                const clickedIndex = legendItem.datasetIndex;
-                                const totalDatasets = ci.data.datasets.length;
-                                
-                                let isAlreadyIsolated = true;
-                                for (let i = 0; i < totalDatasets; i++) {
-                                    if (i !== clickedIndex && ci.isDatasetVisible(i)) {
-                                        isAlreadyIsolated = false;
-                                        break;
-                                    }
-                                }
-
-                                if (isAlreadyIsolated && ci.isDatasetVisible(clickedIndex)) {
-                                    for (let i = 0; i < totalDatasets; i++) {
-                                        ci.show(i);
-                                    }
-                                } else {
-                                    for (let i = 0; i < totalDatasets; i++) {
-                                        if (i === clickedIndex) {
-                                            ci.show(i);
-                                        } else {
-                                            ci.hide(i);
-                                        }
-                                    }
-                                }
-                            }
-                        },
-                        tooltip: { mode: 'index', intersect: false }
-                    }
-                }
-            };
-            
-            charts.constructionEra = new Chart(ctx, chartConfig);
-        }
-
-        // NEW: Strip plot to replace box plot
-        function createLifespanStripPlot(data, filter) {
-            const ctx = document.getElementById('lifespanStripPlot').getContext('2d');
-            
-            if (charts.lifespanStripPlot) charts.lifespanStripPlot.destroy();
-            
-            if (!data.lifespan_by_year_boxplot) {
-                console.warn('No boxplot data available');
-                return;
-            }
-            
-            // Get data for the selected filter
-            let boxplotData;
-            if (typeof data.lifespan_by_year_boxplot === 'object' && !Array.isArray(data.lifespan_by_year_boxplot)) {
-                boxplotData = data.lifespan_by_year_boxplot[filter === 'all' ? 'All' : filter] || [];
-            } else {
-                // Fallback for old data format
-                boxplotData = data.lifespan_by_year_boxplot;
-            }
-            
-            // Create arrays for different data series
-            const years = boxplotData.map(d => d.year.toString());
-            const stripData = [];
-            const medianData = [];
-            const meanData = [];
-            
-            // Process each year's data
-            boxplotData.forEach((yearData, yearIndex) => {
-                const lifespans = [...yearData.lifespans].sort((a, b) => a - b);
-                const n = lifespans.length;
-                
-                if (n > 0) {
-                    // Calculate statistics
-                    const median = lifespans[Math.floor(n * 0.5)];
-                    const mean = lifespans.reduce((a, b) => a + b, 0) / n;
-                    
-                    medianData.push(median);
-                    meanData.push(mean);
-                    
-                    // Create individual points for strip plot
-                    yearData.lifespans.forEach(lifespan => {
-                        stripData.push({
-                            x: yearData.year.toString(),  // Use year string for category axis
-                            y: lifespan
-                        });
-                    });
-                } else {
-                    medianData.push(null);
-                    meanData.push(null);
-                }
-            });
-            
-            const datasets = [
-                {
-                    label: 'Individual Buildings',
-                    data: stripData,
-                    backgroundColor: 'rgba(126, 3, 168, 0.3)',
-                    borderColor: 'rgba(126, 3, 168, 0.5)',
-                    pointRadius: 1.5,  // Small points
-                    pointHoverRadius: 3,
-                    type: 'scatter'
-                },
-                {
-                    label: 'Median',
-                    data: medianData,
-                    borderColor: 'rgba(255, 200, 0, 1)',
-                    backgroundColor: 'rgba(255, 200, 0, 0.8)',
-                    borderWidth: 1,
-                    pointRadius: 0,
-                    type: 'line',
-                    tension: 0.1
-                },
-                {
-                    label: 'Mean',
-                    data: meanData,
-                    borderColor: 'rgba(255, 100, 0, 1)',
-                    backgroundColor: 'rgba(255, 100, 0, 0.8)',
-                    borderWidth: 1,
-                    borderDash: [5, 5],
-                    pointRadius: 0,
-                    type: 'line',
-                    tension: 0.1
-                }
-            ];
-            
-            const chartConfig = {
-                type: 'scatter',
-                data: {
-                    labels: years,
-                    datasets: datasets
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        x: {
-                            type: 'category',  // Use category scale for proper spacing
-                            grid: { display: false },
-                            ticks: {
-                                callback: function(value, index) {
-                                    const year = years[index];
-                                    const yearRange = parseInt(years[years.length - 1]) - parseInt(years[0]);
-                                    
-                                    if (yearRange <= 20) {
-                                        return year;
-                                    } else if (yearRange <= 30) {
-                                        return parseInt(year) % 2 === 0 ? year : '';
-                                    } else if (yearRange <= 50) {
-                                        return parseInt(year) % 5 === 0 ? year : '';
-                                    } else {
-                                        return parseInt(year) % 10 === 0 ? year : '';
-                                    }
-                                },
-                                autoSkip: false,
-                                maxRotation: 45,
-                                minRotation: 45,
-                                font: { size: 10 }
-                            },
-                            title: { display: true, text: 'Demolition Year' }
-                        },
-                        y: {
-                            grid: { borderDash: [2, 2] },
-                            title: { display: true, text: 'Building Age at Demolition (Years)' },
-                            min: 0,
-                            ticks: {
-                                callback: function(value) { return value + ' yrs'; }
-                            }
-                        }
-                    },
-                    plugins: {
-                        legend: {
-                            display: true,
-                            position: 'top',
-                            labels: {
-                                generateLabels: function(chart) {
-                                    const items = Chart.defaults.plugins.legend.labels.generateLabels(chart);
-                                    items.forEach(item => {
-                                        if (item.text === 'Individual Buildings') {
-                                            const totalPoints = stripData.length;
-                                            item.text = `Individual Buildings (${totalPoints} total)`;
-                                        }
-                                    });
-                                    return items;
-                                }
-                            }
-                        },
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    if (context.dataset.label && context.dataset.label.includes('Individual Buildings')) {
-                                        const dataPoint = context.raw;
-                                        return `Year: ${dataPoint.x}, Age: ${dataPoint.y} years`;
-                                    } else if (context.dataset.label === 'Median') {
-                                        return `Median: ${context.parsed.y.toFixed(1)} years`;
-                                    } else if (context.dataset.label === 'Mean') {
-                                        return `Mean: ${context.parsed.y.toFixed(1)} years`;
-                                    }
-                                    return '';
-                                }
+        // Create the doughnut chart
+        charts.type = new Chart(ctx, {
+            type: 'doughnut',
+            data: data,
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'right',
+                        labels: {
+                            // Custom legend labels to show count and percentage
+                            generateLabels: function (chart) {
+                                const data = chart.data;
+                                const total = data.datasets[0].data.reduce((a, b) => a + b, 0);
+                                return data.labels.map((label, i) => {
+                                    const value = data.datasets[0].data[i];
+                                    const percentage = ((value / total) * 100).toFixed(1);
+                                    return {
+                                        text: `${label}: ${value.toLocaleString()} (${percentage}%)`,
+                                        fillStyle: data.datasets[0].backgroundColor[i],
+                                        hidden: false,
+                                        index: i
+                                    };
+                                });
                             }
                         }
                     }
-                }
-            };
-            
-            charts.lifespanStripPlot = new Chart(ctx, chartConfig);
-        }
-
-        window.addEventListener('DOMContentLoaded', () => {
-            document.getElementById('demolitionFilter').value = 'RAZE';
-            
-            document.getElementById('totalDemo').textContent = 'Loading...';
-            document.getElementById('avgLifespan').innerHTML = 'Loading...';
-            document.getElementById('extdemCount').textContent = 'Loading...';
-            document.getElementById('intdemCount').textContent = 'Loading...';
-            
-            loadDataFromJSON();
+                },
+                cutout: '50%'
+            }
         });
+    }
+
+    /**
+     * MODIFIED: Creates the "Age Distribution of Demolished Buildings by Year" stacked bar chart.
+     * Accepts pre-filtered 'ageDistData' and the 'showClosedOnly' flag.
+     * @param {object} ageDistData - The data object (e.g., currentData.yearly_age_distribution or currentData.yearly_age_distribution_closed).
+     * @param {string} filter - 'RAZE', 'EXTDEM', etc. (Locked to 'RAZE').
+     * @param {boolean} showClosedOnly - The state of the "Closed Only" checkbox.
+     */
+    function createAgeDistributionChart(ageDistData, filter, showClosedOnly) {
+        const ctx = document.getElementById('ageDistributionChart').getContext('2d');
+        if (charts.ageDistribution) charts.ageDistribution.destroy();
+
+        // MODIFIED: Check the passed-in 'ageDistData'
+        if (!ageDistData) {
+            console.error("Age distribution data is missing from JSON.");
+            return;
+        }
+
+        // Define the age bins (datasets)
+        const ageBins = [
+            { dataKey: '0-5 years', displayLabel: '0-5 years (5yr span)' },
+            { dataKey: '5-10 years', displayLabel: '5-10 years (5yr span)' },
+            { dataKey: '10-20 years', displayLabel: '10-20 years (10yr span)' },
+            { dataKey: '20-30 years', displayLabel: '20-30 years (10yr span)' },
+            { dataKey: '30-50 years', displayLabel: '30-50 years (20yr span)' },
+            { dataKey: '50-75 years', displayLabel: '50-75 years (25yr span)' },
+            { dataKey: '75-100 years', displayLabel: '75-100 years (25yr span)' },
+            { dataKey: '100-150 years', displayLabel: '100-150 years (50yr span)' },
+            { dataKey: '150+ years', displayLabel: '150+ years' }
+        ];
+
+        // Plasma color scale
+        const plasmaColors = [
+            'rgba(13, 8, 135, 0.8)', 'rgba(84, 2, 163, 0.8)', 'rgba(139, 10, 165, 0.8)',
+            'rgba(185, 50, 137, 0.8)', 'rgba(219, 92, 104, 0.8)', 'rgba(244, 136, 73, 0.8)',
+            'rgba(254, 188, 43, 0.8)', 'rgba(240, 249, 33, 0.8)', 'rgba(240, 249, 33, 0.9)'
+        ];
+
+        // MODIFIED: Create the dynamic filter key (e.g., 'RAZE' or 'RAZE_closed')
+        let filterKey = filter === 'all' ? 'All' : filter;
+        if (showClosedOnly) {
+            filterKey = filterKey + '_closed';
+        }
+
+        // MODIFIED: Get years from the passed-in 'ageDistData'
+        const years = Object.keys(ageDistData).sort();
+
+        // Build the datasets
+        const datasets = ageBins.map((bin, index) => {
+            const binData = years.map(year => {
+                // MODIFIED: Get data using the dynamic key (e.g., ageDistData[year]['RAZE_closed']['0-5 years'])
+                return ageDistData[year]?.[filterKey]?.[bin.dataKey] || 0;
+            });
+
+            return {
+                label: bin.displayLabel,
+                data: binData,
+                backgroundColor: plasmaColors[index],
+                borderWidth: 1
+            };
+        });
+
+        // Create the stacked bar chart
+        const chartConfig = {
+            type: 'bar',
+            data: {
+                labels: years,
+                datasets: datasets
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: {
+                        stacked: true,
+                        grid: { display: false },
+                        title: { display: true, text: 'Demolition Year' }
+                    },
+                    y: {
+                        stacked: true,
+                        grid: { borderDash: [2, 2] },
+                        // MODIFIED: Show the dynamic filter key in the y-axis title
+                        title: { display: true, text: `Number of Buildings (${filterKey} Types)` }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        position: 'right',
+                        reverse: true, // Show youngest ages at the bottom
+                        // Custom click handler to isolate/show all datasets
+                        onClick: (e, legendItem, legend) => {
+                            const ci = legend.chart;
+                            const clickedIndex = legendItem.datasetIndex;
+                            const totalDatasets = ci.data.datasets.length;
+
+                            // Check if the clicked item is already the only one visible
+                            let isAlreadyIsolated = true;
+                            for (let i = 0; i < totalDatasets; i++) {
+                                if (i !== clickedIndex && ci.isDatasetVisible(i)) {
+                                    isAlreadyIsolated = false;
+                                    break;
+                                }
+                            }
+
+                            if (isAlreadyIsolated && ci.isDatasetVisible(clickedIndex)) {
+                                // If it is isolated, show all datasets
+                                for (let i = 0; i < totalDatasets; i++) {
+                                    ci.show(i);
+                                }
+                            } else {
+                                // Otherwise, isolate the clicked dataset
+                                for (let i = 0; i < totalDatasets; i++) {
+                                    if (i === clickedIndex) {
+                                        ci.show(i);
+                                    } else {
+                                        ci.hide(i);
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    tooltip: { mode: 'index', intersect: false }
+                }
+            }
+        };
+
+        charts.ageDistribution = new Chart(ctx, chartConfig);
+    }
+
+    /**
+     * MODIFIED: Creates the "Construction Era of Demolished Buildings by Year" stacked bar chart.
+     * Accepts pre-filtered 'eraData' and the 'showClosedOnly' flag.
+     * @param {object} eraData - The data object (e.g., currentData.yearly_construction_era or currentData.yearly_construction_era_closed).
+     * @param {string} filter - 'RAZE', 'EXTDEM', etc. (Locked to 'RAZE').
+     * @param {boolean} showClosedOnly - The state of the "Closed Only" checkbox.
+     */
+    function createConstructionEraChart(eraData, filter, showClosedOnly) {
+        const ctx = document.getElementById('constructionEraChart').getContext('2d');
+        if (charts.constructionEra) charts.constructionEra.destroy();
+
+        // MODIFIED: Check the passed-in 'eraData'
+        if (!eraData) {
+            console.error("Construction era data is missing from JSON.");
+            return;
+        }
+
+        // Define the era bins (datasets)
+        const eras = [
+            'Pre-1900', '1900-1920', '1920-1940', '1940-1960',
+            '1960-1980', '1980-2000', '2000-2010', '2010-2020', '2020+'
+        ];
+
+        // Color scale (same as above)
+        const eraColors = [
+            'rgba(13, 8, 135, 0.8)', 'rgba(84, 2, 163, 0.8)', 'rgba(139, 10, 165, 0.8)',
+            'rgba(185, 50, 137, 0.8)', 'rgba(219, 92, 104, 0.8)', 'rgba(244, 136, 73, 0.8)',
+            'rgba(254, 188, 43, 0.8)', 'rgba(240, 249, 33, 0.8)', 'rgba(250, 250, 100, 0.9)'
+        ];
+
+        // MODIFIED: Create the dynamic filter key (e.g., 'RAZE' or 'RAZE_closed')
+        let filterKey = filter === 'all' ? 'All' : filter;
+        if (showClosedOnly) {
+            filterKey = filterKey + '_closed';
+        }
+
+        // MODIFIED: Get years from the passed-in 'eraData'
+        const years = Object.keys(eraData).sort();
+
+        // Build the datasets
+        const datasets = eras.map((era, index) => {
+            const eraDataPoints = years.map(year => {
+                // MODIFIED: Get data using the dynamic key
+                return eraData[year]?.[filterKey]?.[era] || 0;
+            });
+
+            return {
+                label: era,
+                data: eraDataPoints,
+                backgroundColor: eraColors[index],
+                borderWidth: 1
+            };
+        });
+
+        // Create the stacked bar chart
+        const chartConfig = {
+            type: 'bar',
+            data: {
+                labels: years,
+                datasets: datasets
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: {
+                        stacked: true,
+                        grid: { display: false },
+                        title: { display: true, text: 'Demolition Year' },
+                        ticks: {
+                            // Dynamic tick skipping for x-axis
+                            callback: function (value, index) {
+                                const year = years[index];
+                                const yearRange = years[years.length - 1] - years[0];
+                                if (yearRange <= 20) return year;
+                                else if (yearRange <= 30) return year % 2 === 0 ? year : '';
+                                else if (yearRange <= 50) return year % 5 === 0 ? year : '';
+                                else return year % 10 === 0 ? year : '';
+                            },
+                            autoSkip: false,
+                            maxRotation: 45,
+                            minRotation: 45,
+                            font: { size: 10 }
+                        }
+                    },
+                    y: {
+                        stacked: true,
+                        grid: { borderDash: [2, 2] },
+                        // MODIFIED: Show the dynamic filter key in the y-axis title
+                        title: { display: true, text: `Number of Buildings (${filterKey} Types)` }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        position: 'right',
+                        reverse: true, // Show oldest eras at the bottom
+                        onClick: (e, legendItem, legend) => { // Same isolate/show all logic
+                            const ci = legend.chart;
+                            const clickedIndex = legendItem.datasetIndex;
+                            const totalDatasets = ci.data.datasets.length;
+
+                            let isAlreadyIsolated = true;
+                            for (let i = 0; i < totalDatasets; i++) {
+                                if (i !== clickedIndex && ci.isDatasetVisible(i)) {
+                                    isAlreadyIsolated = false;
+                                    break;
+                                }
+                            }
+
+                            if (isAlreadyIsolated && ci.isDatasetVisible(clickedIndex)) {
+                                for (let i = 0; i < totalDatasets; i++) {
+                                    ci.show(i);
+                                }
+                            } else {
+                                for (let i = 0; i < totalDatasets; i++) {
+                                    if (i === clickedIndex) {
+                                        ci.show(i);
+                                    } else {
+                                        ci.hide(i);
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    tooltip: { mode: 'index', intersect: false }
+                }
+            }
+        };
+
+        charts.constructionEra = new Chart(ctx, chartConfig);
+    }
+
+    /**
+     * MODIFIED: Creates the "Building Lifespan Distribution by Demolition Year" strip plot.
+     * Accepts pre-filtered 'boxplotDataRoot' and the 'showClosedOnly' flag.
+     * @param {object} boxplotDataRoot - The data object (e.g., currentData.lifespan_by_year_boxplot or currentData.lifespan_by_year_boxplot_closed).
+     * @param {string} filter - 'RAZE', 'EXTDEM', etc. (Locked to 'RAZE').
+     * @param {boolean} showClosedOnly - The state of the "Closed Only" checkbox.
+     */
+    function createLifespanStripPlot(boxplotDataRoot, filter, showClosedOnly) {
+        const ctx = document.getElementById('lifespanStripPlot').getContext('2d');
+
+        if (charts.lifespanStripPlot) charts.lifespanStripPlot.destroy();
+
+        // MODIFIED: Check the passed-in 'boxplotDataRoot'
+        if (!boxplotDataRoot) {
+            console.warn('No boxplot data available');
+            return;
+        }
+
+        // MODIFIED: Create the dynamic filter key (e.g., 'RAZE' or 'RAZE_closed')
+        let filterKey = filter === 'all' ? 'All' : filter;
+        if (showClosedOnly) {
+            filterKey = filterKey + '_closed';
+        }
+
+        let boxplotData;
+        // MODIFIED: Select the correct array from the data object using the dynamic key
+        if (typeof boxplotDataRoot === 'object' && !Array.isArray(boxplotDataRoot)) {
+            // Assumes 'boxplotDataRoot' has keys like 'RAZE', 'RAZE_closed'
+            boxplotData = boxplotDataRoot[filterKey] || [];
+        } else {
+            // Fallback for old data format (will not be filtered)
+            boxplotData = boxplotDataRoot;
+        }
+
+        // Create arrays for the different data series
+        const years = boxplotData.map(d => d.year.toString());
+        const stripData = []; // For individual points
+        const medianData = []; // For median line
+        const meanData = []; // For mean line
+
+        // Process each year's data
+        boxplotData.forEach((yearData, yearIndex) => {
+            // MODIFIED: Added fallback for empty/missing lifespans array
+            const lifespans = [...(yearData.lifespans || [])].sort((a, b) => a - b);
+            const n = lifespans.length;
+
+            if (n > 0) {
+                // Calculate statistics
+                const median = lifespans[Math.floor(n * 0.5)];
+                const mean = lifespans.reduce((a, b) => a + b, 0) / n;
+
+                medianData.push(median);
+                meanData.push(mean);
+
+                // Create individual points for the strip plot
+                yearData.lifespans.forEach(lifespan => {
+                    stripData.push({
+                        x: yearData.year.toString(), // Use year string for category axis
+                        y: lifespan
+                    });
+                });
+            } else {
+                // Add nulls if no data for a year
+                medianData.push(null);
+                meanData.push(null);
+            }
+        });
+
+        // Define the datasets for Chart.js
+        const datasets = [
+            {
+                label: 'Individual Buildings',
+                data: stripData,
+                backgroundColor: 'rgba(126, 3, 168, 0.3)',
+                borderColor: 'rgba(126, 3, 168, 0.5)',
+                pointRadius: 1.5, // Small points
+                pointHoverRadius: 3,
+                type: 'scatter'
+            },
+            {
+                label: 'Median',
+                data: medianData,
+                borderColor: 'rgba(255, 200, 0, 1)',
+                backgroundColor: 'rgba(255, 200, 0, 0.8)',
+                borderWidth: 1,
+                pointRadius: 0,
+                type: 'line',
+                tension: 0.1
+            },
+            {
+                label: 'Mean',
+                data: meanData,
+                borderColor: 'rgba(255, 100, 0, 1)',
+                backgroundColor: 'rgba(255, 100, 0, 0.8)',
+                borderWidth: 1,
+                borderDash: [5, 5], // Dashed line
+                pointRadius: 0,
+                type: 'line',
+                tension: 0.1
+            }
+        ];
+
+        // Create the chart (mixed scatter and line)
+        const chartConfig = {
+            type: 'scatter',
+            data: {
+                labels: years,
+                datasets: datasets
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: {
+                        type: 'category', // Use category scale for proper spacing of points
+                        grid: { display: false },
+                        ticks: {
+                            // Dynamic tick skipping
+                            callback: function (value, index) {
+                                const year = years[index];
+                                if (!year) return ''; // NEW: Safety check for empty year
+                                const yearRange = parseInt(years[years.length - 1] || 0) - parseInt(years[0] || 0);
+
+                                if (yearRange <= 20) {
+                                    return year;
+                                } else if (yearRange <= 30) {
+                                    return parseInt(year) % 2 === 0 ? year : '';
+                                } else if (yearRange <= 50) {
+                                    return parseInt(year) % 5 === 0 ? year : '';
+                                } else {
+                                    return parseInt(year) % 10 === 0 ? year : '';
+                                }
+                            },
+                            autoSkip: false,
+                            maxRotation: 45,
+                            minRotation: 45,
+                            font: { size: 10 }
+                        },
+                        title: { display: true, text: 'Demolition Year' }
+                    },
+                    y: {
+                        grid: { borderDash: [2, 2] },
+                        title: { display: true, text: 'Building Age at Demolition (Years)' },
+                        min: 0,
+                        ticks: {
+                            callback: function (value) { return value + ' yrs'; }
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'top',
+                        labels: {
+                            // Custom legend label to show total point count
+                            generateLabels: function (chart) {
+                                const items = Chart.defaults.plugins.legend.labels.generateLabels(chart);
+                                items.forEach(item => {
+                                    if (item.text === 'Individual Buildings') {
+                                        const totalPoints = stripData.length;
+                                        item.text = `Individual Buildings (${totalPoints} total)`;
+                                    }
+                                });
+                                return items;
+                            }
+                        }
+                    },
+                    tooltip: {
+                        // Custom tooltip labels
+                        callbacks: {
+                            label: function (context) {
+                                if (context.dataset.label && context.dataset.label.includes('Individual Buildings')) {
+                                    const dataPoint = context.raw;
+                                    return `Year: ${dataPoint.x}, Age: ${dataPoint.y} years`;
+                                } else if (context.dataset.label === 'Median') {
+                                    return `Median: ${context.parsed.y.toFixed(1)} years`;
+                                } else if (context.dataset.label === 'Mean') {
+                                    return `Mean: ${context.parsed.y.toFixed(1)} years`;
+                                }
+                                return '';
+                            }
+                        }
+                    }
+                }
+            }
+        };
+
+        charts.lifespanStripPlot = new Chart(ctx, chartConfig);
+    }
+
+    /**
+     * This function runs when the HTML page (DOM) is fully loaded and ready.
+     */
+    window.addEventListener('DOMContentLoaded', () => {
+        // Set the default value for the map filter dropdown to 'RAZE'
+        document.getElementById('demolitionFilter').value = 'RAZE';
+
+        // Show 'Loading...' text in the KPI cards while data is being fetched
+        document.getElementById('totalDemo').textContent = 'Loading...';
+        document.getElementById('avgLifespan').innerHTML = 'Loading...';
+        document.getElementById('extdemCount').textContent = 'Loading...';
+        document.getElementById('intdemCount').textContent = 'Loading...';
+
+        // Start loading the JSON data
+        loadDataFromJSON();
+    });
     </script>
 </body>
 </html>
