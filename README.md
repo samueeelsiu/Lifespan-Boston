@@ -2,6 +2,11 @@
 
 An interactive web-based visualization dashboard for analyzing building demolition patterns in Boston, combining property assessment data with building permit records to reveal urban development trends and building lifecycles.
 
+## Live Demo
+
+[View Live Dashboard](https://samueeelsiu.github.io/Lifespan-Boston/)
+
+
 ## Table of Contents
 
 - [Overview](#overview)
