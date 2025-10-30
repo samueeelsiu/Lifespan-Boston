@@ -115,9 +115,9 @@ Stage 3: Lifespan Calculation
 
 3. **Launch Dashboard**
 
-Option A: Direct file opening
+Option A: Direct website opening
 ```bash
-# Open index.html in your browser
+# Open [index.html](https://samueeelsiu.github.io/Lifespan-Boston/) in your browser
 ```
 
 Option B: Local server (recommended)
@@ -152,17 +152,17 @@ python -m http.server 8000
 ```javascript
 {
   "metadata": {
-    "generated_date": "ISO timestamp",
-    "total_parcels_analyzed": number,
+    "generated_date": ...,
+    "total_parcels_analyzed": ...,
     "year_range": "2009-2025",
-    "data_source": "Boston Property Assessment & Building Permits"
+    "data_source": "Boston Property Assessment & Approved Building Permits"
   },
   "summary_stats": {
-    "total_demolitions": number,
-    "average_lifespan": float,
-    "raze_count": number,
-    "extdem_count": number,
-    "intdem_count": number,
+    "total_demolitions": ...,
+    "average_lifespan": 91.3,
+    "raze_count": 357,
+    "extdem_count": 1,022,
+    "intdem_count": 6,395,
     "raze_status_by_lifespan": {...}
   },
   "summary_stats_closed": {...},      // Filtered for closed permits
