@@ -215,7 +215,7 @@ python -m http.server 8000
 
 ## Performance Notes
 
-- Handles 2000+ demolition records efficiently
+- Handles 7000+ demolition records efficiently
 - Map points filtered dynamically
 - Pre-aggregated statistics for responsiveness
 - Optimized for modern browsers
