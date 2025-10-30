@@ -239,6 +239,10 @@ python -m http.server 8000
 - **Institution**: [Northeastern University](https://www.northeastern.edu/)
 - **Lab**: [Structural Futures Lab](https://structural-futures.org/)
 
+### Data Sources
+- Property Assessment Dataset From City of Boston
+- Approved Building Permits From City of Boston
+
 ## Support
 
 For issues, questions, or suggestions regarding this dashboard, please contact: shao.la@northeastern.edu
