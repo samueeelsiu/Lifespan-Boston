@@ -5,20 +5,43 @@ from datetime import datetime
 
 
 # Keep only the latest record within a given time window for the same group
-def drop_near_duplicates(df, time_col, group_cols, window='24h'):
+# Keep only the latest record within a given time window for the same group,
+# prioritizing a specific status.
+def drop_near_duplicates(df, time_col, group_cols, status_col, preferred_status='Close', window='24h'):
     """
-    For each group (e.g., same parcel_id + worktype), keep only the latest
-    permit within any rolling time window (default: 1 hour). Assumes `time_col`
-    is a pandas datetime dtype.
+    For each group (e.g., same parcel_id + worktype), keep only the "best"
+    permit within any rolling time window (default: 24h).
+    "Best" is defined as:
+    1. Any permit matching `preferred_status` (e.g., 'Close').
+    2. If multiple preferred, the latest one.
+    3. If no preferred, the latest one (original logic).
+
+    Assumes `time_col` is a pandas datetime dtype.
     """
-    # Sort so that the newest rows come first within each group
-    sort_cols = group_cols + [time_col]
-    df = df.sort_values(sort_cols, ascending=[True] * len(group_cols) + [False]).copy()
+
+    df_copy = df.copy()
+
+    # --- NEW: Create a priority column ---
+    # Give a priority of 1 to the preferred status, 0 to all others.
+    # NaNs will be treated as 0.
+    if status_col in df_copy.columns:
+        df_copy['priority'] = (df_copy[status_col] == preferred_status).astype(int)
+    else:
+        # If status column is missing, default all priorities to 0
+        df_copy['priority'] = 0
+
+    # --- MODIFIED: Sort by priority first, then time ---
+    # Sort so that preferred status (priority=1) comes first,
+    # and *then* the newest rows come first within that priority.
+    sort_cols = group_cols + ['priority', time_col]
+    ascending_order = [True] * len(group_cols) + [False, False]  # [group_cols ASC, priority DESC, time_col DESC]
+
+    df_sorted = df_copy.sort_values(sort_cols, ascending=ascending_order)
 
     keep_idx = []
-    # Iterate group by group, selecting newest first and skipping any earlier
+    # Iterate group by group, selecting "best" first and skipping any earlier
     # record that happens within `window` from the last kept one.
-    for _, g in df.groupby(group_cols, sort=False):
+    for _, g in df_sorted.groupby(group_cols, sort=False):
         last_kept_time = None
         for idx, row in g.iterrows():
             if last_kept_time is None or (last_kept_time - row[time_col]) > pd.Timedelta(window):
@@ -26,7 +49,9 @@ def drop_near_duplicates(df, time_col, group_cols, window='24h'):
                 last_kept_time = row[time_col]
 
     # Return kept rows in chronological order (optional)
-    kept = df.loc[keep_idx].sort_values(sort_cols)
+    # We must sort by the *original* time_col to restore chronological order
+    final_sort_cols = group_cols + [time_col]
+    kept = df_copy.loc[keep_idx].sort_values(final_sort_cols)
     return kept
 
 
@@ -129,28 +154,10 @@ def process_demolition_data(assessment_file, permit_file):
     demolition_permits['issued_date'] = pd.to_datetime(demolition_permits['issued_date'], errors='coerce')
     demolition_permits.dropna(subset=['issued_date'], inplace=True)
 
-    dedup_permits = drop_near_duplicates(
-        demolition_permits,
-        time_col='issued_date',
-        group_cols=['parcel_id', 'worktype'],
-        window='24h'
-    ).copy()
-
-    dedup_permits['demolition_year'] = dedup_permits['issued_date'].dt.year
-
-    # --- 4. Merge with build years and calculate lifespan ---
-    print("Merging data and calculating lifespan...")
-    lifespan_df_all = pd.merge(dedup_permits, build_years, left_on='parcel_id', right_on='building_id', how='inner')
-    lifespan_df_all['lifespan'] = lifespan_df_all['demolition_year'] - lifespan_df_all['build_year']
-
-    # ... (around line 134)
-    lifespan_df_all = pd.merge(dedup_permits, build_years, left_on='parcel_id', right_on='building_id', how='inner')
-    lifespan_df_all['lifespan'] = lifespan_df_all['demolition_year'] - lifespan_df_all['build_year']
-
     # --- MOVED: Normalize STATUS immediately after creating lifespan_df_all ---
     print("Normalizing permit status ('Close'/'Open')...")
     # Check lifespan_df_all (the source) for the status column
-    status_col_detected = status_col if status_col in lifespan_df_all.columns else None
+    status_col_detected = status_col if status_col in demolition_permits.columns else None
 
     def normalize_status(val):
         if pd.isna(val):
@@ -167,12 +174,28 @@ def process_demolition_data(assessment_file, permit_file):
     if status_col_detected:
         print(f"Normalizing status using column: {status_col_detected}")
         # Apply normalization to the source DataFrame
-        lifespan_df_all['status_norm'] = lifespan_df_all[status_col_detected].map(normalize_status)
+        demolition_permits['status_norm'] = demolition_permits[status_col_detected].map(normalize_status)
     else:
         print("Warning: No status column found. All 'status_norm' will be None.")
         # Add an empty column to the source DataFrame
-        lifespan_df_all['status_norm'] = None
+        demolition_permits['status_norm'] = None
     # --- END OF MOVED BLOCK ---
+
+    dedup_permits = drop_near_duplicates(
+        demolition_permits,
+        time_col='issued_date',
+        group_cols=['parcel_id', 'worktype'],
+        status_col='status_norm',  # <-- Add this
+        preferred_status='Close',  # <-- Add this
+        window='24h'
+    ).copy()
+
+    dedup_permits['demolition_year'] = dedup_permits['issued_date'].dt.year
+
+    # --- 4. Merge with build years and calculate lifespan ---
+    print("Merging data and calculating lifespan...")
+    lifespan_df_all = pd.merge(dedup_permits, build_years, left_on='parcel_id', right_on='building_id', how='inner')
+    lifespan_df_all['lifespan'] = lifespan_df_all['demolition_year'] - lifespan_df_all['build_year']
 
     # --- NEW: Enforce one final RAZE event per building ---
     print("Enforcing a single, definitive RAZE event per building...")
@@ -313,8 +336,8 @@ def process_demolition_data(assessment_file, permit_file):
 
     # --- Summary Stats (All Data) ---
     # Get counts for RAZE <= 0 (from the *original* uncleaned RAZE df)
-    zero_mask_all = (lifespan_df_all['worktype'] == 'RAZE') & (lifespan_df_all['lifespan'] == 0)
-    neg_mask_all = (lifespan_df_all['worktype'] == 'RAZE') & (lifespan_df_all['lifespan'] < 0)
+    zero_mask_all = (lifespan_df_all_cleaned['worktype'] == 'RAZE') & (lifespan_df_all_cleaned['lifespan'] == 0)
+    neg_mask_all = (lifespan_df_all_cleaned['worktype'] == 'RAZE') & (lifespan_df_all_cleaned['lifespan'] < 0)
 
     # Helper for status counts
     def count_co(df):
@@ -327,9 +350,12 @@ def process_demolition_data(assessment_file, permit_file):
         }
 
     # This summary block is NOT filtered and is used for the RAZE Lifespan Summary chart
-    sb_positive = count_co(lifespan_df[lifespan_df['worktype'] == 'RAZE'])
-    sb_zero = count_co(lifespan_df_all[zero_mask_all])
-    sb_negative = count_co(lifespan_df_all[neg_mask_all])
+    sb_positive = count_co(lifespan_df_all_cleaned[
+                               (lifespan_df_all_cleaned['worktype'] == 'RAZE') &
+                               (lifespan_df_all_cleaned['lifespan'] > 0)
+                               ])
+    sb_zero = count_co(lifespan_df_all_cleaned[zero_mask_all])
+    sb_negative = count_co(lifespan_df_all_cleaned[neg_mask_all])
     sb_total = {
         'close': sb_positive['close'] + sb_zero['close'] + sb_negative['close'],
         'open': sb_positive['open'] + sb_zero['open'] + sb_negative['open'],
