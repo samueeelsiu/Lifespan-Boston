@@ -117,7 +117,7 @@ Stage 3: Lifespan Calculation
 
 Option A: Direct website opening
 ```bash
-# Open [index.html](https://samueeelsiu.github.io/Lifespan-Boston/) in your browser
+# Open https://samueeelsiu.github.io/Lifespan-Boston/ in your browser
 ```
 
 Option B: Local server (recommended)
