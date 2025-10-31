@@ -495,6 +495,9 @@
     let map = null; // Will hold the Leaflet map instance
     let pointLayer = null; // Will hold the Leaflet layer group that contains all the demolition points
 
+    let zoningLayer = null; // Will hold the new Zoning GeoJSON layer
+    let layerControl = null; // Will hold the Leaflet layer control
+
     // --- CONSTANTS ---
     // Color palette for the fill color of charts
     const colors = {
@@ -703,10 +706,85 @@
 
         // Initialize the Leaflet map container (only happens once)
         initMap();
+
+        if (!zoningLayer) {
+            loadZoningLayer();
+        }
         
         // Call the main update function to draw all charts for the first time
         updateCharts();
     }
+
+    async function loadZoningLayer() {
+    try {
+        // 1. Make sure the filename exactly matches your actual file
+        const response = await fetch('Boston_Zoning_Subdistricts.geojson');
+        if (!response.ok) {
+            console.error('Failed to load zoning GeoJSON');
+            return;
+        }
+        const zoningData = await response.json();
+
+        // 2. Define the style for zoning areas
+        function zoningStyle(feature) {
+            return {
+                color: "#800080",      // Color of zoning boundaries
+                weight: 1.2,             // Boundary line width
+                opacity: 0.6,          // Boundary line transparency
+                fillColor: "#800080",  // Fill color of zoning areas
+                fillOpacity: 0.1       // Fill transparency (very important!)
+            };
+        }
+
+        // 3. (Optional) Define hover/click interactions
+        function onEachZoningFeature(feature, layer) {
+            if (feature.properties && (feature.properties.Zoning_Subdistrict || feature.properties.name)) {
+                // Show zoning name when hovering over the area
+                layer.bindTooltip(feature.properties.Zoning_Subdistrict || feature.properties.name);
+            }
+        }
+
+        // 4. Create the GeoJSON layer
+        zoningLayer = L.geoJSON(zoningData, {
+            style: zoningStyle,
+            onEachFeature: onEachZoningFeature
+        });
+
+        // 5. Add the layer to the map
+        zoningLayer.addTo(map);
+
+        // 6. Update the layer control panel
+        addLayerControl();
+
+    } catch (error) {
+        console.error('Error loading or parsing zoning data:', error);
+    }
+}
+
+/**
+ * NEW: Creates or updates the Leaflet layer control.
+ * This allows users to toggle layers on and off.
+ */
+function addLayerControl() {
+    // Remove existing control if it already exists
+    if (layerControl) {
+        map.removeControl(layerControl);
+    }
+
+    // Define toggleable overlay layers
+    const overlayMaps = {
+        // pointLayer must exist
+        "Demolitions": pointLayer ? pointLayer : L.layerGroup(),
+        // zoningLayer must exist
+        "Zoning Overlay": zoningLayer ? zoningLayer : L.layerGroup()
+    };
+
+    // Add a new layer control panel to the map
+    layerControl = L.control.layers(null, overlayMaps, { 
+        collapsed: false // Keep the control panel expanded by default
+    }).addTo(map);
+}
+
 
     /**
      * NEW FUNCTION: Updates the main KPI (Key Performance Indicator) cards at the top of the page.
@@ -909,6 +987,7 @@
         // Add all markers to a layer group and add the group to the map
         pointLayer = L.layerGroup(markers);
         pointLayer.addTo(map);
+        addLayerControl();
     }
 
     /**

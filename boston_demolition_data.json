@@ -1,7 +1,7 @@
 {
   "multi_raze_parcels": [
     {
-      "building_id": "100603000.0",
+      "building_id": "0100603000",
       "build_year": 1905,
       "raze_permits": [
         {
@@ -15,7 +15,7 @@
       ]
     },
     {
-      "building_id": "103919002.0",
+      "building_id": "0103919002",
       "build_year": 1950,
       "raze_permits": [
         {
@@ -29,7 +29,7 @@
       ]
     },
     {
-      "building_id": "603515000.0",
+      "building_id": "0603515000",
       "build_year": 1910,
       "raze_permits": [
         {
@@ -43,7 +43,7 @@
       ]
     },
     {
-      "building_id": "703502000.0",
+      "building_id": "0703502000",
       "build_year": 1900,
       "raze_permits": [
         {
@@ -57,7 +57,7 @@
       ]
     },
     {
-      "building_id": "1101208030.0",
+      "building_id": "1101208030",
       "build_year": 1899,
       "raze_permits": [
         {
@@ -71,7 +71,7 @@
       ]
     },
     {
-      "building_id": "1101233100.0",
+      "building_id": "1101233100",
       "build_year": 1960,
       "raze_permits": [
         {
@@ -85,7 +85,7 @@
       ]
     },
     {
-      "building_id": "1102017000.0",
+      "building_id": "1102017000",
       "build_year": 2018,
       "raze_permits": [
         {
@@ -99,7 +99,7 @@
       ]
     },
     {
-      "building_id": "1701289010.0",
+      "building_id": "1701289010",
       "build_year": 1936,
       "raze_permits": [
         {
@@ -113,7 +113,7 @@
       ]
     },
     {
-      "building_id": "2102473001.0",
+      "building_id": "2102473001",
       "build_year": 1979,
       "raze_permits": [
         {
@@ -127,7 +127,7 @@
       ]
     },
     {
-      "building_id": "2200534000.0",
+      "building_id": "2200534000",
       "build_year": 1957,
       "raze_permits": [
         {
@@ -141,7 +141,7 @@
       ]
     },
     {
-      "building_id": "2201822010.0",
+      "building_id": "2201822010",
       "build_year": 2021,
       "raze_permits": [
         {
@@ -79013,7 +79013,7 @@
     }
   ],
   "metadata": {
-    "generated_date": "2025-10-29T23:31:57.578120",
+    "generated_date": "2025-10-31T13:49:16.181485",
     "total_parcels_analyzed": 7823,
     "year_range": "2009-2025",
     "data_source": "Boston Property Assessment & Building Permits",

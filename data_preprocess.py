@@ -2,7 +2,7 @@ import pandas as pd
 import json
 import numpy as np
 from datetime import datetime
-
+import geopandas as gpd
 
 # Keep only the latest record within a given time window for the same group
 # Keep only the latest record within a given time window for the same group,
@@ -62,7 +62,7 @@ def process_demolition_data(assessment_file, permit_file):
     # --- 1. Load the datasets ---
     print("Loading datasets...")
     try:
-        prop_ass_df = pd.read_csv(assessment_file, low_memory=False)
+        prop_ass_df = gpd.read_file(assessment_file)
         bldg_permit_df = pd.read_csv(permit_file, low_memory=False)
     except FileNotFoundError as e:
         print(f"File not found: {e}")
@@ -88,6 +88,8 @@ def process_demolition_data(assessment_file, permit_file):
         assessment_data['building_id'] = assessment_data['CM_ID'].fillna(assessment_data['PID'])
     else:
         assessment_data['building_id'] = assessment_data['PID']
+
+    assessment_data['building_id'] = assessment_data['building_id'].astype(str).str.replace(r'\.0$', '', regex=True).str.strip().str.zfill(10)
 
     print("Aggregating build years by 'building_id' (handling condos)...")
     # Group by the new building_id and find the earliest construction year for that building.
@@ -153,6 +155,13 @@ def process_demolition_data(assessment_file, permit_file):
 
     demolition_permits['issued_date'] = pd.to_datetime(demolition_permits['issued_date'], errors='coerce')
     demolition_permits.dropna(subset=['issued_date'], inplace=True)
+
+    print("Converting parcel_id to standardized string for merging...")
+    demolition_permits['parcel_id'] = demolition_permits['parcel_id'].astype(str).str.replace(r'\.0$', '',
+                                                                                              regex=True).str.strip().str.zfill(
+        10)
+
+    demolition_permits = demolition_permits[demolition_permits['parcel_id'].str.lower() != 'nan'].copy()
 
     # --- MOVED: Normalize STATUS immediately after creating lifespan_df_all ---
     print("Normalizing permit status ('Close'/'Open')...")
@@ -695,7 +704,7 @@ def save_json_files(data, output_prefix='boston_demolition'):
 def main():
     """Main execution function."""
     # Define your input files here
-    assessment_file = 'fy2025-property-assessment-data_12_30_2024.csv'
+    assessment_file = 'FINAL_Merged_Parcels_with_Zoning_and_Assessment_v3.geojson'
     permit_file = 'tmpbtz4x7bc.csv'
 
     print("Starting Boston Demolition Data Processing...")
