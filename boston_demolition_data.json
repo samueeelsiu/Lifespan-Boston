@@ -167,7 +167,7 @@
     "negative_raze_count": 206,
     "zero_raze_count": 111,
     "demolished_and_replaced_count": 317,
-    "avg_current_building_age": 91.33594357401867,
+    "avg_current_building_age": 91.22234385301472,
     "raze_status_by_lifespan": {
       "positive": {
         "close": 40,
@@ -79013,7 +79013,7 @@
     }
   ],
   "metadata": {
-    "generated_date": "2025-10-31T13:49:16.181485",
+    "generated_date": "2025-11-06T01:00:07.566540",
     "total_parcels_analyzed": 7823,
     "year_range": "2009-2025",
     "data_source": "Boston Property Assessment & Building Permits",
@@ -79021,5 +79021,6604 @@
     "total_demolition_permits": 10963,
     "matched_records": 8599,
     "final_valid_records": 7823
-  }
+  },
+  "zoning_subdistrict_stats": {
+    "M-8": {
+      "avg_current_age": 120.0,
+      "avg_raze_lifespan": null
+    },
+    "NEWSPAPER ROW/OLD SOUTH PROTECTION AREA": {
+      "avg_current_age": 100.57142857142857,
+      "avg_raze_lifespan": null
+    },
+    "B-8": {
+      "avg_current_age": 108.85714285714286,
+      "avg_raze_lifespan": null
+    },
+    "NS-1": {
+      "avg_current_age": 87.51152073732719,
+      "avg_raze_lifespan": 102.0
+    },
+    "I-2": {
+      "avg_current_age": 70.91891891891892,
+      "avg_raze_lifespan": null
+    },
+    "TYLER STREET SPECIAL STUDY AREA": {
+      "avg_current_age": 72.57142857142857,
+      "avg_raze_lifespan": null
+    },
+    "WM": {
+      "avg_current_age": 62.357142857142854,
+      "avg_raze_lifespan": null
+    },
+    "OS-UW": {
+      "avg_current_age": 80.51546391752578,
+      "avg_raze_lifespan": null
+    },
+    "DIMOCK STREET CF": {
+      "avg_current_age": 92.33333333333333,
+      "avg_raze_lifespan": null
+    },
+    "MFR-2": {
+      "avg_current_age": 92.176,
+      "avg_raze_lifespan": 88.0
+    },
+    "OS-P": {
+      "avg_current_age": 95.5910931174089,
+      "avg_raze_lifespan": 59.666666666666664
+    },
+    "Westland Ave NS-1": {
+      "avg_current_age": 52.0,
+      "avg_raze_lifespan": null
+    },
+    "E St. LI": {
+      "avg_current_age": 21.0,
+      "avg_raze_lifespan": null
+    },
+    "GOODENOUGH STREET LI-1": {
+      "avg_current_age": 44.0,
+      "avg_raze_lifespan": null
+    },
+    "CONGRESS/STATE STREET MEDIUM DENSITY AREA": {
+      "avg_current_age": 57.0,
+      "avg_raze_lifespan": null
+    },
+    "CHARLESTOWN MARITIME ECONOMY RESERVE": {
+      "avg_current_age": 101.88235294117646,
+      "avg_raze_lifespan": null
+    },
+    "H-1": {
+      "avg_current_age": 93.925,
+      "avg_raze_lifespan": null
+    },
+    "MFR": {
+      "avg_current_age": 104.60911713791114,
+      "avg_raze_lifespan": 112.22727272727273
+    },
+    "23N": {
+      "avg_current_age": 46.5,
+      "avg_raze_lifespan": null
+    },
+    "3F-2000": {
+      "avg_current_age": 114.21095518334087,
+      "avg_raze_lifespan": 118.0
+    },
+    "GREATER ROXBURY EDA": {
+      "avg_current_age": 93.66101694915254,
+      "avg_raze_lifespan": null
+    },
+    "NI-VA-1": {
+      "avg_current_age": 105.0,
+      "avg_raze_lifespan": null
+    },
+    "LOWER MILLS SHORELAND OPEN SPACE SUBDISTRICT": {
+      "avg_current_age": 120.0,
+      "avg_raze_lifespan": null
+    },
+    "3F-D-2000": {
+      "avg_current_age": 110.21944444444445,
+      "avg_raze_lifespan": 31.0
+    },
+    "IS": {
+      "avg_current_age": 94.73493975903614,
+      "avg_raze_lifespan": 117.0
+    },
+    "2F-5000": {
+      "avg_current_age": 104.11763365735115,
+      "avg_raze_lifespan": 109.0
+    },
+    "LC": {
+      "avg_current_age": 101.55764705882353,
+      "avg_raze_lifespan": 98.0
+    },
+    "NORTH END PLAYGROUND RECREATION OPEN SPACE SUBDISTRICT": {
+      "avg_current_age": 126.0,
+      "avg_raze_lifespan": null
+    },
+    "CPS IMP": {
+      "avg_current_age": 132.5,
+      "avg_raze_lifespan": null
+    },
+    "Mass Ave NS-2": {
+      "avg_current_age": 40.666666666666664,
+      "avg_raze_lifespan": null
+    },
+    "GATEWAY INDUSTRIAL": {
+      "avg_current_age": 66.63414634146342,
+      "avg_raze_lifespan": 75.0
+    },
+    "CF": {
+      "avg_current_age": 77.97368421052632,
+      "avg_raze_lifespan": 80.0
+    },
+    "CORE INDUSTRIAL": {
+      "avg_current_age": 68.5,
+      "avg_raze_lifespan": null
+    },
+    "Barrys Corner CC-1": {
+      "avg_current_age": 82.78571428571429,
+      "avg_raze_lifespan": null
+    },
+    "CAMBRIDGE STREET NORTH SIDE PROTECTION AREA": {
+      "avg_current_age": 68.61538461538461,
+      "avg_raze_lifespan": null
+    },
+    "1A": {
+      "avg_current_age": 42.0,
+      "avg_raze_lifespan": null
+    },
+    "NORTH END LOCAL BUSINESS SUBDISTRICT": {
+      "avg_current_age": 72.5,
+      "avg_raze_lifespan": null
+    },
+    "1F-7000": {
+      "avg_current_age": 114.38483547925608,
+      "avg_raze_lifespan": 138.66666666666666
+    },
+    "B-3-65": {
+      "avg_current_age": 117.36029411764706,
+      "avg_raze_lifespan": 1.0
+    },
+    "EDA SOUTH": {
+      "avg_current_age": 91.33333333333333,
+      "avg_raze_lifespan": 78.0
+    },
+    "SEARS CRESCENT PROTECTION AREA": {
+      "avg_current_age": 91.5,
+      "avg_raze_lifespan": null
+    },
+    "CLAM POINT WATERFRONT SERVICE": {
+      "avg_current_age": 71.0,
+      "avg_raze_lifespan": 49.0
+    },
+    "15/16": {
+      "avg_current_age": 126.0,
+      "avg_raze_lifespan": null
+    },
+    "3F-5000": {
+      "avg_current_age": 106.6153035095647,
+      "avg_raze_lifespan": 105.17391304347827
+    },
+    "Brookline Ave CC": {
+      "avg_current_age": 63.72727272727273,
+      "avg_raze_lifespan": 96.0
+    },
+    "MU-1": {
+      "avg_current_age": 57.583333333333336,
+      "avg_raze_lifespan": 105.0
+    },
+    "CC": {
+      "avg_current_age": 72.79746835443038,
+      "avg_raze_lifespan": 101.11111111111111
+    },
+    "LADDER BLOCKS AND WASHINGTON STREET THEATRE PROTECTION AREA": {
+      "avg_current_age": 113.02127659574468,
+      "avg_raze_lifespan": null
+    },
+    "WENTWORTH INSTITITE IS": {
+      "avg_current_age": 115.0,
+      "avg_raze_lifespan": null
+    },
+    "CHINATOWN GATEWAY SPECIAL STUDY AREA": {
+      "avg_current_age": 50.5,
+      "avg_raze_lifespan": null
+    },
+    "ALLSTON LANDING SOUTH EDA": {
+      "avg_current_age": 73.33333333333333,
+      "avg_raze_lifespan": null
+    },
+    "CHARLESTOWN GATEWAY SUBDISTRICT": {
+      "avg_current_age": 63.666666666666664,
+      "avg_raze_lifespan": null
+    },
+    "MU-4": {
+      "avg_current_age": 97.41772151898734,
+      "avg_raze_lifespan": 105.0
+    },
+    "OS-UP": {
+      "avg_current_age": 93.06896551724138,
+      "avg_raze_lifespan": null
+    },
+    "BLACKSTONE BLOCK PROTECTION AREA": {
+      "avg_current_age": 115.52941176470588,
+      "avg_raze_lifespan": null
+    },
+    "S2": {
+      "avg_current_age": 94.88260869565218,
+      "avg_raze_lifespan": 120.0
+    },
+    "D St. NDA": {
+      "avg_current_age": 67.75,
+      "avg_raze_lifespan": null
+    },
+    "Everett/Telford CC-1": {
+      "avg_current_age": 70.29166666666667,
+      "avg_raze_lifespan": null
+    },
+    "LIA": {
+      "avg_current_age": 88.97674418604652,
+      "avg_raze_lifespan": null
+    },
+    "MU-5": {
+      "avg_current_age": 104.328125,
+      "avg_raze_lifespan": 115.0
+    },
+    "Mass Ave NS-1": {
+      "avg_current_age": 114.0625,
+      "avg_raze_lifespan": null
+    },
+    "North Boylston NS-2": {
+      "avg_current_age": 76.21428571428571,
+      "avg_raze_lifespan": null
+    },
+    "L-.5": {
+      "avg_current_age": 72.88888888888889,
+      "avg_raze_lifespan": null
+    },
+    "NORTHERN AVENUE TRANSITION ZONE": {
+      "avg_current_age": 9.5,
+      "avg_raze_lifespan": null
+    },
+    "BEACH/KNAPP PROTECTION AREA": {
+      "avg_current_age": 115.14285714285714,
+      "avg_raze_lifespan": null
+    },
+    "GOVERNMENT CENTER/CAA": {
+      "avg_current_age": 41.0,
+      "avg_raze_lifespan": null
+    },
+    "2F-7000": {
+      "avg_current_age": 103.9,
+      "avg_raze_lifespan": 105.0
+    },
+    "BOSTON WHARF TRANSITION ZONE": {
+      "avg_current_age": 9.285714285714286,
+      "avg_raze_lifespan": null
+    },
+    "LEATHER DISTRICT": {
+      "avg_current_age": 87.04545454545455,
+      "avg_raze_lifespan": null
+    },
+    "1F-4000": {
+      "avg_current_age": 99.15601503759399,
+      "avg_raze_lifespan": 85.5
+    },
+    "First St. LI": {
+      "avg_current_age": 82.18181818181819,
+      "avg_raze_lifespan": null
+    },
+    "M-2": {
+      "avg_current_age": 88.23529411764706,
+      "avg_raze_lifespan": null
+    },
+    "OS-CM": {
+      "avg_current_age": 82.53416149068323,
+      "avg_raze_lifespan": 90.5
+    },
+    "LITTLE MYSTIC WATERFRONT ACCESS OPEN SPACE": {
+      "avg_current_age": 76.0,
+      "avg_raze_lifespan": null
+    },
+    "Fenway Triangle NDA": {
+      "avg_current_age": 100.12,
+      "avg_raze_lifespan": null
+    },
+    "NEW ECONOMY DEVELOPMENT AREA": {
+      "avg_current_age": 97.0,
+      "avg_raze_lifespan": null
+    },
+    "CHRISTIAN SCIENCE INSTITUTIONAL AREA": {
+      "avg_current_age": 88.6,
+      "avg_raze_lifespan": null
+    },
+    "S5": {
+      "avg_current_age": 119.6,
+      "avg_raze_lifespan": null
+    },
+    "ST BOTOLPH STREET PROTECTION AREA": {
+      "avg_current_age": 94.25405405405405,
+      "avg_raze_lifespan": 112.0
+    },
+    "4": {
+      "avg_current_age": 98.33333333333333,
+      "avg_raze_lifespan": null
+    },
+    "WILLIAM J. BARRY PLAYGROUND RECREATION OPEN SPACE": {
+      "avg_current_age": 25.0,
+      "avg_raze_lifespan": null
+    },
+    "2": {
+      "avg_current_age": 68.0,
+      "avg_raze_lifespan": null
+    },
+    "NE/CAA": {
+      "avg_current_age": 97.8,
+      "avg_raze_lifespan": 86.0
+    },
+    "OS-G": {
+      "avg_current_age": 101.72340425531915,
+      "avg_raze_lifespan": null
+    },
+    "LINDEN STREET LI-1": {
+      "avg_current_age": 85.0,
+      "avg_raze_lifespan": null
+    },
+    "HANOVER CC": {
+      "avg_current_age": 112.26771653543307,
+      "avg_raze_lifespan": 168.0
+    },
+    "NEPOSET SHORELAND OPEN SPACE SUBDISTRICT": {
+      "avg_current_age": 93.6,
+      "avg_raze_lifespan": null
+    },
+    "H-3-65": {
+      "avg_current_age": 81.82161594963274,
+      "avg_raze_lifespan": null
+    },
+    "MCLELLAN HIGHWAY EDA": {
+      "avg_current_age": 41.666666666666664,
+      "avg_raze_lifespan": null
+    },
+    "3F-D-4000": {
+      "avg_current_age": 113.52941176470588,
+      "avg_raze_lifespan": null
+    },
+    "S4": {
+      "avg_current_age": 93.40860215053763,
+      "avg_raze_lifespan": null
+    },
+    "NEPONSET RIVER RESIDENTIAL SUBDISTRICT": {
+      "avg_current_age": 82.0,
+      "avg_raze_lifespan": null
+    },
+    "DANA FARBER CANCER INTITUTE IS": {
+      "avg_current_age": 17.0,
+      "avg_raze_lifespan": null
+    },
+    "MYSTIC RIVER WATERFRONT MANUFACTURING": {
+      "avg_current_age": 101.57142857142857,
+      "avg_raze_lifespan": null
+    },
+    "NEW BOSTON GARDEN DEVELOPMENT AREA": {
+      "avg_current_age": 19.6,
+      "avg_raze_lifespan": null
+    },
+    "STUART STREET/WASHINGTON STREET PROTECTION AREA": {
+      "avg_current_age": 117.875,
+      "avg_raze_lifespan": null
+    },
+    "LI": {
+      "avg_current_age": 83.72131147540983,
+      "avg_raze_lifespan": 92.81818181818181
+    },
+    "B-10": {
+      "avg_current_age": 94.65625,
+      "avg_raze_lifespan": null
+    },
+    "HARVARD UNIVERSITY IS": {
+      "avg_current_age": 55.0,
+      "avg_raze_lifespan": null
+    },
+    "L-2-65": {
+      "avg_current_age": 99.77333333333333,
+      "avg_raze_lifespan": null
+    },
+    "R2": {
+      "avg_current_age": 96.8179587831207,
+      "avg_raze_lifespan": 93.5
+    },
+    "Boston Landing CC-1": {
+      "avg_current_age": 88.61538461538461,
+      "avg_raze_lifespan": 74.0
+    },
+    "FRANCISCAN CHILDREN'S HOSPITAL IS": {
+      "avg_current_age": 110.7,
+      "avg_raze_lifespan": null
+    },
+    "B-4": {
+      "avg_current_age": 92.62222222222222,
+      "avg_raze_lifespan": 96.0
+    },
+    "BLOSSOM STREET RESTRICTED GROWTH AREA": {
+      "avg_current_age": 72.6,
+      "avg_raze_lifespan": null
+    },
+    "OS-RC": {
+      "avg_current_age": 96.10840707964601,
+      "avg_raze_lifespan": 98.0
+    },
+    "SAVIN HILL LC": {
+      "avg_current_age": 76.66666666666667,
+      "avg_raze_lifespan": null
+    },
+    "NORTH BOYLSTON NS-3": {
+      "avg_current_age": 59.0,
+      "avg_raze_lifespan": null
+    },
+    "CUF": {
+      "avg_current_age": 81.5,
+      "avg_raze_lifespan": null
+    },
+    "M-1": {
+      "avg_current_age": 75.83076923076923,
+      "avg_raze_lifespan": 44.5
+    },
+    "OLD STATE HOUSE PROTECTION AREA": {
+      "avg_current_age": 126.0,
+      "avg_raze_lifespan": null
+    },
+    "22S": {
+      "avg_current_age": 48.0,
+      "avg_raze_lifespan": null
+    },
+    "DUDLEY SQUARE EDA": {
+      "avg_current_age": 97.14117647058823,
+      "avg_raze_lifespan": 114.0
+    },
+    "LI-1": {
+      "avg_current_age": 85.14814814814815,
+      "avg_raze_lifespan": null
+    },
+    "MU-7": {
+      "avg_current_age": 92.56521739130434,
+      "avg_raze_lifespan": null
+    },
+    "2F": {
+      "avg_current_age": 105.76712328767124,
+      "avg_raze_lifespan": null
+    },
+    "BETH ISRAEL HOSPITAL INSTITUTIONAL DISTRICT": {
+      "avg_current_age": 76.33333333333333,
+      "avg_raze_lifespan": null
+    },
+    "COMMERCIAL CHINATOWN": {
+      "avg_current_age": 102.75,
+      "avg_raze_lifespan": null
+    },
+    "EDA CENTRAL": {
+      "avg_current_age": 112.53488372093024,
+      "avg_raze_lifespan": null
+    },
+    "M-1-55": {
+      "avg_current_age": 126.0,
+      "avg_raze_lifespan": null
+    },
+    "BROAD STREET PROTECTION AREA": {
+      "avg_current_age": 110.6,
+      "avg_raze_lifespan": null
+    },
+    "ST PATRICK NS": {
+      "avg_current_age": 115.66666666666667,
+      "avg_raze_lifespan": null
+    },
+    "H-2-D-65": {
+      "avg_current_age": 60.0,
+      "avg_raze_lifespan": null
+    },
+    "MU-3": {
+      "avg_current_age": 98.66666666666667,
+      "avg_raze_lifespan": null
+    },
+    "3F-D-3000": {
+      "avg_current_age": 111.38415366146458,
+      "avg_raze_lifespan": 107.66666666666667
+    },
+    "WS": {
+      "avg_current_age": 89.1,
+      "avg_raze_lifespan": 112.0
+    },
+    "B-1-55": {
+      "avg_current_age": 34.0,
+      "avg_raze_lifespan": null
+    },
+    "BOSTON COMMON AND PUBLIC GARDEN PROTECTION AREA": {
+      "avg_current_age": 96.2,
+      "avg_raze_lifespan": 125.0
+    },
+    "NORTH WASHINGTON ST CC": {
+      "avg_current_age": 101.34285714285714,
+      "avg_raze_lifespan": null
+    },
+    "S1": {
+      "avg_current_age": 105.42758620689655,
+      "avg_raze_lifespan": 109.0
+    },
+    "WATERFRONT NS": {
+      "avg_current_age": 78.6875,
+      "avg_raze_lifespan": null
+    },
+    "SARATOGA STREET EDA": {
+      "avg_current_age": 77.75,
+      "avg_raze_lifespan": 82.0
+    },
+    "CASTLE ISLAND/ COLUMBUS PARK SHORELAND OPEN SPACE SUBDISTRICT": {
+      "avg_current_age": 87.25,
+      "avg_raze_lifespan": null
+    },
+    "1": {
+      "avg_current_age": 72.75,
+      "avg_raze_lifespan": null
+    },
+    "GROVE HALL IDA": {
+      "avg_current_age": 112.5125,
+      "avg_raze_lifespan": 75.0
+    },
+    "PILOT HOUSE EXTENSION": {
+      "avg_current_age": 26.0,
+      "avg_raze_lifespan": null
+    },
+    "B-6-90a": {
+      "avg_current_age": 108.28888888888889,
+      "avg_raze_lifespan": null
+    },
+    "H-3": {
+      "avg_current_age": 73.28888888888889,
+      "avg_raze_lifespan": 67.0
+    },
+    "NDA": {
+      "avg_current_age": 87.95744680851064,
+      "avg_raze_lifespan": 94.0
+    },
+    "H-1-50": {
+      "avg_current_age": 34.578947368421055,
+      "avg_raze_lifespan": 120.5
+    },
+    "EGLESTON SQUARE NS": {
+      "avg_current_age": 99.72727272727273,
+      "avg_raze_lifespan": null
+    },
+    "WATERFRONT TRANSITION ZONE": {
+      "avg_current_age": 95.0,
+      "avg_raze_lifespan": null
+    },
+    "BOYLSTON STREET PROTECTION AREA": {
+      "avg_current_age": 73.5,
+      "avg_raze_lifespan": null
+    },
+    "CHARLESTOWN GENERAL INDUSTRIAL": {
+      "avg_current_age": 79.4,
+      "avg_raze_lifespan": 41.0
+    },
+    "WASHINGTON PARK MALL NS": {
+      "avg_current_age": 57.5,
+      "avg_raze_lifespan": null
+    },
+    "BULFINCH TRIANGLE/CAA": {
+      "avg_current_age": 14.0,
+      "avg_raze_lifespan": null
+    },
+    "EBR-2.5": {
+      "avg_current_age": 91.91150442477876,
+      "avg_raze_lifespan": 65.0
+    },
+    "CC-2": {
+      "avg_current_age": 94.66666666666667,
+      "avg_raze_lifespan": 103.0
+    },
+    "LITTLE MYSTIC WATERFRONT RESIDENTIAL": {
+      "avg_current_age": 50.0,
+      "avg_raze_lifespan": null
+    },
+    "LC-.5": {
+      "avg_current_age": 90.0,
+      "avg_raze_lifespan": null
+    },
+    "PEMBERTON SQUARE PROTECTION AREA": {
+      "avg_current_age": 68.66666666666667,
+      "avg_raze_lifespan": null
+    },
+    "HUNTINGTON AVENUE BOULEVARD AREA": {
+      "avg_current_age": 70.85714285714286,
+      "avg_raze_lifespan": null
+    },
+    "3F-D_2000": {
+      "avg_current_age": 111.55555555555556,
+      "avg_raze_lifespan": null
+    },
+    "RH-1500": {
+      "avg_current_age": 124.61611374407583,
+      "avg_raze_lifespan": null
+    },
+    "9": {
+      "avg_current_age": 5.0,
+      "avg_raze_lifespan": null
+    },
+    "B-8-120c": {
+      "avg_current_age": 107.84615384615384,
+      "avg_raze_lifespan": null
+    },
+    "INDIA STREET RESTRICTED GROWTH AREA": {
+      "avg_current_age": 61.333333333333336,
+      "avg_raze_lifespan": null
+    },
+    "BRAINTREE STREET LI-1": {
+      "avg_current_age": 62.642857142857146,
+      "avg_raze_lifespan": 2.0
+    },
+    "1F-5000": {
+      "avg_current_age": 99.11501736111111,
+      "avg_raze_lifespan": 116.7
+    },
+    "CUSTOM HOUSE MEDIUM DENSITY AREA": {
+      "avg_current_age": 98.125,
+      "avg_raze_lifespan": null
+    },
+    "MCOP INSTITUTIONAL DISTRICT": {
+      "avg_current_age": 120.0,
+      "avg_raze_lifespan": null
+    },
+    "Lower Mills NS": {
+      "avg_current_age": 101.125,
+      "avg_raze_lifespan": null
+    },
+    "MASSACHUSETTS AVENUE/BELVIDERE STREET PROTECTION AREA": {
+      "avg_current_age": 57.166666666666664,
+      "avg_raze_lifespan": null
+    },
+    "NI-VA-2": {
+      "avg_current_age": 70.71428571428571,
+      "avg_raze_lifespan": 34.0
+    },
+    "LIBERTY TREE PROTECTION AREA": {
+      "avg_current_age": 70.0,
+      "avg_raze_lifespan": null
+    },
+    "GUEST STREET LI-2": {
+      "avg_current_age": 48.8,
+      "avg_raze_lifespan": 59.5
+    },
+    "STATE STREET PROTECTION AREA": {
+      "avg_current_age": 92.6875,
+      "avg_raze_lifespan": null
+    },
+    "Adams Street NS": {
+      "avg_current_age": 106.71428571428571,
+      "avg_raze_lifespan": null
+    },
+    "2F-9000": {
+      "avg_current_age": 111.33676975945018,
+      "avg_raze_lifespan": 123.66666666666667
+    },
+    "3F-6000": {
+      "avg_current_age": 99.06505295007564,
+      "avg_raze_lifespan": 94.0
+    },
+    "L-2": {
+      "avg_current_age": 108.0,
+      "avg_raze_lifespan": null
+    },
+    "NS-2": {
+      "avg_current_age": 97.01785714285714,
+      "avg_raze_lifespan": 87.83333333333333
+    },
+    "ALBANY STREET MEDICAL AREA CF": {
+      "avg_current_age": 55.0,
+      "avg_raze_lifespan": null
+    },
+    "BIO SQUARE EDA": {
+      "avg_current_age": 23.4,
+      "avg_raze_lifespan": null
+    },
+    "NS-.5": {
+      "avg_current_age": 95.01298701298701,
+      "avg_raze_lifespan": 74.0
+    },
+    "1F-8000": {
+      "avg_current_age": 98.75913978494624,
+      "avg_raze_lifespan": 111.66666666666667
+    },
+    "2F-3000": {
+      "avg_current_age": 99.69377990430623,
+      "avg_raze_lifespan": null
+    },
+    "COMMUNITY COLLEGE CF": {
+      "avg_current_age": 90.88235294117646,
+      "avg_raze_lifespan": null
+    },
+    "H-5": {
+      "avg_current_age": 47.0,
+      "avg_raze_lifespan": null
+    },
+    "H-4": {
+      "avg_current_age": 112.72685185185185,
+      "avg_raze_lifespan": 111.0
+    },
+    "2F-5000 (A)": {
+      "avg_current_age": 104.88127853881278,
+      "avg_raze_lifespan": 119.5
+    },
+    "2A": {
+      "avg_current_age": 68.5,
+      "avg_raze_lifespan": null
+    },
+    "ALLEGHANY CF": {
+      "avg_current_age": 74.66666666666667,
+      "avg_raze_lifespan": null
+    },
+    "ALLSTON LANDING NORTH EDA": {
+      "avg_current_age": 54.375,
+      "avg_raze_lifespan": 75.0
+    },
+    "WMU": {
+      "avg_current_age": 77.88888888888889,
+      "avg_raze_lifespan": 118.0
+    },
+    "OS-SL": {
+      "avg_current_age": 85.5,
+      "avg_raze_lifespan": null
+    },
+    "ST CECILIA SPECIAL STUDY AREA": {
+      "avg_current_age": 93.25,
+      "avg_raze_lifespan": null
+    },
+    "OS": {
+      "avg_current_age": 76.875,
+      "avg_raze_lifespan": 92.0
+    },
+    "1F-9000": {
+      "avg_current_age": 80.01863799283154,
+      "avg_raze_lifespan": 75.0
+    },
+    "S3": {
+      "avg_current_age": 91.95238095238095,
+      "avg_raze_lifespan": null
+    },
+    "B-6-90b": {
+      "avg_current_age": 126.0,
+      "avg_raze_lifespan": null
+    },
+    "M-4": {
+      "avg_current_age": 96.21212121212122,
+      "avg_raze_lifespan": null
+    },
+    "3": {
+      "avg_current_age": 98.92307692307692,
+      "avg_raze_lifespan": null
+    },
+    "NE DEACONESS HOSPITAL INSTITUTIONAL DISTRICT": {
+      "avg_current_age": 100.33333333333333,
+      "avg_raze_lifespan": null
+    },
+    "Huntington Ave NS-2": {
+      "avg_current_age": 117.27272727272727,
+      "avg_raze_lifespan": null
+    },
+    "CPS": {
+      "avg_current_age": 73.7135922330097,
+      "avg_raze_lifespan": 104.0
+    },
+    "MERCANTILE NS": {
+      "avg_current_age": 126.0,
+      "avg_raze_lifespan": null
+    },
+    "SOUTH BOSTON MARITIME ECONOMY RESERVE": {
+      "avg_current_age": 57.0,
+      "avg_raze_lifespan": 96.0
+    },
+    "CC-4": {
+      "avg_current_age": 24.5,
+      "avg_raze_lifespan": null
+    },
+    "ST GERMAIN STREET PROTECTION AREA": {
+      "avg_current_age": 109.4,
+      "avg_raze_lifespan": null
+    },
+    "R1": {
+      "avg_current_age": 79.22524483133841,
+      "avg_raze_lifespan": 64.0
+    },
+    "BOSTON COLLEGE IS": {
+      "avg_current_age": 68.0,
+      "avg_raze_lifespan": null
+    },
+    "17N": {
+      "avg_current_age": 26.0,
+      "avg_raze_lifespan": null
+    },
+    "HISTORIC CHINATOWN PROTECTION AREA": {
+      "avg_current_age": 116.53012048192771,
+      "avg_raze_lifespan": null
+    },
+    "WHARF STREET RESTRICTED GROWTH AREA": {
+      "avg_current_age": 8.0,
+      "avg_raze_lifespan": null
+    },
+    "EBR-4": {
+      "avg_current_age": 106.4077743902439,
+      "avg_raze_lifespan": 90.66666666666667
+    },
+    "WENTWORTH INSTITUTE IS": {
+      "avg_current_age": 100.28571428571429,
+      "avg_raze_lifespan": null
+    },
+    "CEDAR GROVE WATERFRONT MANUFACTURING SUBDISTRICT": {
+      "avg_current_age": 23.0,
+      "avg_raze_lifespan": null
+    },
+    "N2": {
+      "avg_current_age": 113.5,
+      "avg_raze_lifespan": null
+    },
+    "DORCHESTER BAY WATERFRONT SERVICE SUBDISTRICT": {
+      "avg_current_age": 97.0,
+      "avg_raze_lifespan": null
+    },
+    "INSTITUTIONAL": {
+      "avg_current_age": 73.92857142857143,
+      "avg_raze_lifespan": null
+    },
+    "MFR/LS": {
+      "avg_current_age": 101.82244318181819,
+      "avg_raze_lifespan": 92.57142857142857
+    },
+    "3F-4000": {
+      "avg_current_age": 105.22154858825567,
+      "avg_raze_lifespan": 101.70833333333333
+    },
+    "WE": {
+      "avg_current_age": 93.0,
+      "avg_raze_lifespan": null
+    },
+    "RESIDENTIAL CHINATOWN": {
+      "avg_current_age": 113.75342465753425,
+      "avg_raze_lifespan": null
+    },
+    "1F-6000": {
+      "avg_current_age": 88.94237288135594,
+      "avg_raze_lifespan": 76.17241379310344
+    },
+    "H-2-65": {
+      "avg_current_age": 112.82790309106099,
+      "avg_raze_lifespan": null
+    },
+    "18S": {
+      "avg_current_age": 89.66666666666667,
+      "avg_raze_lifespan": null
+    },
+    "GENERAL AREA": {
+      "avg_current_age": 80.67777777777778,
+      "avg_raze_lifespan": 52.5
+    },
+    "GROVE HALL NS": {
+      "avg_current_age": 103.26666666666667,
+      "avg_raze_lifespan": 105.0
+    },
+    "CHARLESTOWN NAVY YARD SUBDISTRICT": {
+      "avg_current_age": 91.3,
+      "avg_raze_lifespan": null
+    },
+    "3F-7000": {
+      "avg_current_age": 115.24747474747475,
+      "avg_raze_lifespan": 99.0
+    },
+    "MU-2": {
+      "avg_current_age": 86.8,
+      "avg_raze_lifespan": null
+    },
+    "MFR-3": {
+      "avg_current_age": 100.0,
+      "avg_raze_lifespan": null
+    },
+    "EDA NORTH": {
+      "avg_current_age": 50.04347826086956,
+      "avg_raze_lifespan": 52.0
+    },
+    "2F-6000": {
+      "avg_current_age": 101.8723241590214,
+      "avg_raze_lifespan": 111.25
+    },
+    "OS-BZ": {
+      "avg_current_age": 88.32432432432432,
+      "avg_raze_lifespan": null
+    },
+    "CC-1": {
+      "avg_current_age": 63.758620689655174,
+      "avg_raze_lifespan": 119.0
+    },
+    "PARCEL-TO-PARCEL LINKAGE DEVELOPMENT AREA": {
+      "avg_current_age": 92.0,
+      "avg_raze_lifespan": null
+    },
+    "TREMONT STREET PROTECTION AREA": {
+      "avg_current_age": 126.0,
+      "avg_raze_lifespan": null
+    },
+    "NI-VA-3": {
+      "avg_current_age": 91.6,
+      "avg_raze_lifespan": null
+    },
+    "S0": {
+      "avg_current_age": 108.8013698630137,
+      "avg_raze_lifespan": 82.0
+    },
+    "BOSTON UNIVERSITY IS": {
+      "avg_current_age": 65.7,
+      "avg_raze_lifespan": 49.0
+    },
+    "1F-3000": {
+      "avg_current_age": 114.27272727272727,
+      "avg_raze_lifespan": null
+    },
+    "CC-3": {
+      "avg_current_age": 100.0,
+      "avg_raze_lifespan": null
+    },
+    "CREATIVE INDUSTRIAL": {
+      "avg_current_age": 96.40425531914893,
+      "avg_raze_lifespan": 117.0
+    },
+    "MARKETS PROTECTION AREA": {
+      "avg_current_age": 97.0,
+      "avg_raze_lifespan": 117.0
+    },
+    "OS-A": {
+      "avg_current_age": 69.0,
+      "avg_raze_lifespan": 125.0
+    },
+    "ST. ELIZABETH'S HOSPITAL IS": {
+      "avg_current_age": 47.0,
+      "avg_raze_lifespan": 44.0
+    },
+    "NEWMARKET IDA": {
+      "avg_current_age": 72.96428571428571,
+      "avg_raze_lifespan": 60.0
+    },
+    "TURNPIKE AIR-RIGHTS SPECIAL STUDY AREA": {
+      "avg_current_age": 75.0,
+      "avg_raze_lifespan": null
+    },
+    "WALNUT AVENUE CF": {
+      "avg_current_age": 126.0,
+      "avg_raze_lifespan": null
+    },
+    "B-2": {
+      "avg_current_age": 105.0,
+      "avg_raze_lifespan": null
+    },
+    "NI": {
+      "avg_current_age": 110.125,
+      "avg_raze_lifespan": 126.0
+    },
+    "EPS": {
+      "avg_current_age": 18.44047619047619,
+      "avg_raze_lifespan": null
+    },
+    "RH": {
+      "avg_current_age": 108.39455782312925,
+      "avg_raze_lifespan": 78.5
+    },
+    "RH-2000": {
+      "avg_current_age": 123.96124031007751,
+      "avg_raze_lifespan": null
+    },
+    "TREMONT CF": {
+      "avg_current_age": 110.5,
+      "avg_raze_lifespan": null
+    },
+    "NORTH END WATERFRONT SUBDISTRICT": {
+      "avg_current_age": 64.91666666666667,
+      "avg_raze_lifespan": null
+    },
+    "3F-3000": {
+      "avg_current_age": 114.27868852459017,
+      "avg_raze_lifespan": null
+    },
+    "B-8-120a": {
+      "avg_current_age": 115.3030303030303,
+      "avg_raze_lifespan": null
+    },
+    "LI-2": {
+      "avg_current_age": 73.48648648648648,
+      "avg_raze_lifespan": null
+    },
+    "NS": {
+      "avg_current_age": 92.60665137614679,
+      "avg_raze_lifespan": 87.0
+    },
+    "2F-4000": {
+      "avg_current_age": 114.44206008583691,
+      "avg_raze_lifespan": null
+    },
+    "COMMERCIAL WHARF NS": {
+      "avg_current_age": 100.0,
+      "avg_raze_lifespan": null
+    },
+    "NEW ENGLAND BAPTIST IS": {
+      "avg_current_age": 113.1,
+      "avg_raze_lifespan": null
+    },
+    "CAMPUS HIGH CF": {
+      "avg_current_age": 95.5,
+      "avg_raze_lifespan": null
+    },
+    "BAY VILLAGE PROTECTION AREA": {
+      "avg_current_age": 119.2,
+      "avg_raze_lifespan": null
+    },
+    "MFR-1": {
+      "avg_current_age": 91.43396226415095,
+      "avg_raze_lifespan": 99.0
+    },
+    "MFR/LS-2": {
+      "avg_current_age": 115.36,
+      "avg_raze_lifespan": null
+    },
+    "SUFFOLK DOWNS EDA": {
+      "avg_current_age": 29.0,
+      "avg_raze_lifespan": null
+    },
+    "Fields Corner CC": {
+      "avg_current_age": 92.0,
+      "avg_raze_lifespan": null
+    },
+    "H-2": {
+      "avg_current_age": 101.81481481481481,
+      "avg_raze_lifespan": null
+    },
+    "7W": {
+      "avg_current_age": 22.0,
+      "avg_raze_lifespan": null
+    },
+    "IDA": {
+      "avg_current_age": 85.61538461538461,
+      "avg_raze_lifespan": null
+    },
+    "WARREN STREET CF": {
+      "avg_current_age": 96.92307692307692,
+      "avg_raze_lifespan": 116.0
+    },
+    "B-8-120b": {
+      "avg_current_age": 82.92,
+      "avg_raze_lifespan": null
+    },
+    "STATE HOUSE PROTECTION AREA": {
+      "avg_current_age": 98.71428571428571,
+      "avg_raze_lifespan": null
+    },
+    "22N": {
+      "avg_current_age": 65.0,
+      "avg_raze_lifespan": null
+    },
+    "SUMMER ST. LI": {
+      "avg_current_age": 86.42857142857143,
+      "avg_raze_lifespan": 123.0
+    },
+    "EBR-3": {
+      "avg_current_age": 114.19361901782922,
+      "avg_raze_lifespan": 119.28571428571429
+    },
+    "HARVARD AVENUE CC-1": {
+      "avg_current_age": 88.81132075471699,
+      "avg_raze_lifespan": 81.0
+    },
+    "CITY HALL MEDIUM DENSITY AREA": {
+      "avg_current_age": 102.75,
+      "avg_raze_lifespan": null
+    },
+    "DOWNTOWN WATERFRONT SUBDISTRICT": {
+      "avg_current_age": 63.5,
+      "avg_raze_lifespan": null
+    },
+    "C-1": {
+      "avg_current_age": 45.0,
+      "avg_raze_lifespan": null
+    },
+    "B-1": {
+      "avg_current_age": 102.30555555555556,
+      "avg_raze_lifespan": 36.0
+    },
+    "Western Avenue/Soldiers Field Road CC-1": {
+      "avg_current_age": 65.20689655172414,
+      "avg_raze_lifespan": 66.0
+    },
+    "SUDBURY STREET RESTRICTED GROWTH AREA": {
+      "avg_current_age": 66.4,
+      "avg_raze_lifespan": null
+    },
+    "SALEM ST NS": {
+      "avg_current_age": 101.96551724137932,
+      "avg_raze_lifespan": 104.0
+    },
+    "L-1": {
+      "avg_current_age": 72.4375,
+      "avg_raze_lifespan": null
+    },
+    "C-2": {
+      "avg_current_age": 112.0,
+      "avg_raze_lifespan": null
+    }
+  },
+  "zoning_district_stats": {
+    "East Boston Neighborhood": {
+      "avg_current_age": 108.25123937677054,
+      "avg_raze_lifespan": 99.54285714285714,
+      "current_age_distribution_10yr": [
+        {
+          "range": "0-10",
+          "count": 204
+        },
+        {
+          "range": "10-20",
+          "count": 110
+        },
+        {
+          "range": "20-30",
+          "count": 132
+        },
+        {
+          "range": "30-40",
+          "count": 40
+        },
+        {
+          "range": "40-50",
+          "count": 55
+        },
+        {
+          "range": "50-60",
+          "count": 40
+        },
+        {
+          "range": "60-70",
+          "count": 89
+        },
+        {
+          "range": "70-80",
+          "count": 112
+        },
+        {
+          "range": "80-90",
+          "count": 98
+        },
+        {
+          "range": "90-100",
+          "count": 192
+        },
+        {
+          "range": "100-110",
+          "count": 452
+        },
+        {
+          "range": "110-120",
+          "count": 1323
+        },
+        {
+          "range": "120-130",
+          "count": 2257
+        },
+        {
+          "range": "130-140",
+          "count": 186
+        },
+        {
+          "range": "140-150",
+          "count": 239
+        },
+        {
+          "range": "150-160",
+          "count": 66
+        },
+        {
+          "range": "160-170",
+          "count": 16
+        },
+        {
+          "range": "170-180",
+          "count": 23
+        },
+        {
+          "range": "180-190",
+          "count": 5
+        },
+        {
+          "range": "190-200",
+          "count": 7
+        },
+        {
+          "range": "220-230",
+          "count": 1
+        },
+        {
+          "range": "230-240",
+          "count": 1
+        }
+      ],
+      "demolished_age_distribution_10yr": [
+        {
+          "range": "0-10",
+          "count": 1
+        },
+        {
+          "range": "10-20",
+          "count": 1
+        },
+        {
+          "range": "30-40",
+          "count": 1
+        },
+        {
+          "range": "40-50",
+          "count": 1
+        },
+        {
+          "range": "60-70",
+          "count": 2
+        },
+        {
+          "range": "70-80",
+          "count": 3
+        },
+        {
+          "range": "80-90",
+          "count": 1
+        },
+        {
+          "range": "90-100",
+          "count": 1
+        },
+        {
+          "range": "100-110",
+          "count": 7
+        },
+        {
+          "range": "110-120",
+          "count": 6
+        },
+        {
+          "range": "120-130",
+          "count": 9
+        },
+        {
+          "range": "140-150",
+          "count": 1
+        },
+        {
+          "range": "170-180",
+          "count": 1
+        }
+      ],
+      "positive_raze_points": [
+        {
+          "lat": 42.38014448046815,
+          "lng": -71.02859033125368,
+          "lifespan": 108.0,
+          "status": "Close"
+        },
+        {
+          "lat": 42.37887084491705,
+          "lng": -71.02797729865237,
+          "lifespan": 104.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.385369465426315,
+          "lng": -71.0168702939221,
+          "lifespan": 114.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.38534194092199,
+          "lng": -71.01672156511322,
+          "lifespan": 104.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.383078466018574,
+          "lng": -71.01648629803154,
+          "lifespan": 114.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.3823944749108,
+          "lng": -71.01704986262537,
+          "lifespan": 125.0,
+          "status": "Close"
+        },
+        {
+          "lat": 42.38547944848968,
+          "lng": -71.00309026192271,
+          "lifespan": 113.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.38796944562348,
+          "lng": -71.000570252191,
+          "lifespan": 79.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.38912377187999,
+          "lng": -70.99786837888199,
+          "lifespan": 114.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.38926344065175,
+          "lng": -70.99715924982355,
+          "lifespan": 92.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.388782017519006,
+          "lng": -70.99923466791894,
+          "lifespan": 85.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.38732420399152,
+          "lng": -71.00688812176736,
+          "lifespan": 105.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.389282914563346,
+          "lng": -71.00626753205599,
+          "lifespan": 101.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.39036314401629,
+          "lng": -71.01075158887136,
+          "lifespan": 34.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.393232342112334,
+          "lng": -71.01027728877285,
+          "lifespan": 65.0,
+          "status": "Close"
+        },
+        {
+          "lat": 42.393232342112334,
+          "lng": -71.01027728877285,
+          "lifespan": 1.0,
+          "status": "Close"
+        },
+        {
+          "lat": 42.38118948496894,
+          "lng": -71.03240033794705,
+          "lifespan": 124.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.38285867924411,
+          "lng": -71.03643012296283,
+          "lifespan": 118.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.37425948724193,
+          "lng": -71.03343035536932,
+          "lifespan": 100.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.37205014319819,
+          "lng": -71.03479261947476,
+          "lifespan": 75.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.36857248897116,
+          "lng": -71.03493937193927,
+          "lifespan": 64.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.368609489616915,
+          "lng": -71.03505037142092,
+          "lifespan": 124.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.36862948971968,
+          "lng": -71.03514037223117,
+          "lifespan": 124.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.36866948978211,
+          "lng": -71.03522037260997,
+          "lifespan": 124.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.36900631397122,
+          "lng": -71.03308759221343,
+          "lifespan": 16.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.37914062612918,
+          "lng": -71.0264917468693,
+          "lifespan": 46.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.38135946685059,
+          "lng": -71.0177603055594,
+          "lifespan": 124.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.38234946113564,
+          "lng": -71.01320029176142,
+          "lifespan": 115.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.364864030029736,
+          "lng": -71.03204993602873,
+          "lifespan": 177.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.365989484505896,
+          "lng": -71.03090636929292,
+          "lifespan": 121.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.369402253207625,
+          "lng": -71.03756805145362,
+          "lifespan": 74.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.37347949489217,
+          "lng": -71.03925036980246,
+          "lifespan": 126.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.37167949285882,
+          "lng": -71.03800037125382,
+          "lifespan": 124.0,
+          "status": "Close"
+        },
+        {
+          "lat": 42.37514948611744,
+          "lng": -71.03236035118681,
+          "lifespan": 101.0,
+          "status": "Close"
+        },
+        {
+          "lat": 42.37600948860263,
+          "lng": -71.0344203541138,
+          "lifespan": 149.0,
+          "status": "Open"
+        }
+      ]
+    },
+    "Boston Harbor": {
+      "avg_current_age": 107.0,
+      "avg_raze_lifespan": 0.0,
+      "current_age_distribution_10yr": [
+        {
+          "range": "60-70",
+          "count": 1
+        },
+        {
+          "range": "90-100",
+          "count": 1
+        },
+        {
+          "range": "120-130",
+          "count": 3
+        }
+      ],
+      "demolished_age_distribution_10yr": [],
+      "positive_raze_points": []
+    },
+    "Charlestown Neighborhood": {
+      "avg_current_age": 115.82551669316375,
+      "avg_raze_lifespan": 126.66666666666667,
+      "current_age_distribution_10yr": [
+        {
+          "range": "0-10",
+          "count": 45
+        },
+        {
+          "range": "10-20",
+          "count": 75
+        },
+        {
+          "range": "20-30",
+          "count": 389
+        },
+        {
+          "range": "30-40",
+          "count": 63
+        },
+        {
+          "range": "40-50",
+          "count": 22
+        },
+        {
+          "range": "50-60",
+          "count": 56
+        },
+        {
+          "range": "60-70",
+          "count": 14
+        },
+        {
+          "range": "70-80",
+          "count": 9
+        },
+        {
+          "range": "80-90",
+          "count": 5
+        },
+        {
+          "range": "90-100",
+          "count": 16
+        },
+        {
+          "range": "100-110",
+          "count": 46
+        },
+        {
+          "range": "110-120",
+          "count": 40
+        },
+        {
+          "range": "120-130",
+          "count": 271
+        },
+        {
+          "range": "130-140",
+          "count": 115
+        },
+        {
+          "range": "140-150",
+          "count": 463
+        },
+        {
+          "range": "150-160",
+          "count": 397
+        },
+        {
+          "range": "160-170",
+          "count": 256
+        },
+        {
+          "range": "170-180",
+          "count": 115
+        },
+        {
+          "range": "180-190",
+          "count": 55
+        },
+        {
+          "range": "190-200",
+          "count": 37
+        },
+        {
+          "range": "200-210",
+          "count": 4
+        },
+        {
+          "range": "210-220",
+          "count": 13
+        },
+        {
+          "range": "220-230",
+          "count": 6
+        },
+        {
+          "range": "230-240",
+          "count": 1
+        },
+        {
+          "range": "240-250",
+          "count": 1
+        },
+        {
+          "range": "270-280",
+          "count": 2
+        }
+      ],
+      "demolished_age_distribution_10yr": [
+        {
+          "range": "100-110",
+          "count": 2
+        },
+        {
+          "range": "110-120",
+          "count": 1
+        },
+        {
+          "range": "140-150",
+          "count": 2
+        },
+        {
+          "range": "150-160",
+          "count": 1
+        }
+      ],
+      "positive_raze_points": [
+        {
+          "lat": 42.37871557791729,
+          "lng": -71.06214434605519,
+          "lifespan": 105.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.37871557791729,
+          "lng": -71.06214434605519,
+          "lifespan": 140.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.37810490007086,
+          "lng": -71.06386439401639,
+          "lifespan": 111.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.38070952775605,
+          "lng": -71.06587041435603,
+          "lifespan": 144.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.3842851810041,
+          "lng": -71.07730658148809,
+          "lifespan": 155.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.380287664383026,
+          "lng": -71.07418966153223,
+          "lifespan": 105.0,
+          "status": "Open"
+        }
+      ]
+    },
+    "Harborpark: Charlestown Waterfront": {
+      "avg_current_age": 89.11428571428571,
+      "avg_raze_lifespan": 41.0,
+      "current_age_distribution_10yr": [
+        {
+          "range": "10-20",
+          "count": 4
+        },
+        {
+          "range": "20-30",
+          "count": 8
+        },
+        {
+          "range": "30-40",
+          "count": 4
+        },
+        {
+          "range": "40-50",
+          "count": 5
+        },
+        {
+          "range": "50-60",
+          "count": 4
+        },
+        {
+          "range": "70-80",
+          "count": 1
+        },
+        {
+          "range": "80-90",
+          "count": 1
+        },
+        {
+          "range": "90-100",
+          "count": 3
+        },
+        {
+          "range": "100-110",
+          "count": 4
+        },
+        {
+          "range": "110-120",
+          "count": 3
+        },
+        {
+          "range": "120-130",
+          "count": 32
+        },
+        {
+          "range": "190-200",
+          "count": 1
+        }
+      ],
+      "demolished_age_distribution_10yr": [
+        {
+          "range": "40-50",
+          "count": 1
+        }
+      ],
+      "positive_raze_points": [
+        {
+          "lat": 42.39426674349021,
+          "lng": -71.06718939339507,
+          "lifespan": 41.0,
+          "status": "Open"
+        }
+      ]
+    },
+    "Boston Proper": {
+      "avg_current_age": 100.57096774193549,
+      "avg_raze_lifespan": 68.4,
+      "current_age_distribution_10yr": [
+        {
+          "range": "0-10",
+          "count": 14
+        },
+        {
+          "range": "10-20",
+          "count": 27
+        },
+        {
+          "range": "20-30",
+          "count": 748
+        },
+        {
+          "range": "30-40",
+          "count": 23
+        },
+        {
+          "range": "40-50",
+          "count": 34
+        },
+        {
+          "range": "50-60",
+          "count": 17
+        },
+        {
+          "range": "60-70",
+          "count": 12
+        },
+        {
+          "range": "70-80",
+          "count": 13
+        },
+        {
+          "range": "80-90",
+          "count": 5
+        },
+        {
+          "range": "90-100",
+          "count": 34
+        },
+        {
+          "range": "100-110",
+          "count": 102
+        },
+        {
+          "range": "110-120",
+          "count": 171
+        },
+        {
+          "range": "120-130",
+          "count": 1442
+        },
+        {
+          "range": "130-140",
+          "count": 220
+        },
+        {
+          "range": "140-150",
+          "count": 30
+        },
+        {
+          "range": "150-160",
+          "count": 48
+        },
+        {
+          "range": "160-170",
+          "count": 17
+        },
+        {
+          "range": "170-180",
+          "count": 28
+        },
+        {
+          "range": "180-190",
+          "count": 25
+        },
+        {
+          "range": "190-200",
+          "count": 39
+        },
+        {
+          "range": "200-210",
+          "count": 30
+        },
+        {
+          "range": "210-220",
+          "count": 9
+        },
+        {
+          "range": "220-230",
+          "count": 10
+        },
+        {
+          "range": "230-240",
+          "count": 1
+        },
+        {
+          "range": "260-270",
+          "count": 1
+        }
+      ],
+      "demolished_age_distribution_10yr": [
+        {
+          "range": "0-10",
+          "count": 1
+        },
+        {
+          "range": "40-50",
+          "count": 1
+        },
+        {
+          "range": "90-100",
+          "count": 2
+        },
+        {
+          "range": "110-120",
+          "count": 1
+        }
+      ],
+      "positive_raze_points": [
+        {
+          "lat": 42.36530565877382,
+          "lng": -71.0648244373039,
+          "lifespan": 42.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.3350990278812,
+          "lng": -71.10451944506877,
+          "lifespan": 92.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.35083862210937,
+          "lng": -71.07839402883532,
+          "lifespan": 1.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.34921957137427,
+          "lng": -71.09677055330341,
+          "lifespan": 96.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.349929572897224,
+          "lng": -71.09825055520217,
+          "lifespan": 111.0,
+          "status": "Open"
+        }
+      ]
+    },
+    "Cambridge Street North": {
+      "avg_current_age": 69.72222222222223,
+      "avg_raze_lifespan": 0.0,
+      "current_age_distribution_10yr": [
+        {
+          "range": "0-10",
+          "count": 2
+        },
+        {
+          "range": "10-20",
+          "count": 1
+        },
+        {
+          "range": "20-30",
+          "count": 1
+        },
+        {
+          "range": "40-50",
+          "count": 1
+        },
+        {
+          "range": "50-60",
+          "count": 4
+        },
+        {
+          "range": "60-70",
+          "count": 3
+        },
+        {
+          "range": "120-130",
+          "count": 6
+        }
+      ],
+      "demolished_age_distribution_10yr": [],
+      "positive_raze_points": []
+    },
+    "North Station Economic Development Area": {
+      "avg_current_age": 49.18181818181818,
+      "avg_raze_lifespan": 0.0,
+      "current_age_distribution_10yr": [
+        {
+          "range": "0-10",
+          "count": 2
+        },
+        {
+          "range": "10-20",
+          "count": 2
+        },
+        {
+          "range": "30-40",
+          "count": 3
+        },
+        {
+          "range": "50-60",
+          "count": 1
+        },
+        {
+          "range": "100-110",
+          "count": 1
+        },
+        {
+          "range": "110-120",
+          "count": 2
+        }
+      ],
+      "demolished_age_distribution_10yr": [],
+      "positive_raze_points": []
+    },
+    "North End Neighborhood": {
+      "avg_current_age": 104.60668633235005,
+      "avg_raze_lifespan": 122.6,
+      "current_age_distribution_10yr": [
+        {
+          "range": "0-10",
+          "count": 7
+        },
+        {
+          "range": "10-20",
+          "count": 4
+        },
+        {
+          "range": "20-30",
+          "count": 145
+        },
+        {
+          "range": "30-40",
+          "count": 4
+        },
+        {
+          "range": "40-50",
+          "count": 7
+        },
+        {
+          "range": "60-70",
+          "count": 5
+        },
+        {
+          "range": "70-80",
+          "count": 1
+        },
+        {
+          "range": "80-90",
+          "count": 13
+        },
+        {
+          "range": "90-100",
+          "count": 12
+        },
+        {
+          "range": "100-110",
+          "count": 151
+        },
+        {
+          "range": "110-120",
+          "count": 145
+        },
+        {
+          "range": "120-130",
+          "count": 413
+        },
+        {
+          "range": "130-140",
+          "count": 96
+        },
+        {
+          "range": "140-150",
+          "count": 4
+        },
+        {
+          "range": "150-160",
+          "count": 5
+        },
+        {
+          "range": "160-170",
+          "count": 1
+        },
+        {
+          "range": "170-180",
+          "count": 1
+        },
+        {
+          "range": "180-190",
+          "count": 1
+        },
+        {
+          "range": "190-200",
+          "count": 1
+        },
+        {
+          "range": "200-210",
+          "count": 1
+        }
+      ],
+      "demolished_age_distribution_10yr": [
+        {
+          "range": "80-90",
+          "count": 1
+        },
+        {
+          "range": "100-110",
+          "count": 1
+        },
+        {
+          "range": "120-130",
+          "count": 1
+        },
+        {
+          "range": "130-140",
+          "count": 1
+        },
+        {
+          "range": "160-170",
+          "count": 1
+        }
+      ],
+      "positive_raze_points": [
+        {
+          "lat": 42.366619518606086,
+          "lng": -71.0579804276348,
+          "lifespan": 132.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.36527273065162,
+          "lng": -71.05535723082973,
+          "lifespan": 104.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.36299677783766,
+          "lng": -71.05585988468445,
+          "lifespan": 86.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.36299677783766,
+          "lng": -71.05585988468445,
+          "lifespan": 168.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.36415951117441,
+          "lng": -71.05203042045542,
+          "lifespan": 123.0,
+          "status": "Open"
+        }
+      ]
+    },
+    "Bulfinch Triangle": {
+      "avg_current_age": 99.86274509803921,
+      "avg_raze_lifespan": 52.5,
+      "current_age_distribution_10yr": [
+        {
+          "range": "0-10",
+          "count": 2
+        },
+        {
+          "range": "10-20",
+          "count": 2
+        },
+        {
+          "range": "20-30",
+          "count": 3
+        },
+        {
+          "range": "30-40",
+          "count": 1
+        },
+        {
+          "range": "90-100",
+          "count": 1
+        },
+        {
+          "range": "100-110",
+          "count": 18
+        },
+        {
+          "range": "110-120",
+          "count": 5
+        },
+        {
+          "range": "120-130",
+          "count": 19
+        }
+      ],
+      "demolished_age_distribution_10yr": [
+        {
+          "range": "0-10",
+          "count": 1
+        },
+        {
+          "range": "100-110",
+          "count": 1
+        }
+      ],
+      "positive_raze_points": [
+        {
+          "lat": 42.364358441002985,
+          "lng": -71.06108593858094,
+          "lifespan": 1.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.36426952347624,
+          "lng": -71.0611004402224,
+          "lifespan": 104.0,
+          "status": "Open"
+        }
+      ]
+    },
+    "Central Artery Special": {
+      "avg_current_age": 60.94736842105263,
+      "avg_raze_lifespan": 0.0,
+      "current_age_distribution_10yr": [
+        {
+          "range": "0-10",
+          "count": 1
+        },
+        {
+          "range": "10-20",
+          "count": 1
+        },
+        {
+          "range": "20-30",
+          "count": 4
+        },
+        {
+          "range": "30-40",
+          "count": 3
+        },
+        {
+          "range": "40-50",
+          "count": 2
+        },
+        {
+          "range": "50-60",
+          "count": 2
+        },
+        {
+          "range": "100-110",
+          "count": 1
+        },
+        {
+          "range": "120-130",
+          "count": 5
+        }
+      ],
+      "demolished_age_distribution_10yr": [],
+      "positive_raze_points": []
+    },
+    "Government Center/Markets": {
+      "avg_current_age": 93.45270270270271,
+      "avg_raze_lifespan": 117.0,
+      "current_age_distribution_10yr": [
+        {
+          "range": "0-10",
+          "count": 1
+        },
+        {
+          "range": "10-20",
+          "count": 1
+        },
+        {
+          "range": "20-30",
+          "count": 14
+        },
+        {
+          "range": "30-40",
+          "count": 6
+        },
+        {
+          "range": "40-50",
+          "count": 5
+        },
+        {
+          "range": "50-60",
+          "count": 19
+        },
+        {
+          "range": "60-70",
+          "count": 5
+        },
+        {
+          "range": "70-80",
+          "count": 3
+        },
+        {
+          "range": "80-90",
+          "count": 1
+        },
+        {
+          "range": "90-100",
+          "count": 3
+        },
+        {
+          "range": "100-110",
+          "count": 8
+        },
+        {
+          "range": "110-120",
+          "count": 10
+        },
+        {
+          "range": "120-130",
+          "count": 72
+        }
+      ],
+      "demolished_age_distribution_10yr": [
+        {
+          "range": "110-120",
+          "count": 1
+        }
+      ],
+      "positive_raze_points": [
+        {
+          "lat": 42.36032571350954,
+          "lng": -71.05628096143843,
+          "lifespan": 117.0,
+          "status": "Open"
+        }
+      ]
+    },
+    "South Boston": {
+      "avg_current_age": 82.48812095032397,
+      "avg_raze_lifespan": 73.2,
+      "current_age_distribution_10yr": [
+        {
+          "range": "0-10",
+          "count": 39
+        },
+        {
+          "range": "10-20",
+          "count": 41
+        },
+        {
+          "range": "20-30",
+          "count": 42
+        },
+        {
+          "range": "30-40",
+          "count": 19
+        },
+        {
+          "range": "40-50",
+          "count": 4
+        },
+        {
+          "range": "50-60",
+          "count": 8
+        },
+        {
+          "range": "60-70",
+          "count": 10
+        },
+        {
+          "range": "70-80",
+          "count": 4
+        },
+        {
+          "range": "80-90",
+          "count": 17
+        },
+        {
+          "range": "90-100",
+          "count": 29
+        },
+        {
+          "range": "100-110",
+          "count": 55
+        },
+        {
+          "range": "110-120",
+          "count": 52
+        },
+        {
+          "range": "120-130",
+          "count": 112
+        },
+        {
+          "range": "130-140",
+          "count": 21
+        },
+        {
+          "range": "140-150",
+          "count": 5
+        },
+        {
+          "range": "150-160",
+          "count": 3
+        },
+        {
+          "range": "180-190",
+          "count": 1
+        },
+        {
+          "range": "210-220",
+          "count": 1
+        }
+      ],
+      "demolished_age_distribution_10yr": [
+        {
+          "range": "0-10",
+          "count": 1
+        },
+        {
+          "range": "30-40",
+          "count": 1
+        },
+        {
+          "range": "80-90",
+          "count": 1
+        },
+        {
+          "range": "120-130",
+          "count": 2
+        }
+      ],
+      "positive_raze_points": [
+        {
+          "lat": 42.34145378913107,
+          "lng": -71.05615123140639,
+          "lifespan": 6.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.332836744973854,
+          "lng": -71.05354694416442,
+          "lifespan": 83.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.3322606149614,
+          "lng": -71.05116938044362,
+          "lifespan": 120.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.331158123849114,
+          "lng": -71.05003211004897,
+          "lifespan": 121.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.32893952188356,
+          "lng": -71.05762051002388,
+          "lifespan": 36.0,
+          "status": "Open"
+        }
+      ]
+    },
+    "Harborpark: North End Waterfront": {
+      "avg_current_age": 70.61538461538461,
+      "avg_raze_lifespan": 0.0,
+      "current_age_distribution_10yr": [
+        {
+          "range": "10-20",
+          "count": 1
+        },
+        {
+          "range": "20-30",
+          "count": 7
+        },
+        {
+          "range": "40-50",
+          "count": 2
+        },
+        {
+          "range": "50-60",
+          "count": 1
+        },
+        {
+          "range": "60-70",
+          "count": 4
+        },
+        {
+          "range": "70-80",
+          "count": 2
+        },
+        {
+          "range": "80-90",
+          "count": 1
+        },
+        {
+          "range": "100-110",
+          "count": 1
+        },
+        {
+          "range": "120-130",
+          "count": 6
+        },
+        {
+          "range": "150-160",
+          "count": 1
+        }
+      ],
+      "demolished_age_distribution_10yr": [],
+      "positive_raze_points": []
+    },
+    "Midtown Cultural": {
+      "avg_current_age": 99.58549222797927,
+      "avg_raze_lifespan": 125.0,
+      "current_age_distribution_10yr": [
+        {
+          "range": "0-10",
+          "count": 3
+        },
+        {
+          "range": "10-20",
+          "count": 8
+        },
+        {
+          "range": "20-30",
+          "count": 19
+        },
+        {
+          "range": "30-40",
+          "count": 1
+        },
+        {
+          "range": "40-50",
+          "count": 6
+        },
+        {
+          "range": "50-60",
+          "count": 1
+        },
+        {
+          "range": "60-70",
+          "count": 3
+        },
+        {
+          "range": "70-80",
+          "count": 1
+        },
+        {
+          "range": "80-90",
+          "count": 2
+        },
+        {
+          "range": "90-100",
+          "count": 6
+        },
+        {
+          "range": "100-110",
+          "count": 26
+        },
+        {
+          "range": "110-120",
+          "count": 23
+        },
+        {
+          "range": "120-130",
+          "count": 91
+        },
+        {
+          "range": "150-160",
+          "count": 2
+        },
+        {
+          "range": "200-210",
+          "count": 1
+        }
+      ],
+      "demolished_age_distribution_10yr": [
+        {
+          "range": "120-130",
+          "count": 1
+        }
+      ],
+      "positive_raze_points": [
+        {
+          "lat": 42.356430957945136,
+          "lng": -71.06173608923947,
+          "lifespan": 125.0,
+          "status": "Open"
+        }
+      ]
+    },
+    "South Station Economic Development Area": {
+      "avg_current_age": 82.8,
+      "avg_raze_lifespan": 0.0,
+      "current_age_distribution_10yr": [
+        {
+          "range": "20-30",
+          "count": 1
+        },
+        {
+          "range": "40-50",
+          "count": 1
+        },
+        {
+          "range": "90-100",
+          "count": 1
+        },
+        {
+          "range": "120-130",
+          "count": 2
+        }
+      ],
+      "demolished_age_distribution_10yr": [],
+      "positive_raze_points": []
+    },
+    "Leather District": {
+      "avg_current_age": 87.04545454545455,
+      "avg_raze_lifespan": 0.0,
+      "current_age_distribution_10yr": [
+        {
+          "range": "10-20",
+          "count": 1
+        },
+        {
+          "range": "20-30",
+          "count": 14
+        },
+        {
+          "range": "30-40",
+          "count": 1
+        },
+        {
+          "range": "90-100",
+          "count": 1
+        },
+        {
+          "range": "100-110",
+          "count": 3
+        },
+        {
+          "range": "110-120",
+          "count": 2
+        },
+        {
+          "range": "120-130",
+          "count": 22
+        }
+      ],
+      "demolished_age_distribution_10yr": [],
+      "positive_raze_points": []
+    },
+    "Chinatown": {
+      "avg_current_age": 107.29906542056075,
+      "avg_raze_lifespan": 0.0,
+      "current_age_distribution_10yr": [
+        {
+          "range": "0-10",
+          "count": 4
+        },
+        {
+          "range": "10-20",
+          "count": 7
+        },
+        {
+          "range": "20-30",
+          "count": 7
+        },
+        {
+          "range": "30-40",
+          "count": 1
+        },
+        {
+          "range": "40-50",
+          "count": 8
+        },
+        {
+          "range": "50-60",
+          "count": 4
+        },
+        {
+          "range": "60-70",
+          "count": 3
+        },
+        {
+          "range": "70-80",
+          "count": 4
+        },
+        {
+          "range": "80-90",
+          "count": 3
+        },
+        {
+          "range": "90-100",
+          "count": 6
+        },
+        {
+          "range": "100-110",
+          "count": 16
+        },
+        {
+          "range": "110-120",
+          "count": 45
+        },
+        {
+          "range": "120-130",
+          "count": 82
+        },
+        {
+          "range": "130-140",
+          "count": 1
+        },
+        {
+          "range": "140-150",
+          "count": 7
+        },
+        {
+          "range": "150-160",
+          "count": 16
+        }
+      ],
+      "demolished_age_distribution_10yr": [],
+      "positive_raze_points": []
+    },
+    "South End Neighborhood": {
+      "avg_current_age": 99.46712662337663,
+      "avg_raze_lifespan": 92.53846153846153,
+      "current_age_distribution_10yr": [
+        {
+          "range": "0-10",
+          "count": 14
+        },
+        {
+          "range": "10-20",
+          "count": 21
+        },
+        {
+          "range": "20-30",
+          "count": 681
+        },
+        {
+          "range": "30-40",
+          "count": 11
+        },
+        {
+          "range": "40-50",
+          "count": 15
+        },
+        {
+          "range": "50-60",
+          "count": 27
+        },
+        {
+          "range": "60-70",
+          "count": 9
+        },
+        {
+          "range": "70-80",
+          "count": 3
+        },
+        {
+          "range": "80-90",
+          "count": 6
+        },
+        {
+          "range": "90-100",
+          "count": 17
+        },
+        {
+          "range": "100-110",
+          "count": 54
+        },
+        {
+          "range": "110-120",
+          "count": 139
+        },
+        {
+          "range": "120-130",
+          "count": 772
+        },
+        {
+          "range": "130-140",
+          "count": 329
+        },
+        {
+          "range": "140-150",
+          "count": 18
+        },
+        {
+          "range": "150-160",
+          "count": 116
+        },
+        {
+          "range": "160-170",
+          "count": 196
+        },
+        {
+          "range": "170-180",
+          "count": 28
+        },
+        {
+          "range": "180-190",
+          "count": 5
+        },
+        {
+          "range": "200-210",
+          "count": 1
+        },
+        {
+          "range": "220-230",
+          "count": 2
+        }
+      ],
+      "demolished_age_distribution_10yr": [
+        {
+          "range": "20-30",
+          "count": 1
+        },
+        {
+          "range": "30-40",
+          "count": 1
+        },
+        {
+          "range": "50-60",
+          "count": 1
+        },
+        {
+          "range": "80-90",
+          "count": 1
+        },
+        {
+          "range": "90-100",
+          "count": 1
+        },
+        {
+          "range": "100-110",
+          "count": 2
+        },
+        {
+          "range": "110-120",
+          "count": 3
+        },
+        {
+          "range": "120-130",
+          "count": 3
+        }
+      ],
+      "positive_raze_points": [
+        {
+          "lat": 42.34435953105236,
+          "lng": -71.06622049576268,
+          "lifespan": 52.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.343009538764306,
+          "lng": -71.0720605123337,
+          "lifespan": 122.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.341359536698576,
+          "lng": -71.07015051171723,
+          "lifespan": 94.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.34372954141629,
+          "lng": -71.07291051290288,
+          "lifespan": 100.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.3409995499407,
+          "lng": -71.0799605342982,
+          "lifespan": 104.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.341179548347434,
+          "lng": -71.0790105321482,
+          "lifespan": 111.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.34707452524977,
+          "lng": -71.06987866533049,
+          "lifespan": 126.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.34473003411521,
+          "lng": -71.07196427338859,
+          "lifespan": 34.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.3375944779905,
+          "lng": -71.06801714639128,
+          "lifespan": 87.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.33753953489904,
+          "lng": -71.06825051602779,
+          "lifespan": 124.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.338974921249545,
+          "lng": -71.0694679576725,
+          "lifespan": 23.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.33688140658803,
+          "lng": -71.07200536766537,
+          "lifespan": 113.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.33688140658803,
+          "lng": -71.07200536766537,
+          "lifespan": 113.0,
+          "status": "Open"
+        }
+      ]
+    },
+    "Huntington Avenue/Prudential Center": {
+      "avg_current_age": 92.25101214574899,
+      "avg_raze_lifespan": 112.0,
+      "current_age_distribution_10yr": [
+        {
+          "range": "10-20",
+          "count": 6
+        },
+        {
+          "range": "20-30",
+          "count": 64
+        },
+        {
+          "range": "30-40",
+          "count": 2
+        },
+        {
+          "range": "40-50",
+          "count": 3
+        },
+        {
+          "range": "50-60",
+          "count": 6
+        },
+        {
+          "range": "60-70",
+          "count": 6
+        },
+        {
+          "range": "90-100",
+          "count": 3
+        },
+        {
+          "range": "100-110",
+          "count": 29
+        },
+        {
+          "range": "110-120",
+          "count": 10
+        },
+        {
+          "range": "120-130",
+          "count": 68
+        },
+        {
+          "range": "130-140",
+          "count": 17
+        },
+        {
+          "range": "140-150",
+          "count": 30
+        },
+        {
+          "range": "150-160",
+          "count": 3
+        }
+      ],
+      "demolished_age_distribution_10yr": [
+        {
+          "range": "110-120",
+          "count": 1
+        }
+      ],
+      "positive_raze_points": [
+        {
+          "lat": 42.34445955072838,
+          "lng": -71.08074052782763,
+          "lifespan": 112.0,
+          "status": "Close"
+        }
+      ]
+    },
+    "Stuart Street District": {
+      "avg_current_age": 86.33333333333333,
+      "avg_raze_lifespan": 0.0,
+      "current_age_distribution_10yr": [
+        {
+          "range": "10-20",
+          "count": 4
+        },
+        {
+          "range": "20-30",
+          "count": 2
+        },
+        {
+          "range": "40-50",
+          "count": 2
+        },
+        {
+          "range": "60-70",
+          "count": 2
+        },
+        {
+          "range": "70-80",
+          "count": 1
+        },
+        {
+          "range": "90-100",
+          "count": 2
+        },
+        {
+          "range": "100-110",
+          "count": 4
+        },
+        {
+          "range": "110-120",
+          "count": 4
+        },
+        {
+          "range": "120-130",
+          "count": 9
+        }
+      ],
+      "demolished_age_distribution_10yr": [],
+      "positive_raze_points": []
+    },
+    "Fenway Neighborhood": {
+      "avg_current_age": 96.25050505050505,
+      "avg_raze_lifespan": 100.8,
+      "current_age_distribution_10yr": [
+        {
+          "range": "0-10",
+          "count": 11
+        },
+        {
+          "range": "10-20",
+          "count": 10
+        },
+        {
+          "range": "20-30",
+          "count": 73
+        },
+        {
+          "range": "30-40",
+          "count": 9
+        },
+        {
+          "range": "40-50",
+          "count": 1
+        },
+        {
+          "range": "50-60",
+          "count": 7
+        },
+        {
+          "range": "60-70",
+          "count": 9
+        },
+        {
+          "range": "70-80",
+          "count": 6
+        },
+        {
+          "range": "80-90",
+          "count": 1
+        },
+        {
+          "range": "90-100",
+          "count": 7
+        },
+        {
+          "range": "100-110",
+          "count": 84
+        },
+        {
+          "range": "110-120",
+          "count": 85
+        },
+        {
+          "range": "120-130",
+          "count": 169
+        },
+        {
+          "range": "130-140",
+          "count": 12
+        },
+        {
+          "range": "140-150",
+          "count": 9
+        },
+        {
+          "range": "150-160",
+          "count": 1
+        },
+        {
+          "range": "170-180",
+          "count": 1
+        }
+      ],
+      "demolished_age_distribution_10yr": [
+        {
+          "range": "60-70",
+          "count": 1
+        },
+        {
+          "range": "90-100",
+          "count": 1
+        },
+        {
+          "range": "100-110",
+          "count": 1
+        },
+        {
+          "range": "110-120",
+          "count": 1
+        },
+        {
+          "range": "120-130",
+          "count": 1
+        }
+      ],
+      "positive_raze_points": [
+        {
+          "lat": 42.34431776937425,
+          "lng": -71.08863987803541,
+          "lifespan": 107.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.34010656477329,
+          "lng": -71.09100256022657,
+          "lifespan": 125.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.34216957209908,
+          "lng": -71.09682056898473,
+          "lifespan": 113.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.34315401481669,
+          "lng": -71.10177887574004,
+          "lifespan": 63.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.34531004815732,
+          "lng": -71.10335982772138,
+          "lifespan": 96.0,
+          "status": "Close"
+        }
+      ]
+    },
+    "Mission Hill Neighborhood": {
+      "avg_current_age": 98.04653284671532,
+      "avg_raze_lifespan": 94.6,
+      "current_age_distribution_10yr": [
+        {
+          "range": "0-10",
+          "count": 22
+        },
+        {
+          "range": "10-20",
+          "count": 47
+        },
+        {
+          "range": "20-30",
+          "count": 118
+        },
+        {
+          "range": "30-40",
+          "count": 15
+        },
+        {
+          "range": "40-50",
+          "count": 7
+        },
+        {
+          "range": "50-60",
+          "count": 4
+        },
+        {
+          "range": "60-70",
+          "count": 14
+        },
+        {
+          "range": "70-80",
+          "count": 13
+        },
+        {
+          "range": "80-90",
+          "count": 14
+        },
+        {
+          "range": "90-100",
+          "count": 107
+        },
+        {
+          "range": "100-110",
+          "count": 95
+        },
+        {
+          "range": "110-120",
+          "count": 76
+        },
+        {
+          "range": "120-130",
+          "count": 487
+        },
+        {
+          "range": "130-140",
+          "count": 36
+        },
+        {
+          "range": "140-150",
+          "count": 23
+        },
+        {
+          "range": "150-160",
+          "count": 11
+        },
+        {
+          "range": "160-170",
+          "count": 1
+        },
+        {
+          "range": "170-180",
+          "count": 5
+        },
+        {
+          "range": "190-200",
+          "count": 1
+        }
+      ],
+      "demolished_age_distribution_10yr": [
+        {
+          "range": "50-60",
+          "count": 2
+        },
+        {
+          "range": "110-120",
+          "count": 1
+        },
+        {
+          "range": "120-130",
+          "count": 2
+        }
+      ],
+      "positive_raze_points": [
+        {
+          "lat": 42.333615511653925,
+          "lng": -71.10068618923275,
+          "lifespan": 124.0,
+          "status": "Close"
+        },
+        {
+          "lat": 42.333615511653925,
+          "lng": -71.10068618923275,
+          "lifespan": 124.0,
+          "status": "Close"
+        },
+        {
+          "lat": 42.33376556731485,
+          "lng": -71.10129842493691,
+          "lifespan": 54.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.330841282317984,
+          "lng": -71.1024502104597,
+          "lifespan": 114.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.33299958898958,
+          "lng": -71.10850061550836,
+          "lifespan": 57.0,
+          "status": "Open"
+        }
+      ]
+    },
+    "Roxbury Neighborhood": {
+      "avg_current_age": 104.07195906915332,
+      "avg_raze_lifespan": 104.15384615384616,
+      "current_age_distribution_10yr": [
+        {
+          "range": "0-10",
+          "count": 157
+        },
+        {
+          "range": "10-20",
+          "count": 195
+        },
+        {
+          "range": "20-30",
+          "count": 484
+        },
+        {
+          "range": "30-40",
+          "count": 145
+        },
+        {
+          "range": "40-50",
+          "count": 33
+        },
+        {
+          "range": "50-60",
+          "count": 68
+        },
+        {
+          "range": "60-70",
+          "count": 61
+        },
+        {
+          "range": "70-80",
+          "count": 40
+        },
+        {
+          "range": "80-90",
+          "count": 42
+        },
+        {
+          "range": "90-100",
+          "count": 243
+        },
+        {
+          "range": "100-110",
+          "count": 483
+        },
+        {
+          "range": "110-120",
+          "count": 489
+        },
+        {
+          "range": "120-130",
+          "count": 2440
+        },
+        {
+          "range": "130-140",
+          "count": 816
+        },
+        {
+          "range": "140-150",
+          "count": 257
+        },
+        {
+          "range": "150-160",
+          "count": 50
+        },
+        {
+          "range": "160-170",
+          "count": 21
+        },
+        {
+          "range": "170-180",
+          "count": 20
+        },
+        {
+          "range": "180-190",
+          "count": 8
+        },
+        {
+          "range": "190-200",
+          "count": 5
+        },
+        {
+          "range": "200-210",
+          "count": 1
+        },
+        {
+          "range": "220-230",
+          "count": 1
+        }
+      ],
+      "demolished_age_distribution_10yr": [
+        {
+          "range": "0-10",
+          "count": 1
+        },
+        {
+          "range": "60-70",
+          "count": 1
+        },
+        {
+          "range": "70-80",
+          "count": 1
+        },
+        {
+          "range": "80-90",
+          "count": 1
+        },
+        {
+          "range": "90-100",
+          "count": 2
+        },
+        {
+          "range": "100-110",
+          "count": 8
+        },
+        {
+          "range": "110-120",
+          "count": 6
+        },
+        {
+          "range": "120-130",
+          "count": 3
+        },
+        {
+          "range": "140-150",
+          "count": 3
+        }
+      ],
+      "positive_raze_points": [
+        {
+          "lat": 42.33924018796385,
+          "lng": -71.0902586882143,
+          "lifespan": 125.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.32259999464718,
+          "lng": -71.07055846681403,
+          "lifespan": 140.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.329399539064866,
+          "lng": -71.07063053961953,
+          "lifespan": 103.0,
+          "status": "Close"
+        },
+        {
+          "lat": 42.33376954503339,
+          "lng": -71.0754805401022,
+          "lifespan": 60.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.32979135923765,
+          "lng": -71.08311630506601,
+          "lifespan": 124.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.3299325553711,
+          "lng": -71.08295756601473,
+          "lifespan": 104.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.32080799271058,
+          "lng": -71.07418629569798,
+          "lifespan": 112.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.32623956629892,
+          "lng": -71.0910905921023,
+          "lifespan": 91.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.324405567043065,
+          "lng": -71.09135059697,
+          "lifespan": 1.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.321808698969,
+          "lng": -71.09460194788055,
+          "lifespan": 147.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.32368957171209,
+          "lng": -71.09451060603959,
+          "lifespan": 115.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.32574094055446,
+          "lng": -71.08154424513762,
+          "lifespan": 115.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.32214954896996,
+          "lng": -71.07743057065512,
+          "lifespan": 113.0,
+          "status": "Close"
+        },
+        {
+          "lat": 42.320944902646595,
+          "lng": -71.08150587725405,
+          "lifespan": 100.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.32104306954438,
+          "lng": -71.08155307875805,
+          "lifespan": 100.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.321090623782595,
+          "lng": -71.0815484413636,
+          "lifespan": 100.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.32114314956893,
+          "lng": -71.08154957835798,
+          "lifespan": 100.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.321198333583155,
+          "lng": -71.08159633521447,
+          "lifespan": 100.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.32171341234607,
+          "lng": -71.0829801984868,
+          "lifespan": 144.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.31685955799385,
+          "lng": -71.08378059726698,
+          "lifespan": 116.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.31049956723319,
+          "lng": -71.09006062541596,
+          "lifespan": 99.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.308616250848075,
+          "lng": -71.08397465694927,
+          "lifespan": 105.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.31379955740764,
+          "lng": -71.08335060319726,
+          "lifespan": 81.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.31663954157085,
+          "lng": -71.07163057003086,
+          "lifespan": 116.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.310769550978094,
+          "lng": -71.0783555979582,
+          "lifespan": 75.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.30414955576231,
+          "lng": -71.08146061952156,
+          "lifespan": 122.0,
+          "status": "Open"
+        }
+      ]
+    },
+    "Bay Village Neighborhood": {
+      "avg_current_age": 110.57360406091371,
+      "avg_raze_lifespan": 0.0,
+      "current_age_distribution_10yr": [
+        {
+          "range": "0-10",
+          "count": 5
+        },
+        {
+          "range": "10-20",
+          "count": 1
+        },
+        {
+          "range": "20-30",
+          "count": 24
+        },
+        {
+          "range": "30-40",
+          "count": 1
+        },
+        {
+          "range": "40-50",
+          "count": 1
+        },
+        {
+          "range": "50-60",
+          "count": 2
+        },
+        {
+          "range": "60-70",
+          "count": 2
+        },
+        {
+          "range": "80-90",
+          "count": 3
+        },
+        {
+          "range": "90-100",
+          "count": 6
+        },
+        {
+          "range": "100-110",
+          "count": 3
+        },
+        {
+          "range": "110-120",
+          "count": 17
+        },
+        {
+          "range": "120-130",
+          "count": 83
+        },
+        {
+          "range": "130-140",
+          "count": 29
+        },
+        {
+          "range": "140-150",
+          "count": 2
+        },
+        {
+          "range": "150-160",
+          "count": 8
+        },
+        {
+          "range": "170-180",
+          "count": 4
+        },
+        {
+          "range": "180-190",
+          "count": 1
+        },
+        {
+          "range": "190-200",
+          "count": 3
+        },
+        {
+          "range": "200-210",
+          "count": 2
+        }
+      ],
+      "demolished_age_distribution_10yr": [],
+      "positive_raze_points": []
+    },
+    "South Boston Neighborhood": {
+      "avg_current_age": 109.25263561433775,
+      "avg_raze_lifespan": 103.35,
+      "current_age_distribution_10yr": [
+        {
+          "range": "0-10",
+          "count": 158
+        },
+        {
+          "range": "10-20",
+          "count": 176
+        },
+        {
+          "range": "20-30",
+          "count": 374
+        },
+        {
+          "range": "30-40",
+          "count": 89
+        },
+        {
+          "range": "40-50",
+          "count": 30
+        },
+        {
+          "range": "50-60",
+          "count": 16
+        },
+        {
+          "range": "60-70",
+          "count": 50
+        },
+        {
+          "range": "70-80",
+          "count": 25
+        },
+        {
+          "range": "80-90",
+          "count": 46
+        },
+        {
+          "range": "90-100",
+          "count": 127
+        },
+        {
+          "range": "100-110",
+          "count": 230
+        },
+        {
+          "range": "110-120",
+          "count": 305
+        },
+        {
+          "range": "120-130",
+          "count": 1689
+        },
+        {
+          "range": "130-140",
+          "count": 1458
+        },
+        {
+          "range": "140-150",
+          "count": 230
+        },
+        {
+          "range": "150-160",
+          "count": 136
+        },
+        {
+          "range": "160-170",
+          "count": 37
+        },
+        {
+          "range": "170-180",
+          "count": 26
+        },
+        {
+          "range": "180-190",
+          "count": 6
+        },
+        {
+          "range": "190-200",
+          "count": 3
+        },
+        {
+          "range": "200-210",
+          "count": 5
+        },
+        {
+          "range": "220-230",
+          "count": 1
+        }
+      ],
+      "demolished_age_distribution_10yr": [
+        {
+          "range": "40-50",
+          "count": 1
+        },
+        {
+          "range": "50-60",
+          "count": 1
+        },
+        {
+          "range": "70-80",
+          "count": 3
+        },
+        {
+          "range": "90-100",
+          "count": 3
+        },
+        {
+          "range": "100-110",
+          "count": 3
+        },
+        {
+          "range": "110-120",
+          "count": 1
+        },
+        {
+          "range": "120-130",
+          "count": 6
+        },
+        {
+          "range": "130-140",
+          "count": 1
+        },
+        {
+          "range": "160-170",
+          "count": 1
+        }
+      ],
+      "positive_raze_points": [
+        {
+          "lat": 42.34164851635649,
+          "lng": -71.05435947562458,
+          "lifespan": 109.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.33885953411646,
+          "lng": -71.05047550302248,
+          "lifespan": 56.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.33664208695713,
+          "lng": -71.04901294575123,
+          "lifespan": 124.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.33869850732014,
+          "lng": -71.04794946773664,
+          "lifespan": 125.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.338570793521704,
+          "lng": -71.04805598176877,
+          "lifespan": 165.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.33903950719376,
+          "lng": -71.04730046480573,
+          "lifespan": 91.0,
+          "status": "Close"
+        },
+        {
+          "lat": 42.33476950574608,
+          "lng": -71.0462204729832,
+          "lifespan": 130.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.33534375814419,
+          "lng": -71.04185108304641,
+          "lifespan": 72.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.338407584379134,
+          "lng": -71.03803525320086,
+          "lifespan": 123.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.33581149229986,
+          "lng": -71.03605944727249,
+          "lifespan": 105.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.33722562332411,
+          "lng": -71.03452930148988,
+          "lifespan": 43.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.332839480762765,
+          "lng": -71.02688043280764,
+          "lifespan": 71.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.33477347984406,
+          "lng": -71.02620742719432,
+          "lifespan": 90.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.334221156501606,
+          "lng": -71.05338468297386,
+          "lifespan": 125.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.33036288478792,
+          "lng": -71.05290009468811,
+          "lifespan": 98.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.33021214088014,
+          "lng": -71.05361728032321,
+          "lifespan": 106.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.3311295071751,
+          "lng": -71.04705048209348,
+          "lifespan": 111.0,
+          "status": "Close"
+        },
+        {
+          "lat": 42.33287763794554,
+          "lng": -71.04360465878418,
+          "lifespan": 125.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.3321582675953,
+          "lng": -71.03837669430062,
+          "lifespan": 124.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.32983179043222,
+          "lng": -71.03505724765068,
+          "lifespan": 74.0,
+          "status": "Open"
+        }
+      ]
+    },
+    "Harborpark: Fort Point Waterfront": {
+      "avg_current_age": 27.22222222222222,
+      "avg_raze_lifespan": 0.0,
+      "current_age_distribution_10yr": [
+        {
+          "range": "0-10",
+          "count": 12
+        },
+        {
+          "range": "10-20",
+          "count": 16
+        },
+        {
+          "range": "20-30",
+          "count": 2
+        },
+        {
+          "range": "70-80",
+          "count": 1
+        },
+        {
+          "range": "90-100",
+          "count": 1
+        },
+        {
+          "range": "120-130",
+          "count": 4
+        }
+      ],
+      "demolished_age_distribution_10yr": [],
+      "positive_raze_points": []
+    },
+    "Harborpark: Dorchester Bay/Neponset River Waterfront": {
+      "avg_current_age": 72.68181818181819,
+      "avg_raze_lifespan": 72.5,
+      "current_age_distribution_10yr": [
+        {
+          "range": "0-10",
+          "count": 3
+        },
+        {
+          "range": "10-20",
+          "count": 2
+        },
+        {
+          "range": "20-30",
+          "count": 3
+        },
+        {
+          "range": "30-40",
+          "count": 3
+        },
+        {
+          "range": "40-50",
+          "count": 4
+        },
+        {
+          "range": "50-60",
+          "count": 3
+        },
+        {
+          "range": "60-70",
+          "count": 4
+        },
+        {
+          "range": "70-80",
+          "count": 2
+        },
+        {
+          "range": "80-90",
+          "count": 1
+        },
+        {
+          "range": "90-100",
+          "count": 3
+        },
+        {
+          "range": "100-110",
+          "count": 5
+        },
+        {
+          "range": "110-120",
+          "count": 2
+        },
+        {
+          "range": "120-130",
+          "count": 9
+        }
+      ],
+      "demolished_age_distribution_10yr": [
+        {
+          "range": "40-50",
+          "count": 1
+        },
+        {
+          "range": "90-100",
+          "count": 1
+        }
+      ],
+      "positive_raze_points": [
+        {
+          "lat": 42.33935295495384,
+          "lng": -71.03465421887952,
+          "lifespan": 96.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.30103443651995,
+          "lng": -71.04597170769284,
+          "lifespan": 49.0,
+          "status": "Close"
+        }
+      ]
+    },
+    "Newmarket 21st Century Industrial District": {
+      "avg_current_age": 79.33333333333333,
+      "avg_raze_lifespan": 106.5,
+      "current_age_distribution_10yr": [
+        {
+          "range": "0-10",
+          "count": 1
+        },
+        {
+          "range": "10-20",
+          "count": 4
+        },
+        {
+          "range": "20-30",
+          "count": 10
+        },
+        {
+          "range": "30-40",
+          "count": 6
+        },
+        {
+          "range": "40-50",
+          "count": 4
+        },
+        {
+          "range": "50-60",
+          "count": 8
+        },
+        {
+          "range": "60-70",
+          "count": 16
+        },
+        {
+          "range": "70-80",
+          "count": 13
+        },
+        {
+          "range": "80-90",
+          "count": 3
+        },
+        {
+          "range": "90-100",
+          "count": 6
+        },
+        {
+          "range": "100-110",
+          "count": 10
+        },
+        {
+          "range": "110-120",
+          "count": 8
+        },
+        {
+          "range": "120-130",
+          "count": 22
+        },
+        {
+          "range": "140-150",
+          "count": 3
+        }
+      ],
+      "demolished_age_distribution_10yr": [
+        {
+          "range": "70-80",
+          "count": 1
+        },
+        {
+          "range": "90-100",
+          "count": 1
+        },
+        {
+          "range": "110-120",
+          "count": 1
+        },
+        {
+          "range": "140-150",
+          "count": 1
+        }
+      ],
+      "positive_raze_points": [
+        {
+          "lat": 42.326902541183024,
+          "lng": -71.07209154877683,
+          "lifespan": 140.0,
+          "status": "Close"
+        },
+        {
+          "lat": 42.32936686857463,
+          "lng": -71.07444604822209,
+          "lifespan": 75.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.32732155765272,
+          "lng": -71.07066508872795,
+          "lifespan": 95.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.32823225596047,
+          "lng": -71.07027140073917,
+          "lifespan": 116.0,
+          "status": "Open"
+        }
+      ]
+    },
+    "Dorchester Neighborhood": {
+      "avg_current_age": 107.09130037824443,
+      "avg_raze_lifespan": 106.2,
+      "current_age_distribution_10yr": [
+        {
+          "range": "0-10",
+          "count": 258
+        },
+        {
+          "range": "10-20",
+          "count": 214
+        },
+        {
+          "range": "20-30",
+          "count": 463
+        },
+        {
+          "range": "30-40",
+          "count": 186
+        },
+        {
+          "range": "40-50",
+          "count": 95
+        },
+        {
+          "range": "50-60",
+          "count": 56
+        },
+        {
+          "range": "60-70",
+          "count": 282
+        },
+        {
+          "range": "70-80",
+          "count": 386
+        },
+        {
+          "range": "80-90",
+          "count": 384
+        },
+        {
+          "range": "90-100",
+          "count": 1377
+        },
+        {
+          "range": "100-110",
+          "count": 2160
+        },
+        {
+          "range": "110-120",
+          "count": 1737
+        },
+        {
+          "range": "120-130",
+          "count": 5787
+        },
+        {
+          "range": "130-140",
+          "count": 1166
+        },
+        {
+          "range": "140-150",
+          "count": 532
+        },
+        {
+          "range": "150-160",
+          "count": 140
+        },
+        {
+          "range": "160-170",
+          "count": 38
+        },
+        {
+          "range": "170-180",
+          "count": 38
+        },
+        {
+          "range": "180-190",
+          "count": 7
+        },
+        {
+          "range": "190-200",
+          "count": 12
+        },
+        {
+          "range": "200-210",
+          "count": 4
+        },
+        {
+          "range": "220-230",
+          "count": 9
+        },
+        {
+          "range": "230-240",
+          "count": 1
+        },
+        {
+          "range": "240-250",
+          "count": 1
+        },
+        {
+          "range": "250-260",
+          "count": 1
+        }
+      ],
+      "demolished_age_distribution_10yr": [
+        {
+          "range": "20-30",
+          "count": 1
+        },
+        {
+          "range": "30-40",
+          "count": 1
+        },
+        {
+          "range": "60-70",
+          "count": 2
+        },
+        {
+          "range": "70-80",
+          "count": 4
+        },
+        {
+          "range": "80-90",
+          "count": 7
+        },
+        {
+          "range": "90-100",
+          "count": 7
+        },
+        {
+          "range": "100-110",
+          "count": 11
+        },
+        {
+          "range": "110-120",
+          "count": 15
+        },
+        {
+          "range": "120-130",
+          "count": 11
+        },
+        {
+          "range": "130-140",
+          "count": 4
+        },
+        {
+          "range": "140-150",
+          "count": 1
+        },
+        {
+          "range": "220-230",
+          "count": 1
+        }
+      ],
+      "positive_raze_points": [
+        {
+          "lat": 42.32098952542584,
+          "lng": -71.06008053379945,
+          "lifespan": 122.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.32243952187081,
+          "lng": -71.05717052399031,
+          "lifespan": 100.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.32389321502777,
+          "lng": -71.05942227819632,
+          "lifespan": 130.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.32390952226236,
+          "lng": -71.05810052344071,
+          "lifespan": 102.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.324769529449945,
+          "lng": -71.06328053227915,
+          "lifespan": 119.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.32466952889716,
+          "lng": -71.06337053355206,
+          "lifespan": 119.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.32499952976122,
+          "lng": -71.06361053329513,
+          "lifespan": 114.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.32527068530417,
+          "lng": -71.06348742710232,
+          "lifespan": 137.0,
+          "status": "Close"
+        },
+        {
+          "lat": 42.32476153122592,
+          "lng": -71.06430953578965,
+          "lifespan": 124.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.32351952873148,
+          "lng": -71.06288053506772,
+          "lifespan": 97.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.316169536491984,
+          "lng": -71.06822056293066,
+          "lifespan": 105.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.314734960048035,
+          "lng": -71.06049647169364,
+          "lifespan": 117.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.31238952758287,
+          "lng": -71.06111055614632,
+          "lifespan": 116.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.315880139001344,
+          "lng": -71.06602203325626,
+          "lifespan": 99.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.31795760843159,
+          "lng": -71.06049495977527,
+          "lifespan": 119.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.317939521146954,
+          "lng": -71.0570605341208,
+          "lifespan": 108.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.3157695218706,
+          "lng": -71.056930538997,
+          "lifespan": 94.0,
+          "status": "Close"
+        },
+        {
+          "lat": 42.315060080459745,
+          "lng": -71.05852078858769,
+          "lifespan": 144.0,
+          "status": "Close"
+        },
+        {
+          "lat": 42.30936950927901,
+          "lng": -71.04738053126057,
+          "lifespan": 87.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.31452951534271,
+          "lng": -71.052450531085,
+          "lifespan": 31.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.29994955278139,
+          "lng": -71.07849062332014,
+          "lifespan": 105.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.30186955149784,
+          "lng": -71.07788061748457,
+          "lifespan": 124.0,
+          "status": "Close"
+        },
+        {
+          "lat": 42.3054795368644,
+          "lng": -71.06761058543148,
+          "lifespan": 93.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.30587953506312,
+          "lng": -71.06603058098342,
+          "lifespan": 100.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.309025541008424,
+          "lng": -71.0711885861123,
+          "lifespan": 135.0,
+          "status": "Close"
+        },
+        {
+          "lat": 42.30974052390824,
+          "lng": -71.05815655500385,
+          "lifespan": 98.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.3095495336109,
+          "lng": -71.0654305715899,
+          "lifespan": 111.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.30910730142137,
+          "lng": -71.05990625357981,
+          "lifespan": 84.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.30607766734314,
+          "lng": -71.05645582480503,
+          "lifespan": 125.0,
+          "status": "Close"
+        },
+        {
+          "lat": 42.299756045980494,
+          "lng": -71.05288490410133,
+          "lifespan": 223.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.301209513946304,
+          "lng": -71.05056755697585,
+          "lifespan": 113.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.294013335676105,
+          "lng": -71.05147040677568,
+          "lifespan": 119.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.299617311795565,
+          "lng": -71.05871513883706,
+          "lifespan": 102.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.29471952411818,
+          "lng": -71.05742058714415,
+          "lifespan": 106.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.29274986947906,
+          "lng": -71.05959134606121,
+          "lifespan": 125.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.293393497807735,
+          "lng": -71.0639956785452,
+          "lifespan": 117.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.28997953715027,
+          "lng": -71.06650061764674,
+          "lifespan": 110.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.28929050067692,
+          "lng": -71.06673910717313,
+          "lifespan": 65.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.29131952724633,
+          "lng": -71.05965059916149,
+          "lifespan": 129.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.29266914211034,
+          "lng": -71.05452386261186,
+          "lifespan": 133.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.28912951927309,
+          "lng": -71.0539805916104,
+          "lifespan": 78.0,
+          "status": "Close"
+        },
+        {
+          "lat": 42.289704145430214,
+          "lng": -71.05130610212424,
+          "lifespan": 85.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.29191751645075,
+          "lng": -71.05209258135906,
+          "lifespan": 82.0,
+          "status": "Close"
+        },
+        {
+          "lat": 42.290533684564416,
+          "lng": -71.04518621253705,
+          "lifespan": 119.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.291789501205685,
+          "lng": -71.04083055591289,
+          "lifespan": 112.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.28790952890659,
+          "lng": -71.06054060926435,
+          "lifespan": 124.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.28691953217836,
+          "lng": -71.06327061759046,
+          "lifespan": 121.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.28642106502141,
+          "lng": -71.0479485235472,
+          "lifespan": 124.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.2837679033219,
+          "lng": -71.0514375494366,
+          "lifespan": 119.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.27658953780219,
+          "lng": -71.06634064707312,
+          "lifespan": 64.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.2841295303904,
+          "lng": -71.06183062073337,
+          "lifespan": 106.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.2965502087708,
+          "lng": -71.06887856469862,
+          "lifespan": 103.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.289600544984154,
+          "lng": -71.07240463239194,
+          "lifespan": 76.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.288599544221704,
+          "lng": -71.07200063311207,
+          "lifespan": 126.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.288259545054046,
+          "lng": -71.07216063441007,
+          "lifespan": 95.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.29133900787376,
+          "lng": -71.07728522684236,
+          "lifespan": 79.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.28416817408789,
+          "lng": -71.07561365247616,
+          "lifespan": 85.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.29889953818255,
+          "lng": -71.06832060215713,
+          "lifespan": 120.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.28440937803304,
+          "lng": -71.07286868103289,
+          "lifespan": 118.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.27955955247821,
+          "lng": -71.07659066360225,
+          "lifespan": 98.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.27263334963354,
+          "lng": -71.07070907182741,
+          "lifespan": 105.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.273339502920265,
+          "lng": -71.07610564836749,
+          "lifespan": 81.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.27131954678534,
+          "lng": -71.07233067268018,
+          "lifespan": 20.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.2723207666803,
+          "lng": -71.06920684398594,
+          "lifespan": 75.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.277879541238775,
+          "lng": -71.06872064987635,
+          "lifespan": 87.0,
+          "status": "Open"
+        }
+      ]
+    },
+    "Jamaica Plain Neighborhood": {
+      "avg_current_age": 101.05743622653618,
+      "avg_raze_lifespan": 95.68181818181819,
+      "current_age_distribution_10yr": [
+        {
+          "range": "0-10",
+          "count": 117
+        },
+        {
+          "range": "10-20",
+          "count": 103
+        },
+        {
+          "range": "20-30",
+          "count": 442
+        },
+        {
+          "range": "30-40",
+          "count": 68
+        },
+        {
+          "range": "40-50",
+          "count": 45
+        },
+        {
+          "range": "50-60",
+          "count": 38
+        },
+        {
+          "range": "60-70",
+          "count": 233
+        },
+        {
+          "range": "70-80",
+          "count": 242
+        },
+        {
+          "range": "80-90",
+          "count": 185
+        },
+        {
+          "range": "90-100",
+          "count": 551
+        },
+        {
+          "range": "100-110",
+          "count": 736
+        },
+        {
+          "range": "110-120",
+          "count": 854
+        },
+        {
+          "range": "120-130",
+          "count": 1947
+        },
+        {
+          "range": "130-140",
+          "count": 328
+        },
+        {
+          "range": "140-150",
+          "count": 199
+        },
+        {
+          "range": "150-160",
+          "count": 76
+        },
+        {
+          "range": "160-170",
+          "count": 31
+        },
+        {
+          "range": "170-180",
+          "count": 13
+        },
+        {
+          "range": "180-190",
+          "count": 9
+        },
+        {
+          "range": "190-200",
+          "count": 5
+        },
+        {
+          "range": "200-210",
+          "count": 3
+        },
+        {
+          "range": "210-220",
+          "count": 1
+        },
+        {
+          "range": "220-230",
+          "count": 5
+        },
+        {
+          "range": "240-250",
+          "count": 1
+        },
+        {
+          "range": "320-330",
+          "count": 1
+        }
+      ],
+      "demolished_age_distribution_10yr": [
+        {
+          "range": "0-10",
+          "count": 1
+        },
+        {
+          "range": "20-30",
+          "count": 2
+        },
+        {
+          "range": "30-40",
+          "count": 1
+        },
+        {
+          "range": "40-50",
+          "count": 1
+        },
+        {
+          "range": "50-60",
+          "count": 2
+        },
+        {
+          "range": "60-70",
+          "count": 2
+        },
+        {
+          "range": "70-80",
+          "count": 3
+        },
+        {
+          "range": "80-90",
+          "count": 4
+        },
+        {
+          "range": "90-100",
+          "count": 3
+        },
+        {
+          "range": "100-110",
+          "count": 5
+        },
+        {
+          "range": "110-120",
+          "count": 7
+        },
+        {
+          "range": "120-130",
+          "count": 8
+        },
+        {
+          "range": "130-140",
+          "count": 5
+        }
+      ],
+      "positive_raze_points": [
+        {
+          "lat": 42.3269189020486,
+          "lng": -71.11190176062964,
+          "lifespan": 34.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.322443396185946,
+          "lng": -71.1132807380245,
+          "lifespan": 99.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.319369580517034,
+          "lng": -71.10089063008083,
+          "lifespan": 126.0,
+          "status": "Close"
+        },
+        {
+          "lat": 42.31770787749351,
+          "lng": -71.10297620084087,
+          "lifespan": 58.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.317343858944845,
+          "lng": -71.10141488237059,
+          "lifespan": 123.0,
+          "status": "Close"
+        },
+        {
+          "lat": 42.31408958180009,
+          "lng": -71.10083064178997,
+          "lifespan": 131.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.31061258180125,
+          "lng": -71.1056046919892,
+          "lifespan": 118.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.31061258180125,
+          "lng": -71.1056046919892,
+          "lifespan": 118.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.31023958252797,
+          "lng": -71.10161065213768,
+          "lifespan": 138.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.309736026304215,
+          "lng": -71.10143548862405,
+          "lifespan": 25.0,
+          "status": "Close"
+        },
+        {
+          "lat": 42.30932567632885,
+          "lng": -71.10489866259536,
+          "lifespan": 82.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.30922730615937,
+          "lng": -71.10506656605062,
+          "lifespan": 82.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.30904233062541,
+          "lng": -71.10515632475867,
+          "lifespan": 69.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.3038995925574,
+          "lng": -71.10784067958086,
+          "lifespan": 72.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.305938045352846,
+          "lng": -71.10705860680217,
+          "lifespan": 137.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.30663959088847,
+          "lng": -71.10691067145774,
+          "lifespan": 122.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.306121370743746,
+          "lng": -71.10316106855421,
+          "lifespan": 41.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.30415521767622,
+          "lng": -71.11743543017053,
+          "lifespan": 78.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.30520577786391,
+          "lng": -71.11748398633277,
+          "lifespan": 124.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.2991588533942,
+          "lng": -71.1137823486746,
+          "lifespan": 1.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.297759597307795,
+          "lng": -71.11077069996963,
+          "lifespan": 133.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.31969108620961,
+          "lng": -71.10741977018573,
+          "lifespan": 20.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.320854598399805,
+          "lng": -71.10967557248144,
+          "lifespan": 95.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.32088259294508,
+          "lng": -71.10980964554005,
+          "lifespan": 126.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.32099864620875,
+          "lng": -71.10991802705183,
+          "lifespan": 126.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.32026959269308,
+          "lng": -71.10996064844379,
+          "lifespan": 101.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.3138596956491,
+          "lng": -71.10671546955498,
+          "lifespan": 85.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.3184695931181,
+          "lng": -71.11005065269926,
+          "lifespan": 118.0,
+          "status": "Close"
+        },
+        {
+          "lat": 42.316879595750855,
+          "lng": -71.11168065914211,
+          "lifespan": 125.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.31396698609374,
+          "lng": -71.11386209578002,
+          "lifespan": 85.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.30872960014289,
+          "lng": -71.11405068268913,
+          "lifespan": 103.0,
+          "status": "Close"
+        },
+        {
+          "lat": 42.310740598515416,
+          "lng": -71.11350367737859,
+          "lifespan": 130.0,
+          "status": "Close"
+        },
+        {
+          "lat": 42.31242960622813,
+          "lng": -71.11867068470897,
+          "lifespan": 116.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.31984959599319,
+          "lng": -71.1122406547283,
+          "lifespan": 115.0,
+          "status": "Close"
+        },
+        {
+          "lat": 42.301998393375555,
+          "lng": -71.13189647524138,
+          "lifespan": 72.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.30143492020493,
+          "lng": -71.1281747386522,
+          "lifespan": 126.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.305010345501046,
+          "lng": -71.12991513641262,
+          "lifespan": 97.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.30051960337556,
+          "lng": -71.1160207054015,
+          "lifespan": 104.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.29712960599219,
+          "lng": -71.11715071617115,
+          "lifespan": 103.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.28794787194469,
+          "lng": -71.11666560351922,
+          "lifespan": 59.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.287739602277355,
+          "lng": -71.11381072968526,
+          "lifespan": 60.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.29654146381256,
+          "lng": -71.11442090016301,
+          "lifespan": 116.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.29323960269636,
+          "lng": -71.11498071908647,
+          "lifespan": 111.0,
+          "status": "Close"
+        },
+        {
+          "lat": 42.29074960858576,
+          "lng": -71.11831073295357,
+          "lifespan": 106.0,
+          "status": "Open"
+        }
+      ]
+    },
+    "Greater Mattapan Neighborhood": {
+      "avg_current_age": 93.40513115067968,
+      "avg_raze_lifespan": 94.42857142857143,
+      "current_age_distribution_10yr": [
+        {
+          "range": "0-10",
+          "count": 137
+        },
+        {
+          "range": "10-20",
+          "count": 93
+        },
+        {
+          "range": "20-30",
+          "count": 240
+        },
+        {
+          "range": "30-40",
+          "count": 149
+        },
+        {
+          "range": "40-50",
+          "count": 10
+        },
+        {
+          "range": "50-60",
+          "count": 30
+        },
+        {
+          "range": "60-70",
+          "count": 222
+        },
+        {
+          "range": "70-80",
+          "count": 642
+        },
+        {
+          "range": "80-90",
+          "count": 260
+        },
+        {
+          "range": "90-100",
+          "count": 409
+        },
+        {
+          "range": "100-110",
+          "count": 835
+        },
+        {
+          "range": "110-120",
+          "count": 736
+        },
+        {
+          "range": "120-130",
+          "count": 1284
+        },
+        {
+          "range": "130-140",
+          "count": 110
+        },
+        {
+          "range": "140-150",
+          "count": 53
+        },
+        {
+          "range": "150-160",
+          "count": 9
+        },
+        {
+          "range": "160-170",
+          "count": 1
+        },
+        {
+          "range": "190-200",
+          "count": 1
+        },
+        {
+          "range": "220-230",
+          "count": 1
+        },
+        {
+          "range": "240-250",
+          "count": 1
+        }
+      ],
+      "demolished_age_distribution_10yr": [
+        {
+          "range": "60-70",
+          "count": 1
+        },
+        {
+          "range": "70-80",
+          "count": 1
+        },
+        {
+          "range": "80-90",
+          "count": 1
+        },
+        {
+          "range": "90-100",
+          "count": 1
+        },
+        {
+          "range": "100-110",
+          "count": 2
+        },
+        {
+          "range": "130-140",
+          "count": 1
+        }
+      ],
+      "positive_raze_points": [
+        {
+          "lat": 42.29772956252441,
+          "lng": -71.08562064381653,
+          "lifespan": 138.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.28341138611511,
+          "lng": -71.08938685553471,
+          "lifespan": 74.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.287099576287446,
+          "lng": -71.09477068753614,
+          "lifespan": 101.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.2818695820678,
+          "lng": -71.09834070727933,
+          "lifespan": 90.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.29140955228479,
+          "lng": -71.07768064030647,
+          "lifespan": 85.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.27743767863025,
+          "lng": -71.08306647675123,
+          "lifespan": 109.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.27807958341193,
+          "lng": -71.09846071636088,
+          "lifespan": 64.0,
+          "status": "Open"
+        }
+      ]
+    },
+    "Boston Zoning Code": {
+      "avg_current_age": 101.90330788804071,
+      "avg_raze_lifespan": 107.75,
+      "current_age_distribution_10yr": [
+        {
+          "range": "0-10",
+          "count": 13
+        },
+        {
+          "range": "10-20",
+          "count": 10
+        },
+        {
+          "range": "20-30",
+          "count": 23
+        },
+        {
+          "range": "30-40",
+          "count": 13
+        },
+        {
+          "range": "40-50",
+          "count": 4
+        },
+        {
+          "range": "50-60",
+          "count": 10
+        },
+        {
+          "range": "60-70",
+          "count": 25
+        },
+        {
+          "range": "70-80",
+          "count": 21
+        },
+        {
+          "range": "80-90",
+          "count": 23
+        },
+        {
+          "range": "90-100",
+          "count": 55
+        },
+        {
+          "range": "100-110",
+          "count": 188
+        },
+        {
+          "range": "110-120",
+          "count": 163
+        },
+        {
+          "range": "120-130",
+          "count": 206
+        },
+        {
+          "range": "130-140",
+          "count": 20
+        },
+        {
+          "range": "140-150",
+          "count": 8
+        },
+        {
+          "range": "150-160",
+          "count": 2
+        },
+        {
+          "range": "160-170",
+          "count": 1
+        },
+        {
+          "range": "170-180",
+          "count": 1
+        }
+      ],
+      "demolished_age_distribution_10yr": [
+        {
+          "range": "80-90",
+          "count": 1
+        },
+        {
+          "range": "100-110",
+          "count": 1
+        },
+        {
+          "range": "110-120",
+          "count": 1
+        },
+        {
+          "range": "120-130",
+          "count": 1
+        }
+      ],
+      "positive_raze_points": [
+        {
+          "lat": 42.281016013899446,
+          "lng": -71.08467354087747,
+          "lifespan": 112.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.29303029673451,
+          "lng": -71.12156609896545,
+          "lifespan": 82.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.29111961566586,
+          "lng": -71.12345074392131,
+          "lifespan": 109.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.2816795374543,
+          "lng": -71.13412140893908,
+          "lifespan": 128.0,
+          "status": "Open"
+        }
+      ]
+    },
+    "Hyde Park Neighborhood": {
+      "avg_current_age": 88.26384142173616,
+      "avg_raze_lifespan": 86.05263157894737,
+      "current_age_distribution_10yr": [
+        {
+          "range": "0-10",
+          "count": 64
+        },
+        {
+          "range": "10-20",
+          "count": 125
+        },
+        {
+          "range": "20-30",
+          "count": 207
+        },
+        {
+          "range": "30-40",
+          "count": 187
+        },
+        {
+          "range": "40-50",
+          "count": 85
+        },
+        {
+          "range": "50-60",
+          "count": 218
+        },
+        {
+          "range": "60-70",
+          "count": 963
+        },
+        {
+          "range": "70-80",
+          "count": 1424
+        },
+        {
+          "range": "80-90",
+          "count": 574
+        },
+        {
+          "range": "90-100",
+          "count": 462
+        },
+        {
+          "range": "100-110",
+          "count": 893
+        },
+        {
+          "range": "110-120",
+          "count": 723
+        },
+        {
+          "range": "120-130",
+          "count": 892
+        },
+        {
+          "range": "130-140",
+          "count": 209
+        },
+        {
+          "range": "140-150",
+          "count": 164
+        },
+        {
+          "range": "150-160",
+          "count": 69
+        },
+        {
+          "range": "160-170",
+          "count": 28
+        },
+        {
+          "range": "170-180",
+          "count": 13
+        },
+        {
+          "range": "180-190",
+          "count": 4
+        },
+        {
+          "range": "190-200",
+          "count": 5
+        },
+        {
+          "range": "200-210",
+          "count": 2
+        },
+        {
+          "range": "210-220",
+          "count": 1
+        },
+        {
+          "range": "220-230",
+          "count": 3
+        }
+      ],
+      "demolished_age_distribution_10yr": [
+        {
+          "range": "40-50",
+          "count": 1
+        },
+        {
+          "range": "50-60",
+          "count": 1
+        },
+        {
+          "range": "60-70",
+          "count": 3
+        },
+        {
+          "range": "70-80",
+          "count": 2
+        },
+        {
+          "range": "80-90",
+          "count": 3
+        },
+        {
+          "range": "100-110",
+          "count": 7
+        },
+        {
+          "range": "110-120",
+          "count": 1
+        },
+        {
+          "range": "120-130",
+          "count": 1
+        }
+      ],
+      "positive_raze_points": [
+        {
+          "lat": 42.26124692441038,
+          "lng": -71.10138800475647,
+          "lifespan": 66.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.26399351288468,
+          "lng": -71.1077826424181,
+          "lifespan": 120.0,
+          "status": "Close"
+        },
+        {
+          "lat": 42.25828960957445,
+          "lng": -71.1157107997323,
+          "lifespan": 100.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.26700961178807,
+          "lng": -71.11795078528772,
+          "lifespan": 101.0,
+          "status": "Close"
+        },
+        {
+          "lat": 42.272145015760714,
+          "lng": -71.11998357537374,
+          "lifespan": 100.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.25533410804012,
+          "lng": -71.12207983187918,
+          "lifespan": 114.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.25584327385631,
+          "lng": -71.12202193427804,
+          "lifespan": 88.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.25651261823608,
+          "lng": -71.12154381763982,
+          "lifespan": 74.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.25613108362296,
+          "lng": -71.12146544412454,
+          "lifespan": 42.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.25615961904014,
+          "lng": -71.12159081749932,
+          "lifespan": 104.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.254249622914195,
+          "lng": -71.12456082927349,
+          "lifespan": 105.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.2541688800406,
+          "lng": -71.12507753513658,
+          "lifespan": 102.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.25212942666802,
+          "lng": -71.11836339978713,
+          "lifespan": 86.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.250869601817854,
+          "lng": -71.10963080302956,
+          "lifespan": 70.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.255269625233275,
+          "lng": -71.12609083019503,
+          "lifespan": 80.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.25048963844112,
+          "lng": -71.1345708593054,
+          "lifespan": 104.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.25492964764172,
+          "lng": -71.1417208662877,
+          "lifespan": 61.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.24301968277769,
+          "lng": -71.14120088166707,
+          "lifespan": 62.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.240523692519496,
+          "lng": -71.13920087917641,
+          "lifespan": 56.0,
+          "status": "Open"
+        }
+      ]
+    },
+    "Roslindale Neighborhood": {
+      "avg_current_age": 98.32284027901986,
+      "avg_raze_lifespan": 108.25,
+      "current_age_distribution_10yr": [
+        {
+          "range": "0-10",
+          "count": 64
+        },
+        {
+          "range": "10-20",
+          "count": 64
+        },
+        {
+          "range": "20-30",
+          "count": 143
+        },
+        {
+          "range": "30-40",
+          "count": 122
+        },
+        {
+          "range": "40-50",
+          "count": 22
+        },
+        {
+          "range": "50-60",
+          "count": 100
+        },
+        {
+          "range": "60-70",
+          "count": 391
+        },
+        {
+          "range": "70-80",
+          "count": 369
+        },
+        {
+          "range": "80-90",
+          "count": 180
+        },
+        {
+          "range": "90-100",
+          "count": 662
+        },
+        {
+          "range": "100-110",
+          "count": 1237
+        },
+        {
+          "range": "110-120",
+          "count": 913
+        },
+        {
+          "range": "120-130",
+          "count": 888
+        },
+        {
+          "range": "130-140",
+          "count": 229
+        },
+        {
+          "range": "140-150",
+          "count": 134
+        },
+        {
+          "range": "150-160",
+          "count": 41
+        },
+        {
+          "range": "160-170",
+          "count": 14
+        },
+        {
+          "range": "170-180",
+          "count": 9
+        },
+        {
+          "range": "180-190",
+          "count": 2
+        },
+        {
+          "range": "200-210",
+          "count": 2
+        },
+        {
+          "range": "210-220",
+          "count": 1
+        },
+        {
+          "range": "220-230",
+          "count": 2
+        },
+        {
+          "range": "300-310",
+          "count": 1
+        },
+        {
+          "range": "310-320",
+          "count": 1
+        }
+      ],
+      "demolished_age_distribution_10yr": [
+        {
+          "range": "70-80",
+          "count": 1
+        },
+        {
+          "range": "80-90",
+          "count": 1
+        },
+        {
+          "range": "90-100",
+          "count": 1
+        },
+        {
+          "range": "100-110",
+          "count": 2
+        },
+        {
+          "range": "110-120",
+          "count": 5
+        },
+        {
+          "range": "120-130",
+          "count": 1
+        },
+        {
+          "range": "140-150",
+          "count": 1
+        }
+      ],
+      "positive_raze_points": [
+        {
+          "lat": 42.281203658339145,
+          "lng": -71.12828133581155,
+          "lifespan": 126.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.27676166064574,
+          "lng": -71.12529554276998,
+          "lifespan": 74.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.27878962710618,
+          "lng": -71.13004078634016,
+          "lifespan": 110.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.28713259650367,
+          "lng": -71.10860571920037,
+          "lifespan": 119.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.287819612648995,
+          "lng": -71.12093074474441,
+          "lifespan": 107.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.28990961475615,
+          "lng": -71.12287074569811,
+          "lifespan": 87.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.28128963952437,
+          "lng": -71.13933080165425,
+          "lifespan": 90.0,
+          "status": "Close"
+        },
+        {
+          "lat": 42.28574963731105,
+          "lng": -71.138900790872,
+          "lifespan": 111.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.28431964475536,
+          "lng": -71.1434608040665,
+          "lifespan": 103.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.28908084591076,
+          "lng": -71.13580987409871,
+          "lifespan": 116.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.28965963257703,
+          "lng": -71.13568077410312,
+          "lifespan": 116.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.293019631854385,
+          "lng": -71.1351407661585,
+          "lifespan": 140.0,
+          "status": "Open"
+        }
+      ]
+    },
+    "West Roxbury Neighborhood": {
+      "avg_current_age": 87.04689418119322,
+      "avg_raze_lifespan": 77.20689655172414,
+      "current_age_distribution_10yr": [
+        {
+          "range": "0-10",
+          "count": 117
+        },
+        {
+          "range": "10-20",
+          "count": 131
+        },
+        {
+          "range": "20-30",
+          "count": 191
+        },
+        {
+          "range": "30-40",
+          "count": 188
+        },
+        {
+          "range": "40-50",
+          "count": 75
+        },
+        {
+          "range": "50-60",
+          "count": 196
+        },
+        {
+          "range": "60-70",
+          "count": 989
+        },
+        {
+          "range": "70-80",
+          "count": 1165
+        },
+        {
+          "range": "80-90",
+          "count": 740
+        },
+        {
+          "range": "90-100",
+          "count": 1254
+        },
+        {
+          "range": "100-110",
+          "count": 1657
+        },
+        {
+          "range": "110-120",
+          "count": 677
+        },
+        {
+          "range": "120-130",
+          "count": 450
+        },
+        {
+          "range": "130-140",
+          "count": 154
+        },
+        {
+          "range": "140-150",
+          "count": 91
+        },
+        {
+          "range": "150-160",
+          "count": 24
+        },
+        {
+          "range": "160-170",
+          "count": 21
+        },
+        {
+          "range": "170-180",
+          "count": 8
+        },
+        {
+          "range": "180-190",
+          "count": 5
+        },
+        {
+          "range": "190-200",
+          "count": 2
+        },
+        {
+          "range": "200-210",
+          "count": 3
+        },
+        {
+          "range": "210-220",
+          "count": 3
+        },
+        {
+          "range": "220-230",
+          "count": 4
+        },
+        {
+          "range": "230-240",
+          "count": 1
+        }
+      ],
+      "demolished_age_distribution_10yr": [
+        {
+          "range": "0-10",
+          "count": 2
+        },
+        {
+          "range": "10-20",
+          "count": 1
+        },
+        {
+          "range": "20-30",
+          "count": 2
+        },
+        {
+          "range": "40-50",
+          "count": 2
+        },
+        {
+          "range": "50-60",
+          "count": 1
+        },
+        {
+          "range": "60-70",
+          "count": 3
+        },
+        {
+          "range": "70-80",
+          "count": 2
+        },
+        {
+          "range": "80-90",
+          "count": 4
+        },
+        {
+          "range": "90-100",
+          "count": 2
+        },
+        {
+          "range": "100-110",
+          "count": 4
+        },
+        {
+          "range": "110-120",
+          "count": 2
+        },
+        {
+          "range": "120-130",
+          "count": 3
+        },
+        {
+          "range": "140-150",
+          "count": 1
+        }
+      ],
+      "positive_raze_points": [
+        {
+          "lat": 42.28312965696467,
+          "lng": -71.15191082591214,
+          "lifespan": 111.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.27795965178368,
+          "lng": -71.14744082727532,
+          "lifespan": 109.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.29432850511488,
+          "lng": -71.13987346266325,
+          "lifespan": 50.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.29356965240944,
+          "lng": -71.14983079732946,
+          "lifespan": 102.0,
+          "status": "Close"
+        },
+        {
+          "lat": 42.28997965821619,
+          "lng": -71.1537608145073,
+          "lifespan": 62.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.29203965752989,
+          "lng": -71.15394080975715,
+          "lifespan": 102.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.2878488143824,
+          "lng": -71.15518290758641,
+          "lifespan": 93.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.29087966456424,
+          "lng": -71.15931082540216,
+          "lifespan": 144.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.287819667473634,
+          "lng": -71.16053083476372,
+          "lifespan": 80.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.29429606495073,
+          "lng": -71.15631464405155,
+          "lifespan": 81.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.292289660806595,
+          "lng": -71.1561208153147,
+          "lifespan": 84.0,
+          "status": "Close"
+        },
+        {
+          "lat": 42.29114114690073,
+          "lng": -71.17309631790681,
+          "lifespan": 78.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.28885968100752,
+          "lng": -71.16994085293804,
+          "lifespan": 1.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.28020476808215,
+          "lng": -71.16176322065868,
+          "lifespan": 25.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.28426489538956,
+          "lng": -71.16952435014632,
+          "lifespan": 95.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.28107966676599,
+          "lng": -71.15839084462411,
+          "lifespan": 112.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.27710967672366,
+          "lng": -71.16528086919445,
+          "lifespan": 126.0,
+          "status": "Close"
+        },
+        {
+          "lat": 42.27781522229063,
+          "lng": -71.16635956153506,
+          "lifespan": 124.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.277649685577835,
+          "lng": -71.17115088144604,
+          "lifespan": 1.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.27870969719438,
+          "lng": -71.18027089973424,
+          "lifespan": 45.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.27569630210316,
+          "lng": -71.1620853339982,
+          "lifespan": 85.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.27763567137407,
+          "lng": -71.16158086070286,
+          "lifespan": 13.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.27728290254717,
+          "lng": -71.16123916117009,
+          "lifespan": 124.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.27056908180188,
+          "lng": -71.1647877013013,
+          "lifespan": 79.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.25987967783959,
+          "lng": -71.1634209032779,
+          "lifespan": 69.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.276998479433686,
+          "lng": -71.16380282285087,
+          "lifespan": 65.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.265932272096094,
+          "lng": -71.169316347516,
+          "lifespan": 46.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.26455665602952,
+          "lng": -71.16920434954366,
+          "lifespan": 28.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.26042966244902,
+          "lng": -71.15275087814715,
+          "lifespan": 105.0,
+          "status": "Open"
+        }
+      ]
+    },
+    "Audubon Circle Neighborhood": {
+      "avg_current_age": 96.26717557251908,
+      "avg_raze_lifespan": 0.0,
+      "current_age_distribution_10yr": [
+        {
+          "range": "0-10",
+          "count": 1
+        },
+        {
+          "range": "10-20",
+          "count": 3
+        },
+        {
+          "range": "20-30",
+          "count": 26
+        },
+        {
+          "range": "90-100",
+          "count": 5
+        },
+        {
+          "range": "100-110",
+          "count": 16
+        },
+        {
+          "range": "110-120",
+          "count": 21
+        },
+        {
+          "range": "120-130",
+          "count": 59
+        }
+      ],
+      "demolished_age_distribution_10yr": [],
+      "positive_raze_points": []
+    },
+    "Allston/Brighton Neighborhood": {
+      "avg_current_age": 99.49317257408484,
+      "avg_raze_lifespan": 94.625,
+      "current_age_distribution_10yr": [
+        {
+          "range": "0-10",
+          "count": 123
+        },
+        {
+          "range": "10-20",
+          "count": 91
+        },
+        {
+          "range": "20-30",
+          "count": 331
+        },
+        {
+          "range": "30-40",
+          "count": 66
+        },
+        {
+          "range": "40-50",
+          "count": 51
+        },
+        {
+          "range": "50-60",
+          "count": 76
+        },
+        {
+          "range": "60-70",
+          "count": 231
+        },
+        {
+          "range": "70-80",
+          "count": 273
+        },
+        {
+          "range": "80-90",
+          "count": 252
+        },
+        {
+          "range": "90-100",
+          "count": 956
+        },
+        {
+          "range": "100-110",
+          "count": 1681
+        },
+        {
+          "range": "110-120",
+          "count": 925
+        },
+        {
+          "range": "120-130",
+          "count": 1077
+        },
+        {
+          "range": "130-140",
+          "count": 443
+        },
+        {
+          "range": "140-150",
+          "count": 236
+        },
+        {
+          "range": "150-160",
+          "count": 16
+        },
+        {
+          "range": "160-170",
+          "count": 38
+        },
+        {
+          "range": "170-180",
+          "count": 9
+        },
+        {
+          "range": "180-190",
+          "count": 3
+        },
+        {
+          "range": "190-200",
+          "count": 3
+        },
+        {
+          "range": "210-220",
+          "count": 1
+        },
+        {
+          "range": "220-230",
+          "count": 1
+        },
+        {
+          "range": "300-310",
+          "count": 1
+        }
+      ],
+      "demolished_age_distribution_10yr": [
+        {
+          "range": "0-10",
+          "count": 1
+        },
+        {
+          "range": "20-30",
+          "count": 1
+        },
+        {
+          "range": "40-50",
+          "count": 4
+        },
+        {
+          "range": "50-60",
+          "count": 1
+        },
+        {
+          "range": "60-70",
+          "count": 1
+        },
+        {
+          "range": "70-80",
+          "count": 4
+        },
+        {
+          "range": "80-90",
+          "count": 2
+        },
+        {
+          "range": "90-100",
+          "count": 4
+        },
+        {
+          "range": "100-110",
+          "count": 7
+        },
+        {
+          "range": "110-120",
+          "count": 5
+        },
+        {
+          "range": "120-130",
+          "count": 7
+        },
+        {
+          "range": "130-140",
+          "count": 2
+        },
+        {
+          "range": "180-190",
+          "count": 1
+        }
+      ],
+      "positive_raze_points": [
+        {
+          "lat": 42.35231827645677,
+          "lng": -71.12201023446372,
+          "lifespan": 49.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.35231827645677,
+          "lng": -71.12201023446372,
+          "lifespan": 103.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.35356960757253,
+          "lng": -71.12511060786501,
+          "lifespan": 115.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.353403811333195,
+          "lng": -71.13035942575804,
+          "lifespan": 123.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.3520896162729,
+          "lng": -71.13159062526252,
+          "lifespan": 81.0,
+          "status": "Close"
+        },
+        {
+          "lat": 42.349640104809325,
+          "lng": -71.1365502599429,
+          "lifespan": 134.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.34957353155361,
+          "lng": -71.14797979563608,
+          "lifespan": 44.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.34892455407459,
+          "lng": -71.1427310941567,
+          "lifespan": 119.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.34259463560653,
+          "lng": -71.14466267633448,
+          "lifespan": 127.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.33168865191046,
+          "lng": -71.15563572431991,
+          "lifespan": 125.0,
+          "status": "Close"
+        },
+        {
+          "lat": 42.3372694577375,
+          "lng": -71.16456882104688,
+          "lifespan": 40.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.34222173263381,
+          "lng": -71.15386682822748,
+          "lifespan": 58.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.36143772028976,
+          "lng": -71.12698371360932,
+          "lifespan": 75.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.36547462865627,
+          "lng": -71.12105524455416,
+          "lifespan": 92.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.364014176611136,
+          "lng": -71.12920053990199,
+          "lifespan": 66.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.3619263839137,
+          "lng": -71.14271539980166,
+          "lifespan": 100.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.36085955058112,
+          "lng": -71.142921947282,
+          "lifespan": 181.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.36088897709243,
+          "lng": -71.1430987251194,
+          "lifespan": 114.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.35909869537701,
+          "lng": -71.14201378692044,
+          "lifespan": 47.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.36044962370435,
+          "lng": -71.13840062172866,
+          "lifespan": 74.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.361649097801354,
+          "lng": -71.13467892057339,
+          "lifespan": 123.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.35889516830081,
+          "lng": -71.13152953047052,
+          "lifespan": 108.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.35566262159879,
+          "lng": -71.13607862758046,
+          "lifespan": 2.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.35660333033381,
+          "lng": -71.14009510650773,
+          "lifespan": 27.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.35578498208543,
+          "lng": -71.14351563252471,
+          "lifespan": 92.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.349829647529575,
+          "lng": -71.15476068194049,
+          "lifespan": 100.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.35338402576985,
+          "lng": -71.15309408913723,
+          "lifespan": 125.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.3541372741096,
+          "lng": -71.1509700439081,
+          "lifespan": 135.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.35691665012981,
+          "lng": -71.15788367347962,
+          "lifespan": 90.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.35393991520101,
+          "lng": -71.16932379408186,
+          "lifespan": 75.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.35180960192385,
+          "lng": -71.17166590548763,
+          "lifespan": 102.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.35189965658924,
+          "lng": -71.16220069454333,
+          "lifespan": 95.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.34973965067919,
+          "lng": -71.15762068969038,
+          "lifespan": 116.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.34939407607981,
+          "lng": -71.15679441957079,
+          "lifespan": 74.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.34964573775624,
+          "lng": -71.16461769556743,
+          "lifespan": 125.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.34554251832723,
+          "lng": -71.15572963397902,
+          "lifespan": 104.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.34044965252261,
+          "lng": -71.15719070981403,
+          "lifespan": 81.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.34118958692221,
+          "lng": -71.16070438025012,
+          "lifespan": 105.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.34721260930123,
+          "lng": -71.14893212448861,
+          "lifespan": 124.0,
+          "status": "Open"
+        },
+        {
+          "lat": 42.34708964150737,
+          "lng": -71.15011067890357,
+          "lifespan": 115.0,
+          "status": "Open"
+        }
+      ]
+    }
+  },
+  "zoning_district_names": [
+    "Allston/Brighton Neighborhood",
+    "Audubon Circle Neighborhood",
+    "Bay Village Neighborhood",
+    "Boston Harbor",
+    "Boston Proper",
+    "Boston Zoning Code",
+    "Bulfinch Triangle",
+    "Cambridge Street North",
+    "Central Artery Special",
+    "Charlestown Neighborhood",
+    "Chinatown",
+    "Dorchester Neighborhood",
+    "East Boston Neighborhood",
+    "Fenway Neighborhood",
+    "Government Center/Markets",
+    "Greater Mattapan Neighborhood",
+    "Harborpark: Charlestown Waterfront",
+    "Harborpark: Dorchester Bay/Neponset River Waterfront",
+    "Harborpark: Fort Point Waterfront",
+    "Harborpark: North End Waterfront",
+    "Huntington Avenue/Prudential Center",
+    "Hyde Park Neighborhood",
+    "Jamaica Plain Neighborhood",
+    "Leather District",
+    "Midtown Cultural",
+    "Mission Hill Neighborhood",
+    "Newmarket 21st Century Industrial District",
+    "North End Neighborhood",
+    "North Station Economic Development Area",
+    "Roslindale Neighborhood",
+    "Roxbury Neighborhood",
+    "South Boston",
+    "South Boston Neighborhood",
+    "South End Neighborhood",
+    "South Station Economic Development Area",
+    "Stuart Street District",
+    "West Roxbury Neighborhood"
+  ]
 }

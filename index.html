@@ -370,6 +370,7 @@
             </p>
         </div>
 
+
         <div class="chart-container">
             <h2 class="chart-title">Demolition Locations Map</h2>
             <p style="color: #666; font-size: 0.9em; margin-bottom: 15px;">
@@ -387,6 +388,44 @@
             </div>
 
             <div id="map"></div>
+        </div>
+
+                <div class="chart-container" id="zoning-deep-dive">
+            <h2 class="chart-title">Zoning District Deep Dive</h2>
+            
+            <div class="control-group" style="margin-bottom: 20px;">
+                <label for="zoningDistrictFilter">Select a Zoning District</label>
+                <select id="zoningDistrictFilter" onchange="updateZoningDeepDive()">
+                    <option value="">Loading districts...</option>
+                </select>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 20px; margin-bottom: 30px;">
+                
+                <div id="zoningMap" style="height: 450px; width: 100%; border-radius: 4px; border: 1px solid #ddd;"></div>
+
+                <div class="stats-grid" style="grid-template-columns: 1fr; gap: 20px; margin: 0;">
+                    <div class="stat-card">
+                        <div class="stat-label">Avg. Current Age (in District)</div>
+                        <div class="stat-value" id="zoningAvgCurrentAge">0 <span class="stat-unit">years</span></div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Avg. RAZE Lifespan (in District)</div>
+                        <div class="stat-value" id="zoningAvgLifespan">0 <span class="stat-unit">years</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px;">
+                <div id="zoning-demolished-chart-container">
+                    <h3 class="chart-title" style="font-size: 1.1em;">Age Distribution of Demolished Buildings (RAZE)</h3>
+                    <canvas id="zoningDemolishedAgeChart" style="max-height: 300px;"></canvas>
+                </div>
+                <div id="zoning-current-chart-container">
+                    <h3 class="chart-title" style="font-size: 1.1em;">Age Distribution of Current Buildings</h3>
+                    <canvas id="zoningCurrentAgeChart" style="max-height: 300px;"></canvas>
+                </div>
+            </div>
         </div>
 
         <div class="chart-container">
@@ -497,6 +536,15 @@
 
     let zoningLayer = null; // Will hold the new Zoning GeoJSON layer
     let layerControl = null; // Will hold the Leaflet layer control
+
+    // --- ADD THESE NEW GLOBALS ---
+    let globalZoningGeoJSON = null; // Will store the raw GeoJSON for filtering
+    let zoningDeepDiveMap = null; // Map instance for the deep dive section
+    let zoningDistrictLayer = null; // Layer for the purple district boundary
+    let zoningRazePointLayer = null; // Layer for the RAZE points in the district
+    // Add new chart instances to your charts object
+    charts.zoningDemolishedAge = null;
+    charts.zoningCurrentAge = null;
 
     // --- CONSTANTS ---
     // Color palette for the fill color of charts
@@ -711,55 +759,96 @@
             loadZoningLayer();
         }
         
+        const districtDropdown = document.getElementById('zoningDistrictFilter');
+        if (districtDropdown && data.zoning_district_names) {
+            districtDropdown.innerHTML = ''; // Clear "Loading..."
+            data.zoning_district_names.forEach(districtName => {
+                const option = new Option(districtName, districtName);
+                districtDropdown.add(option);
+            });
+        }
+
+        initZoningDeepDiveMap();
+
         // Call the main update function to draw all charts for the first time
         updateCharts();
     }
 
-    async function loadZoningLayer() {
+async function loadZoningLayer() {
     try {
-        // 1. Make sure the filename exactly matches your actual file
+        // 1. Make sure the filename matches exactly
         const response = await fetch('Boston_Zoning_Subdistricts.geojson');
         if (!response.ok) {
             console.error('Failed to load zoning GeoJSON');
             return;
         }
-        const zoningData = await response.json();
 
-        // 2. Define the style for zoning areas
+        // 2. Read the response only once and store it in a global variable
+        globalZoningGeoJSON = await response.json(); // (this is correct)
+
+        // 3. Define the zoning style
         function zoningStyle(feature) {
             return {
-                color: "#800080",      // Color of zoning boundaries
-                weight: 1.2,             // Boundary line width
-                opacity: 0.6,          // Boundary line transparency
-                fillColor: "#800080",  // Fill color of zoning areas
-                fillOpacity: 0.1       // Fill transparency (very important!)
+                color: "#800080",      // Boundary color
+                weight: 1.2,           // Border width
+                opacity: 0.6,          // Border transparency
+                fillColor: "#800080",  // Fill color
+                fillOpacity: 0.1       // Fill transparency
             };
         }
 
-        // 3. (Optional) Define hover/click interactions
+        // 4. Define hover/click interactions
         function onEachZoningFeature(feature, layer) {
-            if (feature.properties && (feature.properties.Zoning_Subdistrict || feature.properties.name)) {
-                // Show zoning name when hovering over the area
-                layer.bindTooltip(feature.properties.Zoning_Subdistrict || feature.properties.name);
+            if (feature.properties && feature.properties.Zoning_Subdistrict) {
+                
+                const subdistrict_name = feature.properties.Zoning_Subdistrict;
+                let content = `<strong>${subdistrict_name}</strong><br><hr>`;
+
+                // Check if precomputed statistics exist in our JSON object
+                if (currentData && currentData.zoning_subdistrict_stats && currentData.zoning_subdistrict_stats[subdistrict_name]) {
+                    
+                    const stats = currentData.zoning_subdistrict_stats[subdistrict_name];
+                    
+                    // Format average current age
+                    const age_val = (stats.avg_current_age > 0) ? stats.avg_current_age.toFixed(1) : 'N/A';
+                    content += `Avg. Current Age: ${age_val} yrs<br>`;
+
+                    // Format average RAZE lifespan
+                    const lifespan_val = (stats.avg_raze_lifespan > 0) ? stats.avg_raze_lifespan.toFixed(1) : 'N/A';
+                    content += `Avg. RAZE Lifespan: ${lifespan_val} yrs`;
+
+                } else {
+                    // If no statistics found for this subdistrict, show fallback info
+                    content += "No statistical data available.";
+                }
+                
+                // Use bindPopup() to enable clickable popups
+                layer.bindPopup(content);
+            
+            } else if (feature.properties && feature.properties.name) {
+                // Fallback for subdistricts without a name property
+                layer.bindTooltip(feature.properties.name);
             }
         }
 
-        // 4. Create the GeoJSON layer
-        zoningLayer = L.geoJSON(zoningData, {
+        // 5. Create GeoJSON layer (using the global variable)
+        zoningLayer = L.geoJSON(globalZoningGeoJSON, {
             style: zoningStyle,
             onEachFeature: onEachZoningFeature
         });
 
-        // 5. Add the layer to the map
+        // 6. Add the layer to the map
         zoningLayer.addTo(map);
 
-        // 6. Update the layer control panel
+        // 7. Update the layer control
         addLayerControl();
+        updateZoningDeepDive();
 
     } catch (error) {
         console.error('Error loading or parsing zoning data:', error);
     }
 }
+
 
 /**
  * NEW: Creates or updates the Leaflet layer control.
@@ -811,6 +900,190 @@ function addLayerControl() {
         document.getElementById('totalDemo').textContent = (stats.raze_count || 0).toLocaleString();
         document.getElementById('extdemCount').textContent = (stats.extdem_count || 0).toLocaleString();
         document.getElementById('intdemCount').textContent = (stats.intdem_count || 0).toLocaleString();
+    }
+
+function initZoningDeepDiveMap() {
+        if (!zoningDeepDiveMap && document.getElementById('zoningMap')) {
+            zoningDeepDiveMap = L.map('zoningMap').setView([42.3601, -71.0589], 12); // Center on Boston
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            }).addTo(zoningDeepDiveMap);
+        }
+    }
+
+    /**
+     * NEW: Main controller for the Zoning Deep Dive section.
+     * Reads the dropdown and updates all modules in that section.
+     */
+    function updateZoningDeepDive() {
+        // --- ADD THIS GUARD CLAUSE ---
+        // If the data from Python hasn't loaded, or the map isn't ready, stop.
+        if (!currentData || !zoningDeepDiveMap || !currentData.zoning_district_stats) {
+            return; 
+        }
+
+        const selectedDistrictName = document.getElementById('zoningDistrictFilter').value;
+        if (!selectedDistrictName) return; // No district selected
+
+        // This line is now SAFE because we checked for 'zoning_district_stats' above
+        const districtData = currentData.zoning_district_stats[selectedDistrictName];
+        
+        // This check is also good
+        if (!districtData) {
+            console.warn(`No data found for district: ${selectedDistrictName}`);
+            // Clear old data
+            document.getElementById('zoningAvgCurrentAge').innerHTML = 'N/A';
+            document.getElementById('zoningAvgLifespan').innerHTML = 'N/A';
+            // You might want to clear the charts and map here too
+            return;
+        }
+
+        // 1. Update KPIs (Your existing code is correct)
+        const avgAgeEl = document.getElementById('zoningAvgCurrentAge');
+        const avgLifespanEl = document.getElementById('zoningAvgLifespan');
+        
+        avgAgeEl.innerHTML = (districtData.avg_current_age > 0) 
+            ? `${districtData.avg_current_age.toFixed(1)} <span class="stat-unit">years</span>` 
+            : 'N/A';
+        
+        avgLifespanEl.innerHTML = (districtData.avg_raze_lifespan > 0) 
+            ? `${districtData.avg_raze_lifespan.toFixed(1)} <span class="stat-unit">years</span>`
+            : 'N/A';
+
+        // 2. Update Charts (Your existing code is correct)
+        createZoningBarChart(
+            'zoningDemolishedAgeChart', 
+            'zoningDemolishedAge', 
+            districtData.demolished_age_distribution_10yr, 
+            'Demolished Buildings (RAZE)',
+            colors.RAZE
+        );
+        createZoningBarChart(
+            'zoningCurrentAgeChart', 
+            'zoningCurrentAge', 
+            districtData.current_age_distribution_10yr, 
+            'Current Buildings',
+            'rgba(52, 152, 219, 0.8)'
+        );
+
+        // 3. Update Map (Your existing code is correct)
+        updateZoningDeepDiveMap(selectedDistrictName, districtData.positive_raze_points);
+    }
+
+    /**
+     * NEW: Helper function to draw the bar charts in the deep dive section.
+     * This is a simplified version of your other chart functions.
+     */
+    function createZoningBarChart(canvasId, chartInstanceName, data, label, color) {
+        const ctx = document.getElementById(canvasId).getContext('2d');
+        if (charts[chartInstanceName]) {
+            charts[chartInstanceName].destroy();
+        }
+        
+        if (!data || data.length === 0) {
+            // Optional: Show a message if no data
+            return;
+        }
+
+        const labels = data.map(d => d.range);
+        const counts = data.map(d => d.count);
+
+        charts[chartInstanceName] = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: label,
+                    data: counts,
+                    backgroundColor: color,
+                    borderColor: color.replace('0.8', '1'),
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: {
+                        grid: { display: false },
+                        title: { display: true, text: 'Building Age (10-Year Bins)' }
+                    },
+                    y: {
+                        grid: { borderDash: [2, 2] },
+                        title: { display: true, text: 'Number of Buildings' },
+                        beginAtZero: true
+                    }
+                },
+                plugins: {
+                    legend: { display: false },
+                    tooltip: { mode: 'index', intersect: false }
+                }
+            }
+        });
+    }
+
+
+    /**
+     * NEW: Updates the deep dive map with the selected district boundary
+     * and the RAZE points within it.
+     */
+    function updateZoningDeepDiveMap(districtName, points) {
+        if (!zoningDeepDiveMap) return;
+
+        // Clear old layers
+        if (zoningDistrictLayer) {
+            zoningDeepDiveMap.removeLayer(zoningDistrictLayer);
+        }
+        if (zoningRazePointLayer) {
+            zoningDeepDiveMap.removeLayer(zoningRazePointLayer);
+        }
+
+        // 1. Add RAZE Points
+        const markers = [];
+        points.forEach(point => {
+            if (point.lat && point.lng) {
+                // Filter out points based on the global "Closed Only" filter
+                const showClosedOnly = document.getElementById('statusFilter').checked;
+                if (showClosedOnly && point.status !== 'Close') {
+                    return; // Skip this point
+                }
+
+                markers.push(L.circleMarker([point.lat, point.lng], {
+                    radius: 4,
+                    fillColor: colors.RAZE,
+                    color: borderColors.RAZE,
+                    weight: 1,
+                    opacity: 0.6,
+                    fillOpacity: 1
+                }).bindTooltip(`Lifespan: ${point.lifespan} years`));
+            }
+        });
+        zoningRazePointLayer = L.layerGroup(markers);
+        zoningRazePointLayer.addTo(zoningDeepDiveMap);
+
+        // 2. Add District Boundary Layer
+        if (globalZoningGeoJSON) {
+            // Filter the global GeoJSON to find features matching this district
+            const districtFeatures = globalZoningGeoJSON.features.filter(
+                f => f.properties.Zoning_District === districtName
+            );
+            
+            if (districtFeatures.length > 0) {
+                zoningDistrictLayer = L.geoJSON(districtFeatures, {
+                    style: {
+                        color: "purple",
+                        weight: 2,
+                        opacity: 0.7,
+                        fillColor: "purple",
+                        fillOpacity: 0.15
+                    }
+                });
+                zoningDistrictLayer.addTo(zoningDeepDiveMap);
+                
+                // Zoom the map to fit the bounds of this district
+                zoningDeepDiveMap.fitBounds(zoningDistrictLayer.getBounds());
+            }
+        }
     }
 
 
@@ -910,6 +1183,7 @@ function addLayerControl() {
         createConstructionEraChart(eraData, chartTypeFilter, showClosedOnly); // MODIFIED (filter-aware)
         createLifespanStripPlot(boxplotData, chartTypeFilter, showClosedOnly); // MODIFIED (filter-aware)
         updateRazeLifespanSummary(currentData); // NOT filtered
+        updateZoningDeepDive();
     }
 
     /**

@@ -71,10 +71,12 @@ def process_demolition_data(assessment_file, permit_file):
     # --- 2. Prepare property assessment data ---
     print("Processing property assessment data...")
     # Load more columns to identify buildings correctly
-    assessment_cols = ['PID', 'CM_ID', 'YR_BUILT']
+    assessment_cols = ['PID', 'CM_ID', 'YR_BUILT', 'Zoning_District', 'Zoning_Subdistrict']
+
     if 'CM_ID' not in prop_ass_df.columns:
         print("Warning: 'CM_ID' not found in assessment data. Condominium logic will be skipped.")
-        assessment_cols = ['PID', 'YR_BUILT']
+        # Still include zoning columns
+        assessment_cols = ['PID', 'YR_BUILT', 'Zoning_District', 'Zoning_Subdistrict']
 
     assessment_data = prop_ass_df[assessment_cols].copy()
     assessment_data.dropna(subset=['YR_BUILT'], inplace=True)
@@ -93,19 +95,23 @@ def process_demolition_data(assessment_file, permit_file):
 
     print("Aggregating build years by 'building_id' (handling condos)...")
     # Group by the new building_id and find the earliest construction year for that building.
-    build_years = assessment_data.groupby('building_id')['YR_BUILT'].min().reset_index()
-    build_years.rename(columns={'YR_BUILT': 'build_year'}, inplace=True)
+    build_years = assessment_data.groupby('building_id').agg(
+        build_year=('YR_BUILT', 'min'),  # Get the earliest build year
+        Zoning_District=('Zoning_District', 'first'),  # Get the first zoning district
+        Zoning_Subdistrict=('Zoning_Subdistrict', 'first')  # Get the first zoning subdistrict
+    ).reset_index()
 
     # --- NEW: Calculate current building age distribution (5-year and 10-year) ---
     print("Calculating current building age distribution (5yr & 10yr)...")
     current_year = 2025  # Keep consistent with the rest of the analysis
-    all_buildings = prop_ass_df[['YR_BUILT']].copy()
-    all_buildings = all_buildings[
-        (all_buildings['YR_BUILT'] > 0) &
-        (all_buildings['YR_BUILT'] <= current_year)
-        ]
+    all_buildings_cols = ['YR_BUILT', 'Zoning_District', 'Zoning_Subdistrict']
+    all_buildings = prop_ass_df[
+        prop_ass_df['YR_BUILT'].notna() & (prop_ass_df['YR_BUILT'] > 0)
+        ][all_buildings_cols].copy()
+
     all_buildings['age'] = current_year - all_buildings['YR_BUILT']
     avg_current_age = float(all_buildings['age'].mean()) if not all_buildings.empty else 0.0
+
 
     def make_hist(df, width):
         """
@@ -683,9 +689,94 @@ def process_demolition_data(assessment_file, permit_file):
         'final_valid_records': final_record_count
     }
 
+    # In process_demolition_data(), right before the 'return all_data' line
+
+    # --- 7. NEW: Generate Aggregations by Zoning Area ---
+    print("Aggregating statistics by Zoning Subdistrict (for map tooltips)...")
+
+    # This is for Feature 1 (Map Tooltip)
+    zoning_subdistrict_stats = {}
+
+    # 1. Get avg age of ALL current buildings, grouped by Subdistrict
+    current_age_by_subdistrict = all_buildings.groupby('Zoning_Subdistrict')['age'].mean()
+
+    # 2. Get avg lifespan of POSITIVE RAZE demolitions, grouped by Subdistrict
+    #    We use lifespan_df, which is already filtered for positive lifespan
+    raze_df = lifespan_df[lifespan_df['worktype'] == 'RAZE']
+    raze_lifespan_by_subdistrict = raze_df.groupby('Zoning_Subdistrict')['lifespan'].mean()
+
+    # 3. Combine them into one dictionary
+    all_subdistricts = set(current_age_by_subdistrict.index).union(set(raze_lifespan_by_subdistrict.index))
+    for subdistrict in all_subdistricts:
+        if pd.isna(subdistrict): continue  # Skip empty/NaN keys
+        avg_age_val = current_age_by_subdistrict.get(subdistrict)
+        avg_lifespan_val = raze_lifespan_by_subdistrict.get(subdistrict)
+
+        # Convert NaN values to None, which will become 'null' in JSON
+        # This makes the JSON valid
+        zoning_subdistrict_stats[subdistrict] = {
+            'avg_current_age': None if pd.isna(avg_age_val) else float(avg_age_val),
+            'avg_raze_lifespan': None if pd.isna(avg_lifespan_val) else float(avg_lifespan_val)
+        }
+    all_data['zoning_subdistrict_stats'] = zoning_subdistrict_stats
+    print(f"Calculated stats for {len(zoning_subdistrict_stats)} subdistricts.")
+
+    # --- 8. NEW: Generate Aggregations by Zoning District (for Deep Dive) ---
+    print("Aggregating statistics by Zoning District (for deep dive section)...")
+
+    # This is for Feature 2 (Deep Dive Section)
+    zoning_district_stats = {}
+    # Get a clean list of unique, non-null district names
+    all_districts = all_buildings['Zoning_District'].dropna().unique()
+
+    # Get the make_hist function (defined at line 102)
+    # You may need to move make_hist outside of process_demolition_data
+    # or copy its definition here if you get a "not defined" error.
+    # For this example, I assume make_hist is accessible.
+
+    for district in all_districts:
+        if pd.isna(district): continue
+
+        # 1. Filter dataframes for this specific district
+        current_buildings_in_district = all_buildings[all_buildings['Zoning_District'] == district]
+        raze_in_district = raze_df[raze_df['Zoning_District'] == district]
+
+        # 2. Calculate KPIs
+        avg_age = current_buildings_in_district['age'].mean()
+        avg_lifespan = raze_in_district['lifespan'].mean()
+
+        # 3. Generate chart data
+        # We must rename 'lifespan' to 'age' for the make_hist function to work
+        raze_in_district_for_hist = raze_in_district.rename(columns={'lifespan': 'age'})
+
+        current_age_hist = make_hist(current_buildings_in_district, 10)  # 10-year bins
+        demolished_age_hist = make_hist(raze_in_district_for_hist, 10)  # 10-year bins
+
+        # 4. Get map points for RAZE demolitions in this district
+        raze_points_df = raze_in_district[['y_latitude', 'x_longitude', 'lifespan', 'status_norm']].copy()
+        raze_points_df.rename(columns={
+            'y_latitude': 'lat',
+            'x_longitude': 'lng',
+            'status_norm': 'status'
+        }, inplace=True)
+        raze_points = raze_points_df.to_dict('records')
+
+        # 5. Assemble all stats for this district
+        zoning_district_stats[district] = {
+            'avg_current_age': avg_age if pd.notna(avg_age) else 0.0,
+            'avg_raze_lifespan': avg_lifespan if pd.notna(avg_lifespan) else 0.0,
+            'current_age_distribution_10yr': current_age_hist,
+            'demolished_age_distribution_10yr': demolished_age_hist,
+            'positive_raze_points': raze_points
+        }
+
+    all_data['zoning_district_stats'] = zoning_district_stats
+    # Also export the list of names for the dropdown
+    all_data['zoning_district_names'] = sorted(all_districts)
+    print(f"Calculated stats for {len(zoning_district_stats)} districts.")
+
     print("All aggregations complete.")
     return all_data
-
 
 def save_json_files(data, output_prefix='boston_demolition'):
     """Saves the final data dictionary to a JSON file."""
