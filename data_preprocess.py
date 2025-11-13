@@ -741,6 +741,9 @@ def process_demolition_data(assessment_file, permit_file):
         current_buildings_in_district = all_buildings[all_buildings['Zoning_District'] == district]
         raze_in_district = raze_df[raze_df['Zoning_District'] == district]
 
+        count_current = len(current_buildings_in_district)
+        count_raze = len(raze_in_district)
+
         # 2. Calculate KPIs
         avg_age = current_buildings_in_district['age'].mean()
         avg_lifespan = raze_in_district['lifespan'].mean()
@@ -763,6 +766,8 @@ def process_demolition_data(assessment_file, permit_file):
 
         # 5. Assemble all stats for this district
         zoning_district_stats[district] = {
+            'count_current': int(count_current),
+            'count_raze': int(count_raze),
             'avg_current_age': avg_age if pd.notna(avg_age) else 0.0,
             'avg_raze_lifespan': avg_lifespan if pd.notna(avg_lifespan) else 0.0,
             'current_age_distribution_10yr': current_age_hist,
